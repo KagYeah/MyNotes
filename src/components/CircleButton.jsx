@@ -4,6 +4,7 @@ import {
 } from 'prop-types';
 
 import Button from './Button';
+import { appStyles } from '../style';
 
 export default function CircleButton(props) {
   const {
@@ -16,14 +17,13 @@ export default function CircleButton(props) {
       onPress={onPress}
       style={style}
       borderRadius={size / 2}
-      padding={0}
       height={size}
       width={size}
-      color="#fff"
+      color={appStyles.circleButton.color}
       fontSize={fontSize}
       fontWeight={fontWeight}
       linearGradient
-      options={{ colors: ['#393960', '#000033'] }}
+      options={{ colors: appStyles.circleButton.gradientColors }}
     />
   );
 }

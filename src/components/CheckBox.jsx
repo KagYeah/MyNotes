@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity } from 'react-native';
 import { bool, func, shape } from 'prop-types';
 
+import { appStyles } from '../style';
+
 export default function CheckBox(props) {
   const { checked, onPress, style } = props;
   const [_checked, setChecked] = useState(checked);
@@ -42,11 +44,11 @@ const styles = StyleSheet.create({
     padding: 8,
   },
   iconChecked: {
-    color: '#0f0',
-    fontSize: 24,
+    color: appStyles.checkbox.checkedColor,
+    fontSize: appStyles.checkbox.fontSize,
   },
   iconUnchecked: {
-    color: '#000',
-    fontSize: 24,
+    color: appStyles.checkbox.uncheckedColor,
+    fontSize: appStyles.checkbox.fontSize,
   },
 });

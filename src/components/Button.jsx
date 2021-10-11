@@ -8,7 +8,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 export default function Button(props) {
   const {
     label, onPress, style,
-    backgroundColor, borderRadius, padding, height, width,
+    backgroundColor, borderRadius, height, width,
     color, fontSize, fontWeight,
     linearGradient, options,
   } = props;
@@ -55,7 +55,6 @@ export default function Button(props) {
           styles.lineaerGradient,
           {
             borderRadius,
-            padding,
             height,
             width,
           },
@@ -69,7 +68,7 @@ export default function Button(props) {
   return (
     <TouchableOpacity
       style={[
-        linearGradient ? null : [styles.container, { padding }],
+        styles.container,
         style,
         {
           backgroundColor,
@@ -91,7 +90,6 @@ Button.propTypes = {
   style: shape(),
   backgroundColor: string,
   borderRadius: number,
-  padding: number,
   height: number,
   width: number,
   color: string,
@@ -105,7 +103,6 @@ Button.defaultProps = {
   style: null,
   backgroundColor: '#fff',
   borderRadius: 8,
-  padding: 16,
   height: 50,
   width: 68,
   color: '#000',
@@ -119,9 +116,11 @@ const styles = StyleSheet.create({
   lineaerGradient: {
     alignItems: 'center',
     justifyContent: 'center',
+    padding: 0,
   },
   container: {
     alignItems: 'center',
     justifyContent: 'center',
+    padding: 0,
   },
 });

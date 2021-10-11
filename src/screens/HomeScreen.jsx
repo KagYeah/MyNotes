@@ -8,6 +8,7 @@ import Button from '../components/Button';
 import CircleButton from '../components/CircleButton';
 import ListHeader from '../components/ListHeader';
 import ListItemWithCheckBox from '../components/ListItemWithCheckBox';
+import { appStyles } from '../style';
 
 export default function HomeScreen() {
   const schedules = [];
@@ -51,18 +52,16 @@ export default function HomeScreen() {
           <Button
             label="三"
             onPress={() => {}}
-            style={{ padding: 0 }}
-            backgroundColor="#00000000"
-            color="#fff"
+            backgroundColor={appStyles.appbarButton.backgroundColor}
+            color={appStyles.appbarButton.color}
           />
         )}
         right={(
           <Button
             label={showCheckBox ? '完了' : '編集'}
             onPress={() => setShowCheckBox(!showCheckBox)}
-            style={{ padding: 0 }}
-            backgroundColor="#00000000"
-            color="#fff"
+            backgroundColor={appStyles.appbarButton.backgroundColor}
+            color={appStyles.appbarButton.color}
           />
         )}
       />
@@ -87,11 +86,11 @@ export default function HomeScreen() {
               <Button
                 label="削除"
                 onPress={() => {}}
-                backgroundColor="#0000"
+                backgroundColor={appStyles.deleteButton.backgroundColor}
                 padding={0}
-                height={32}
-                color="#f00"
-                fontWeight="bold"
+                height={appStyles.listHeader.height - (appStyles.listHeader.paddingVertical * 2)}
+                color={appStyles.deleteButton.color}
+                fontWeight={appStyles.deleteButton.fontWeight}
               />
             )}
           />
@@ -102,12 +101,12 @@ export default function HomeScreen() {
         label="＋"
         onPress={() => {}}
         style={{
-          bottom: 24,
+          bottom: appStyles.createButton.bottom,
           position: 'absolute',
-          right: 24,
+          right: appStyles.createButton.right,
         }}
-        size={48}
-        fontSize={32}
+        size={appStyles.circleButton.size}
+        fontSize={appStyles.createButton.fontSize}
       />
     </View>
   );
@@ -116,6 +115,6 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#eef',
+    backgroundColor: appStyles.app.backgroundColor,
   },
 });

@@ -4,6 +4,7 @@ import { bool, func, string } from 'prop-types';
 
 import CheckBox from './CheckBox';
 import ListItem from './ListItem';
+import { appStyles } from '../style';
 
 export default function ListItemWithCheckBox(props) {
   const {
@@ -40,7 +41,7 @@ export default function ListItemWithCheckBox(props) {
       }
       linearGradient
       options={{
-        colors: ['rgba(255, 255, 255, 0.9)', 'rgba(238, 238, 255, 0.9)'],
+        colors: appStyles.listItemWithCheckBox.gradientColors,
       }}
     />
   );
@@ -72,15 +73,15 @@ const styles = StyleSheet.create({
   right: {
     alignItems: 'center',
     justifyContent: 'center',
-    width: '20%',
+    width: appStyles.listItemRight.width,
   },
   title: {
-    fontSize: 18,
-    lineHeight: 32,
+    fontSize: appStyles.listItemTitle.fontSize,
+    lineHeight: appStyles.listItemTitle.lineHeight,
   },
   subtitle: {
-    fontSize: 12,
-    lineHeight: 24,
-    paddingStart: 8,
+    fontSize: appStyles.listItemSubTitle.fontSize,
+    lineHeight: appStyles.listItemSubTitle.lineHeight,
+    paddingStart: appStyles.listItemSubTitle.paddingStart,
   },
 });

@@ -3,6 +3,8 @@ import { StyleSheet, View, Text } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { element, oneOfType, string } from 'prop-types';
 
+import { appStyles } from '../style';
+
 export default function AppBar(props) {
   const { title, left, right } = props;
   let titleComponent = title;
@@ -12,7 +14,7 @@ export default function AppBar(props) {
   }
 
   return (
-    <LinearGradient colors={['#393960', '#000033']} style={styles.container}>
+    <LinearGradient colors={appStyles.appbar.gradientColors} style={styles.container}>
       <View style={styles.inner}>{titleComponent}</View>
       <View style={styles.left}>{left}</View>
       <View style={styles.right}>{right}</View>
@@ -33,28 +35,27 @@ AppBar.defaultProps = {
 
 const styles = StyleSheet.create({
   container: {
-    height: 104,
+    height: appStyles.appbar.height,
     justifyContent: 'flex-end',
     width: '100%',
   },
   inner: {
     alignItems: 'center',
-    marginBottom: 8,
+    marginBottom: appStyles.appbar.paddingBottom,
   },
   title: {
-    color: '#fff',
-    fontSize: 32,
+    color: appStyles.appbarTitle.color,
+    fontSize: appStyles.appbarTitle.fontSize,
     fontWeight: 'bold',
-    lineHeight: 40,
   },
   left: {
     bottom: 0,
-    left: 16,
+    left: appStyles.appbar.paddingHorizontal,
     position: 'absolute',
   },
   right: {
     bottom: 0,
     position: 'absolute',
-    right: 16,
+    right: appStyles.appbar.paddingHorizontal,
   },
 });

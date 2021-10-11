@@ -2,6 +2,7 @@ import React from 'react';
 import { StyleSheet, View, Text } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { element, oneOfType, string } from 'prop-types';
+import { appStyles } from '../style';
 
 export default function ListHeader(props) {
   const { left, right } = props;
@@ -17,7 +18,7 @@ export default function ListHeader(props) {
   }
 
   return (
-    <LinearGradient colors={['rgba(238, 238, 255, 0.9)', 'rgba(227, 227, 237, 0.9)']} style={styles.container}>
+    <LinearGradient colors={appStyles.listHeader.gradientColors} style={styles.container}>
       {left && <View style={styles.left}>{leftComponent}</View>}
       {right && <View style={styles.right}>{rightComponent}</View>}
     </LinearGradient>
@@ -38,22 +39,20 @@ const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
     flexDirection: 'row',
-    height: 48,
+    height: appStyles.listHeader.height,
     justifyContent: 'space-between',
-    paddingHorizontal: 24,
-    paddingVertical: 8,
+    paddingHorizontal: appStyles.listHeader.paddingHorizontal,
+    paddingVertical: appStyles.listHeader.paddingVertical,
   },
   left: {
     alignItems: 'center',
-    justifyContent: 'flex-start',
   },
   right: {
     alignItems: 'center',
-    justifyContent: 'flex-end',
-    width: '20%',
+    width: appStyles.listHeaderRight.width,
   },
   text: {
-    fontSize: 18,
-    fontWeight: 'bold',
+    fontSize: appStyles.listHeader.fontSize,
+    fontWeight: appStyles.listHeader.fontWeight,
   },
 });

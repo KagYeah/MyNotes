@@ -7,6 +7,8 @@ import {
 } from 'prop-types';
 import { LinearGradient } from 'expo-linear-gradient';
 
+import { appStyles } from '../style';
+
 export default function ListItem(props) {
   const {
     title, onPress, style, linearGradient, options,
@@ -90,14 +92,14 @@ ListItem.defaultProps = {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#fff',
-    borderBottomColor: 'rgba(0, 0, 0, 0.25)',
+    backgroundColor: appStyles.listItem.backgroundColor,
+    borderBottomColor: appStyles.listItem.borderBottomColor,
     borderBottomWidth: 1,
-    height: 72,
+    height: appStyles.listItem.height,
     justifyContent: 'center',
-    opacity: 0.9,
-    paddingVertical: 8,
-    paddingHorizontal: 24,
+    opacity: appStyles.listItem.opacity,
+    paddingHorizontal: appStyles.listItem.paddingHorizontal,
+    paddingVertical: appStyles.listItem.paddingVertical,
     width: '100%',
   },
 });
