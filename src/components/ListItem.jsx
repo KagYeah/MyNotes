@@ -8,6 +8,7 @@ import {
 import { LinearGradient } from 'expo-linear-gradient';
 
 import { appStyles } from '../style';
+import { normalizeObj } from '../helpers';
 
 export default function ListItem(props) {
   const {
@@ -19,21 +20,8 @@ export default function ListItem(props) {
     component = <Text>{title}</Text>;
   }
 
-  function getProps(obj, defaults) {
-    const normalizedObj = {};
-    Object.keys(obj).forEach((key) => {
-      if (obj[key] !== undefined && obj[key] !== null) {
-        normalizedObj[key] = obj[key];
-      } else if (defaults[key] !== undefined && defaults[key] !== null) {
-        normalizedObj[key] = defaults[key];
-      }
-    });
-
-    return normalizedObj;
-  }
-
   if (linearGradient) {
-    const properties = getProps({
+    const properties = normalizeObj({
       colors: options.colors,
       locations: options.locations,
       start: options.start,
@@ -41,6 +29,7 @@ export default function ListItem(props) {
     }, {
       colors: ['#fff', '#000'],
     });
+
     component = (
       <LinearGradient
         {...properties}
@@ -52,12 +41,11 @@ export default function ListItem(props) {
   }
 
   if (onPress) {
-    const properties = getProps({
+    const properties = normalizeObj({
       activeOpacity: options.activeOpacity,
       onPress,
-    }, {
-      activeOpacity: null,
     });
+
     component = (
       <TouchableOpacity
         {...properties}

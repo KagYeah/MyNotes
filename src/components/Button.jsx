@@ -5,6 +5,8 @@ import {
 } from 'prop-types';
 import { LinearGradient } from 'expo-linear-gradient';
 
+import { normalizeObj } from '../helpers';
+
 export default function Button(props) {
   const {
     label, onPress, style,
@@ -26,21 +28,8 @@ export default function Button(props) {
     );
   }
 
-  function getProps(obj, defaults) {
-    const normalizedObj = {};
-    Object.keys(obj).forEach((key) => {
-      if (obj[key] !== undefined && obj[key] !== null) {
-        normalizedObj[key] = obj[key];
-      } else if (defaults[key] !== undefined && defaults[key] !== null) {
-        normalizedObj[key] = defaults[key];
-      }
-    });
-
-    return normalizedObj;
-  }
-
   if (linearGradient) {
-    const properties = getProps({
+    const properties = normalizeObj({
       colors: options.colors,
       locations: options.locations,
       start: options.start,
@@ -48,6 +37,7 @@ export default function Button(props) {
     }, {
       colors: ['#fff', '#000'],
     });
+
     labelComponent = (
       <LinearGradient
         {...properties}
