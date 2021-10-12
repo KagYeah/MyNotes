@@ -1,5 +1,6 @@
 // color
 const black = '#000';
+const blue = '#39f';
 const green = '#0f0';
 const red = '#f00';
 const white = '#fff';
@@ -20,6 +21,11 @@ const appOpacity = 0.9;
 export const appStyles = {
   statusbar: {
     barStyle: 'light-content',
+  },
+  allCheckButton: {
+    backgroundColor: transparent,
+    color: blue,
+    width: 80,
   },
   app: {
     backgroundColor: '#eef',
@@ -57,9 +63,10 @@ export const appStyles = {
     position: 'absolute',
     right: 24,
   },
-  deleteButton: {
+  deleteButtonInListHeader: {
     backgroundColor: transparent,
     color: red,
+    fontSize: 18,
     fontWeight: 'bold',
   },
   listHeader: {

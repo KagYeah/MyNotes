@@ -31,3 +31,7 @@ export function normalizeObj(obj, defaults = {}) {
 
   return normalizedObj;
 }
+
+export async function sleep(msec) {
+  return new Promise((resolve) => setTimeout(resolve, msec));
+}

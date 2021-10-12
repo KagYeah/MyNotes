@@ -2,19 +2,22 @@ import React, { useEffect, useState } from 'react';
 import { StyleSheet, View, Text } from 'react-native';
 import { bool, func, string } from 'prop-types';
 
-import CheckBox from './CheckBox';
 import ListItem from './ListItem';
 import { appStyles } from '../style';
 
 export default function ListItemWithCheckBox(props) {
   const {
-    title, subtitle, showCheckBox, onPressWithCheckBox, onPressWithoutCheckBox,
+    title, subtitle, checked, showCheckBox, onPressWithCheckBox, onPressWithoutCheckBox,
   } = props;
-  const [checked, setChecked] = useState(false);
+  const [_checked, setChecked] = useState(checked);
 
   useEffect(() => {
     setChecked(false);
   }, [showCheckBox]);
+
+  useEffect(() => {
+    setChecked(checked);
+  }, [checked]);
 
   return (
     <ListItem
@@ -26,7 +29,9 @@ export default function ListItemWithCheckBox(props) {
           </View>
           {showCheckBox ? (
             <View style={styles.right}>
-              <CheckBox checked={checked} onPress={() => onPressWithCheckBox()} />
+              {_checked
+                ? <Text style={styles.checked}>[*]</Text>
+                : <Text style={styles.unchecked}>[  ]</Text>}
             </View>
           ) : null}
         </View>
@@ -35,7 +40,7 @@ export default function ListItemWithCheckBox(props) {
         showCheckBox
           ? () => {
             onPressWithCheckBox();
-            setChecked(!checked);
+            setChecked(!_checked);
           }
           : () => onPressWithoutCheckBox()
       }
@@ -50,6 +55,7 @@ export default function ListItemWithCheckBox(props) {
 ListItemWithCheckBox.propTypes = {
   title: string.isRequired,
   subtitle: string,
+  checked: bool,
   showCheckBox: bool,
   onPressWithCheckBox: func,
   onPressWithoutCheckBox: func,
@@ -57,6 +63,7 @@ ListItemWithCheckBox.propTypes = {
 
 ListItemWithCheckBox.defaultProps = {
   subtitle: null,
+  checked: false,
   showCheckBox: true,
   onPressWithCheckBox: () => {},
   onPressWithoutCheckBox: () => {},
@@ -83,5 +90,13 @@ const styles = StyleSheet.create({
     fontSize: appStyles.listItemSubTitle.fontSize,
     lineHeight: appStyles.listItemSubTitle.lineHeight,
     paddingStart: appStyles.listItemSubTitle.paddingStart,
+  },
+  checked: {
+    color: appStyles.checkbox.checkedColor,
+    fontSize: appStyles.checkbox.fontSize,
+  },
+  unchecked: {
+    color: appStyles.checkbox.ucheckedColor,
+    fontSize: appStyles.checkbox.fontSize,
   },
 });
