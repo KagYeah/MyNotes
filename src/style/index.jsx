@@ -1,8 +1,21 @@
-const colorOnMainGradientColors = '#fff';
-const appOpacity = 0.9;
-const mainGradientColors = ['#393960', '#000033'];
+// color
+const black = '#000';
+const green = '#0f0';
+const red = '#f00';
+const white = '#fff';
+
+const transparent = '#0000';
+
+const colorOnMainGradientColors = white;
+
+// colors for LinearGradient
 const subGradientColors = ['rgba(238, 238, 255, 0.9)', 'rgba(227, 227, 237, 0.9)'];
+const mainGradientColors = ['#393960', '#000033'];
 const whiteGradientColors = ['rgba(255, 255, 255, 0.9)', 'rgba(238, 238, 255, 0.9)'];
+
+// opacity
+const appOpacity = 0.9;
+
 // eslint-disable-next-line import/prefer-default-export
 export const appStyles = {
   statusbar: {
@@ -18,20 +31,20 @@ export const appStyles = {
     paddingHorizontal: 16,
   },
   appbarButton: {
-    backgroundColor: '#0000',
-    color: '#fff',
+    backgroundColor: transparent,
+    color: colorOnMainGradientColors,
     height: 50,
     padding: 0,
     width: 68,
   },
   appbarTitle: {
-    color: '#fff',
+    color: colorOnMainGradientColors,
     fontSize: 32,
   },
   checkbox: {
-    checkedColor: '#0f0',
+    checkedColor: green,
     fontSize: 24,
-    uncheckedColor: '#000',
+    uncheckedColor: black,
   },
   circleButton: {
     color: colorOnMainGradientColors,
@@ -45,8 +58,8 @@ export const appStyles = {
     right: 24,
   },
   deleteButton: {
-    backgroundColor: '#0000',
-    color: '#f00',
+    backgroundColor: transparent,
+    color: red,
     fontWeight: 'bold',
   },
   listHeader: {
@@ -61,7 +74,7 @@ export const appStyles = {
     width: '20%',
   },
   listItem: {
-    backgroundColor: '#fff',
+    backgroundColor: white,
     borderBottomColor: 'rgba(0, 0, 0, 0.25)',
     height: 72,
     opacity: appOpacity,
