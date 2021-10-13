@@ -63,11 +63,17 @@ export const appStyles = {
     position: 'absolute',
     right: 24,
   },
-  deleteButtonInListHeader: {
+  deleteButton: {
     backgroundColor: transparent,
     color: red,
     fontSize: 18,
     fontWeight: 'bold',
+    height: 54,
+    width: 68,
+  },
+  deleteButtonInListHeader: {
+    height: 32,
+    width: 68,
   },
   listHeader: {
     fontSize: 18,
@@ -83,6 +89,7 @@ export const appStyles = {
   listItem: {
     backgroundColor: white,
     borderBottomColor: 'rgba(0, 0, 0, 0.25)',
+    borderBottomWidth: 1,
     height: 72,
     opacity: appOpacity,
     paddingHorizontal: 24,
@@ -102,5 +109,34 @@ export const appStyles = {
   },
   listItemWithCheckBox: {
     gradientColors: whiteGradientColors,
+  },
+  noteBodyInput: {
+    backgroundColor: transparent,
+    borderBottomColor: 'rgba(0, 0, 0, 0.25)',
+    borderBottomWidth: 1,
+    color: black,
+    fontSize: 16,
+    minHeight: 400,
+    // if you set opacity, edit styles.container.opacity in src/components/NoteBodyInput.jsx
+    // opacity: appOpacity,
+    paddingHorizontal: 24,
+    paddingVertical: 16,
+  },
+  noteTitleInput: {
+    backgroundColor: white,
+    borderBottomColor: 'rgba(0, 0, 0, 0.25)',
+    borderBottomWidth: 1,
+    color: black,
+    fontSize: 18,
+    maxHeight: 96,
+    opacity: appOpacity,
+    paddingHorizontal: 24,
+    paddingVertical: 16,
+  },
+  saveButton: {
+    bottom: 24,
+    fontSize: 24,
+    position: 'absolute',
+    right: 24,
   },
 };

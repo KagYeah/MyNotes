@@ -9,6 +9,7 @@ import {
 import AppBar from '../components/AppBar';
 import Button from '../components/Button';
 import CreateButton from '../components/CreateButton';
+import DeleteButton from '../components/DeleteButton';
 import ListHeader from '../components/ListHeader';
 import ListItemWithCheckBox from '../components/ListItemWithCheckBox';
 import { appStyles } from '../style';
@@ -96,14 +97,10 @@ export default function ListScreen(props) {
               </View>
             )}
             right={(
-              <Button
-                label="削除"
+              <DeleteButton
                 onPress={() => {}}
-                backgroundColor={appStyles.deleteButtonInListHeader.backgroundColor}
-                padding={0}
-                height={appStyles.listHeader.height - (appStyles.listHeader.paddingVertical * 2)}
-                color={appStyles.deleteButtonInListHeader.color}
-                fontWeight={appStyles.deleteButtonInListHeader.fontWeight}
+                height={appStyles.deleteButtonInListHeader.height}
+                width={appStyles.deleteButtonInListHeader.width}
               />
             )}
           />

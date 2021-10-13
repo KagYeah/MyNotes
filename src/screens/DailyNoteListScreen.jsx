@@ -12,6 +12,7 @@ import CreateButton from '../components/CreateButton';
 import ListHeader from '../components/ListHeader';
 import ListItemWithCheckBox from '../components/ListItemWithCheckBox';
 import { appStyles } from '../style';
+import DeleteButton from '../components/DeleteButton';
 
 export default function DailyNoteListScreen(props) {
   const { data, appbarTitle } = props;
@@ -58,14 +59,10 @@ export default function DailyNoteListScreen(props) {
           <ListHeader
             left={title}
             right={!showCheckBox ? null : (
-              <Button
-                label="削除"
+              <DeleteButton
                 onPress={() => {}}
-                backgroundColor={appStyles.deleteButtonInListHeader.backgroundColor}
-                height={appStyles.listHeader.height - (appStyles.listHeader.paddingVertical * 2)}
-                color={appStyles.deleteButtonInListHeader.color}
-                fontSize={appStyles.deleteButtonInListHeader.fontSize}
-                fontWeight={appStyles.deleteButtonInListHeader.fontWeight}
+                height={appStyles.deleteButtonInListHeader.height}
+                width={appStyles.deleteButtonInListHeader.width}
               />
             )}
           />
