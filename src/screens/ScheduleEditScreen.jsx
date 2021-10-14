@@ -38,7 +38,7 @@ export default function MemoEditScreen() {
         <StatusBar barStyle={appStyles.statusbar.barStyle} />
 
         <AppBar
-          title="タスク"
+          title="予定"
           left={(
             <Button
               label="<戻る"
@@ -47,17 +47,14 @@ export default function MemoEditScreen() {
               color={appStyles.appbarButton.color}
             />
           )}
-          right={(
-            showKeyboardHidingButton
-              ? (
-                <Button
-                  label="完了"
-                  onPress={() => Keyboard.dismiss()}
-                  backgroundColor={appStyles.appbarButton.backgroundColor}
-                  color={appStyles.appbarButton.color}
-                />
-              ) : null
-          )}
+          right={showKeyboardHidingButton ? (
+            <Button
+              label="完了"
+              onPress={() => Keyboard.dismiss()}
+              backgroundColor={appStyles.appbarButton.backgroundColor}
+              color={appStyles.appbarButton.color}
+            />
+          ) : null}
         />
 
         <ScrollView>
@@ -81,6 +78,7 @@ export default function MemoEditScreen() {
 
           <NoteTitleInput
             onChangeText={(text) => setTitle(text)}
+            placeholder="予定"
             value={title}
           />
 

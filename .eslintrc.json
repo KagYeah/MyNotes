@@ -20,6 +20,10 @@
     ],
     "rules": {
         "no-use-before-define": 0,
-        "react/jsx-props-no-spreading": 0
+        "react/jsx-props-no-spreading": 0,
+        "react/jsx-no-bind": ["error", {
+            "allowArrowFunctions": true,
+            "allowFunctions": true
+        }]
     }
 }

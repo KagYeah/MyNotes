@@ -17,7 +17,12 @@ export default function ListItem(props) {
   let component = title;
 
   if (typeof title === 'string') {
-    component = <Text>{title}</Text>;
+    const properties = normalizeObj({
+      color: style.color,
+      fontSize: style.fontSize,
+      fontWeight: style.fontWeight,
+    });
+    component = <Text {...properties}>{title}</Text>;
   }
 
   if (linearGradient) {

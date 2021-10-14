@@ -45,27 +45,26 @@ export default function MemoEditScreen() {
               color={appStyles.appbarButton.color}
             />
           )}
-          right={(
-            showKeyboardHidingButton
-              ? (
-                <Button
-                  label="完了"
-                  onPress={() => Keyboard.dismiss()}
-                  backgroundColor={appStyles.appbarButton.backgroundColor}
-                  color={appStyles.appbarButton.color}
-                />
-              ) : null
-          )}
+          right={showKeyboardHidingButton ? (
+            <Button
+              label="完了"
+              onPress={() => Keyboard.dismiss()}
+              backgroundColor={appStyles.appbarButton.backgroundColor}
+              color={appStyles.appbarButton.color}
+            />
+          ) : null}
         />
 
         <ScrollView>
           <NoteTitleInput
             onChangeText={(text) => setTitle(text)}
+            placeholder="タイトル"
             value={title}
           />
 
           <NoteBodyInput
             onChangeText={(text) => setBody(text)}
+            placeholder="メモ"
             value={body}
           />
 

@@ -37,6 +37,7 @@ export const appStyles = {
     height: 104,
     paddingBottom: 16,
     paddingHorizontal: 16,
+    zIndex: 100,
   },
   appbarButton: {
     backgroundColor: transparent,
@@ -153,5 +154,15 @@ export const appStyles = {
     fontSize: 24,
     position: 'absolute',
     right: 24,
+  },
+  typeListItem: {
+    color: colorOnMainGradientColors,
+    count: 3,
+    fontSize: 18,
+    gradientColors: mainGradientColors,
+  },
+  typeListBackground: {
+    backgroundColor: black,
+    opacity: 0.5,
   },
 };

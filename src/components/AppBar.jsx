@@ -38,7 +38,7 @@ const styles = StyleSheet.create({
     height: appStyles.appbar.height,
     justifyContent: 'flex-end',
     width: '100%',
-    zIndex: 10,
+    zIndex: appStyles.appbar.zIndex,
   },
   inner: {
     alignItems: 'center',

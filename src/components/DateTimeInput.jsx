@@ -35,22 +35,21 @@ export default function DateTimeInput(props) {
           )}
       </TouchableOpacity>
 
-      {showPicker
-        ? (
-          <RNDateTimePicker
-            value={value}
-            mode={mode}
-            is24Hour
-            display={mode === 'date' && Platform.OS === 'android' ? 'calendar' : 'spinner'}
-            locale="ja-JP"
-            style={styles.picker}
-            onChange={(event, selectedValue) => {
-              setShowPicker(Platform.OS === 'ios');
-              setValue(selectedValue || value);
-              onChange(selectedValue);
-            }}
-          />
-        ) : null}
+      {showPicker ? (
+        <RNDateTimePicker
+          value={value}
+          mode={mode}
+          is24Hour
+          display={mode === 'date' && Platform.OS === 'android' ? 'calendar' : 'spinner'}
+          locale="ja-JP"
+          style={styles.picker}
+          onChange={(event, selectedValue) => {
+            setShowPicker(Platform.OS === 'ios');
+            setValue(selectedValue || value);
+            onChange(selectedValue);
+          }}
+        />
+      ) : null}
     </>
   );
 }
