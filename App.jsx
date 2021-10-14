@@ -7,6 +7,9 @@ import MemoCreateScreen from './src/screens/MemoCreateScreen';
 import TaskListScreen from './src/screens/TaskListScreen';
 import TaskEditScreen from './src/screens/TaskEditScreen';
 import TaskCreateScreen from './src/screens/TaskCreateScreen';
+import ScheduleListScreen from './src/screens/ScheduleListScreen';
+import ScheduleEditScreen from './src/screens/ScheduleEditScreen';
+import ScheduleCreateScreen from './src/screens/ScheduleCreateScreen';
 
 export default function App() {
   return (
@@ -16,6 +19,9 @@ export default function App() {
     // <MemoCreateScreen />
     // <TaskListScreen />
     // <TaskEditScreen />
-    <TaskCreateScreen />
+    // <TaskCreateScreen />
+    // <ScheduleListScreen />
+    // <ScheduleEditScreen />
+    <ScheduleCreateScreen />
   );
 }
