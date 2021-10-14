@@ -1,3 +1,24 @@
+import { format } from 'date-fns';
+
+export const DATE_SEPARATOR = '/';
+export const TIME_SEPARATOR = ':';
+
+export function date2string(date) {
+  if (!date) {
+    return '';
+  }
+
+  return format(date, `yyyy${DATE_SEPARATOR}MM${DATE_SEPARATOR}dd`);
+}
+
+export function time2string(date) {
+  if (!date) {
+    return '';
+  }
+
+  return format(date, `hh${TIME_SEPARATOR}mm`);
+}
+
 export function hex2rgba(hex, alpha = 1) {
   let rgb = null;
 

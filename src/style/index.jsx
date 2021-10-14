@@ -8,6 +8,8 @@ const white = '#fff';
 const transparent = '#0000';
 
 const colorOnMainGradientColors = white;
+const colorOnSubMainBackgroundColor = black;
+const subMainBackgorundColor = '#e3e3ed';
 
 // colors for LinearGradient
 const subGradientColors = ['rgba(238, 238, 255, 0.9)', 'rgba(227, 227, 237, 0.9)'];
@@ -62,6 +64,19 @@ export const appStyles = {
     fontSize: 32,
     position: 'absolute',
     right: 24,
+  },
+  datetimeInput: {
+    backgroundColor: subMainBackgorundColor,
+    borderBottomColor: 'rgba(0, 0, 0, 0.25)',
+    borderBottomWidth: 1,
+    color: colorOnSubMainBackgroundColor,
+    fontSize: 18,
+    height: 48,
+    paddingHorizontal: 24,
+    paddingVertical: 8,
+  },
+  datetimePicker: {
+    backgroundColor: subMainBackgorundColor,
   },
   deleteButton: {
     backgroundColor: transparent,
