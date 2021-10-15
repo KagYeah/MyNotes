@@ -2,13 +2,14 @@ import { format } from 'date-fns';
 
 export const DATE_SEPARATOR = '/';
 export const TIME_SEPARATOR = ':';
+const DAY_OF_WEEK = ['日', '月', '火', '水', '木', '金', '土'];
 
 export function date2string(date) {
   if (!date) {
     return '';
   }
 
-  return format(date, `yyyy${DATE_SEPARATOR}MM${DATE_SEPARATOR}dd`);
+  return format(date, `yyyy${DATE_SEPARATOR}MM${DATE_SEPARATOR}dd (${DAY_OF_WEEK[date.getDay()]})`);
 }
 
 export function time2string(date) {
@@ -16,7 +17,7 @@ export function time2string(date) {
     return '';
   }
 
-  return format(date, `hh${TIME_SEPARATOR}mm`);
+  return format(date, `HH${TIME_SEPARATOR}mm`);
 }
 
 export function hex2rgba(hex, alpha = 1) {

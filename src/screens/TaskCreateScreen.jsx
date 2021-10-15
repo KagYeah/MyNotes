@@ -13,7 +13,7 @@ import TypeList from '../components/TypeList';
 import { appStyles } from '../style';
 import { sleep } from '../helpers';
 
-export default function MemoEditScreen() {
+export default function TaskCreateScreen() {
   const [date, setDate] = useState(new Date());
   const [time, setTime] = useState(new Date());
   const [title, setTitle] = useState('');

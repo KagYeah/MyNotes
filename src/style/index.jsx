@@ -1,6 +1,7 @@
 // color
 const black = '#000';
 const blue = '#39f';
+const gray = '#ccc';
 const green = '#0f0';
 const red = '#f00';
 const white = '#fff';
@@ -49,6 +50,32 @@ export const appStyles = {
   appbarTitle: {
     color: colorOnMainGradientColors,
     fontSize: 32,
+  },
+  calendar: {
+    borderColor: black,
+    currenMonthNumberColor: black,
+    dateBorderColor: gray,
+    dateHeight: 56,
+    dateWidth: 48,
+    defaultBackgroundColor: white,
+    dotColor: gray,
+    fontSize: 18,
+    holidayBackgroundColor: '#fee',
+    notCurrentMonthNumberColor: gray,
+    opacity: appOpacity,
+    saturdayBackgroundColor: '#eaf5ff',
+    todayBorderColor: black,
+  },
+  calendarHeader: {
+    color: black,
+    gradientColors: subGradientColors,
+    height: 48,
+    marginBottom: 48,
+    paddingHorizontal: 24,
+    paddingVertical: 8,
+  },
+  calendarHeaderButton: {
+    backgroundColor: transparent,
   },
   checkbox: {
     checkedColor: green,

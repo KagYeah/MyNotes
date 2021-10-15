@@ -1,7 +1,7 @@
 import React from 'react';
 import ListScreen from './ListScreen';
 
-export default function TaskListScreen() {
+export default function ScheduleListScreen() {
   const schedules = [];
   for (let i = 0; i < 10; i += 1) {
     schedules.push({

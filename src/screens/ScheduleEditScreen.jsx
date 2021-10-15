@@ -11,7 +11,7 @@ import NoteTitleInput from '../components/NoteTitleInput';
 import SaveButton from '../components/SaveButton';
 import { appStyles } from '../style';
 
-export default function MemoEditScreen() {
+export default function ScheduleEditScreen() {
   const [date, setDate] = useState(new Date());
   const [startTime, setStartTime] = useState(new Date());
   const [endTime, setEndTime] = useState(new Date());

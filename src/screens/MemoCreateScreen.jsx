@@ -13,7 +13,7 @@ import TypeList from '../components/TypeList';
 import { appStyles } from '../style';
 import { sleep } from '../helpers';
 
-export default function MemoEditScreen() {
+export default function MemoCreateScreen() {
   const [title, setTitle] = useState('');
   const [body, setBody] = useState('');
   const [showKeyboardHidingButton, setShowKeyboardHidingButton] = useState(false);
