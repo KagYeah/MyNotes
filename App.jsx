@@ -16,6 +16,7 @@ import SettingScreen from './src/screens/SettingScreen';
 import SettingMainColorScreen from './src/screens/SettingMainColorScreen';
 import SettingBackgroundImageScreen from './src/screens/SettingBackgroundImageScreen';
 import SettingModelChangeScreen from './src/screens/SettingModelChangeScreen';
+import SettingModelChangeDoneScreen from './src/screens/SettingModelChangeDoneScreen';
 
 export default function App() {
   return (
@@ -34,6 +35,7 @@ export default function App() {
     // <SettingScreen />
     // <SettingMainColorScreen />
     // <SettingBackgroundImageScreen />
-    <SettingModelChangeScreen />
+    // <SettingModelChangeScreen />
+    <SettingModelChangeDoneScreen />
   );
 }
