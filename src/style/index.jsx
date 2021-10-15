@@ -32,6 +32,8 @@ export const appStyles = {
   },
   app: {
     backgroundColor: '#eef',
+    paddingHorizontal: 24,
+    paddingVertical: 24,
   },
   appbar: {
     gradientColors: mainGradientColors,
@@ -50,6 +52,15 @@ export const appStyles = {
   appbarTitle: {
     color: colorOnMainGradientColors,
     fontSize: 32,
+  },
+  body: {
+    fontSize: 16,
+    lineHeight: 24,
+  },
+  button: {
+    color: colorOnMainGradientColors,
+    gradientColors: mainGradientColors,
+    height: 40,
   },
   calendar: {
     borderColor: black,
@@ -121,6 +132,13 @@ export const appStyles = {
   deleteButtonInListHeader: {
     height: 32,
     width: 68,
+  },
+  idPasswordInput: {
+    borderColor: 'rgba(0, 0, 0, 0.25)',
+    borderWidth: 1,
+    fontSize: 18,
+    height: 34,
+    padding: 8,
   },
   listHeader: {
     fontSize: 18,

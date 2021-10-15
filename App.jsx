@@ -15,6 +15,7 @@ import CalendarDetailScreen from './src/screens/CalendarDetailScreen';
 import SettingScreen from './src/screens/SettingScreen';
 import SettingMainColorScreen from './src/screens/SettingMainColorScreen';
 import SettingBackgroundImageScreen from './src/screens/SettingBackgroundImageScreen';
+import SettingModelChangeScreen from './src/screens/SettingModelChangeScreen';
 
 export default function App() {
   return (
@@ -32,6 +33,7 @@ export default function App() {
     // <CalendarDetailScreen />
     // <SettingScreen />
     // <SettingMainColorScreen />
-    <SettingBackgroundImageScreen />
+    // <SettingBackgroundImageScreen />
+    <SettingModelChangeScreen />
   );
 }
