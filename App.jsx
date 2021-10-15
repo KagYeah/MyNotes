@@ -11,6 +11,7 @@ import ScheduleListScreen from './src/screens/ScheduleListScreen';
 import ScheduleEditScreen from './src/screens/ScheduleEditScreen';
 import ScheduleCreateScreen from './src/screens/ScheduleCreateScreen';
 import CalendarScreen from './src/screens/CalendarScreen';
+import CalendarDetailScreen from './src/screens/CalendarDetailScreen';
 
 export default function App() {
   return (
@@ -24,6 +25,7 @@ export default function App() {
     // <ScheduleListScreen />
     // <ScheduleEditScreen />
     // <ScheduleCreateScreen />
-    <CalendarScreen />
+    // <CalendarScreen />
+    <CalendarDetailScreen />
   );
 }
