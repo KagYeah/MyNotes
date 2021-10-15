@@ -13,6 +13,7 @@ import ScheduleCreateScreen from './src/screens/ScheduleCreateScreen';
 import CalendarScreen from './src/screens/CalendarScreen';
 import CalendarDetailScreen from './src/screens/CalendarDetailScreen';
 import SettingScreen from './src/screens/SettingScreen';
+import SettingMainColorScreen from './src/screens/SettingMainColorScreen';
 
 export default function App() {
   return (
@@ -28,6 +29,7 @@ export default function App() {
     // <ScheduleCreateScreen />
     // <CalendarScreen />
     // <CalendarDetailScreen />
-    <SettingScreen />
+    // <SettingScreen />
+    <SettingMainColorScreen />
   );
 }

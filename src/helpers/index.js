@@ -20,6 +20,32 @@ export function time2string(date) {
   return format(date, `HH${TIME_SEPARATOR}mm`);
 }
 
+export function getHexFromColor(color) {
+  switch (color) {
+    case 'pink':
+      return '#f09';
+    case 'red':
+      return '#f00';
+    case 'orange':
+      return '#f90';
+    case 'yellow':
+      return '#fff500';
+    case 'green':
+      return '#0f0';
+    case 'lightBlue':
+      return '#0ff';
+    case 'blue':
+      return '#00f';
+    case 'purple':
+      return '#a0f';
+    case 'navy':
+      return '#003';
+    default:
+  }
+
+  return '#000';
+}
+
 export function hex2rgba(hex, alpha = 1) {
   let rgb = null;
 

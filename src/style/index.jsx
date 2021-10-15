@@ -87,6 +87,10 @@ export const appStyles = {
     gradientColors: mainGradientColors,
     size: 48,
   },
+  colorPod: {
+    height: 32,
+    width: 32,
+  },
   createButton: {
     bottom: 24,
     fontSize: 32,
