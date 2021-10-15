@@ -22,7 +22,7 @@ export default function ListItem(props) {
       fontSize: style.fontSize,
       fontWeight: style.fontWeight,
     });
-    component = <Text {...properties}>{title}</Text>;
+    component = <Text style={properties}>{title}</Text>;
   }
 
   if (linearGradient) {

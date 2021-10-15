@@ -201,4 +201,9 @@ export const appStyles = {
     backgroundColor: black,
     opacity: 0.5,
   },
+  uploadButton: {
+    color: blue,
+    fontSize: 18,
+    height: 48,
+  },
 };
