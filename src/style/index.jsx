@@ -182,6 +182,11 @@ export const appStyles = {
     position: 'absolute',
     right: 24,
   },
+  settingListItem: {
+    fontSize: 18,
+    gradientColors: whiteGradientColors,
+    height: 48,
+  },
   typeListItem: {
     color: colorOnMainGradientColors,
     count: 3,
