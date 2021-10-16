@@ -1,5 +1,7 @@
 import React from 'react';
 
+import InitialStarting from './src/screens/InitialStarting';
+import InitialSetting from './src/screens/InitialSetting';
 import HomeScreen from './src/screens/HomeScreen';
 import MemoListScreen from './src/screens/MemoListScreen';
 import MemoEditScreen from './src/screens/MemoEditScreen';
@@ -20,6 +22,8 @@ import SettingModelChangeDoneScreen from './src/screens/SettingModelChangeDoneSc
 
 export default function App() {
   return (
+    <InitialStarting />
+    // <InitialSetting />
     // <HomeScreen />
     // <MemoListScreen />
     // <MemoEditScreen />
@@ -36,6 +40,6 @@ export default function App() {
     // <SettingMainColorScreen />
     // <SettingBackgroundImageScreen />
     // <SettingModelChangeScreen />
-    <SettingModelChangeDoneScreen />
+    // <SettingModelChangeDoneScreen />
   );
 }
