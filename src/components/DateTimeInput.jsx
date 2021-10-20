@@ -4,15 +4,19 @@ import {
   StyleSheet, Text, TouchableOpacity,
 } from 'react-native';
 import RNDateTimePicker from '@react-native-community/datetimepicker';
-import { func, oneOf, string } from 'prop-types';
+import {
+  func, instanceOf, oneOf, string,
+} from 'prop-types';
 
 import Button from './Button';
 import { appStyles } from '../style';
 import { date2string, time2string } from '../helpers';
 
 export default function DateTimeInput(props) {
-  const { label, mode, onChange } = props;
-  const [value, setValue] = useState(new Date());
+  const {
+    label, mode, onChange, value,
+  } = props;
+  const [_value, setValue] = useState(value);
   const [showPicker, setShowPicker] = useState(false);
 
   return (
@@ -31,13 +35,13 @@ export default function DateTimeInput(props) {
               height={styles.container.height - styles.container.paddingVertical}
             />
           ) : (
-            <Text style={styles.text}>{mode === 'date' ? date2string(value) : time2string(value)}</Text>
+            <Text style={styles.text}>{mode === 'date' ? date2string(_value) : time2string(_value)}</Text>
           )}
       </TouchableOpacity>
 
       {showPicker ? (
         <RNDateTimePicker
-          value={value}
+          value={_value}
           mode={mode}
           is24Hour
           display={mode === 'date' && Platform.OS === 'android' ? 'calendar' : 'spinner'}
@@ -45,7 +49,7 @@ export default function DateTimeInput(props) {
           style={styles.picker}
           onChange={(event, selectedValue) => {
             setShowPicker(Platform.OS === 'ios');
-            setValue(selectedValue || value);
+            setValue(selectedValue || _value);
             onChange(selectedValue);
           }}
         />
@@ -58,6 +62,7 @@ DateTimeInput.propTypes = {
   label: string.isRequired,
   mode: oneOf(['date', 'time']).isRequired,
   onChange: func,
+  value: instanceOf(Date).isRequired,
 };
 
 DateTimeInput.defaultProps = {

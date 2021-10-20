@@ -24,6 +24,9 @@
         "react/jsx-no-bind": ["error", {
             "allowArrowFunctions": true,
             "allowFunctions": true
+        }],
+        "react/prop-types": ["error", {
+            "ignore": ["navigation"]
         }]
     }
 }

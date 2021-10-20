@@ -11,5 +11,5 @@ export default function TaskListScreen() {
     });
   }
 
-  return <ListScreen data={tasks} title="タスク一覧" />;
+  return <ListScreen data={tasks} type="task" />;
 }

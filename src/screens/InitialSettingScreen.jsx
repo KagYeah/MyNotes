@@ -3,29 +3,17 @@ import {
   StatusBar, StyleSheet, TextInput, View,
 } from 'react-native';
 
-import AppBar from '../components/AppBar';
 import Button from '../components/Button';
 import { appStyles } from '../style';
 
-export default function SettingBackgroundImageScreen() {
+export default function InitialSettingScreen(props) {
+  const { navigation } = props;
   const [id, setID] = useState('');
   const [password, setPassword] = useState('');
 
   return (
     <View style={styles.container}>
       <StatusBar barStyle={appStyles.statusbar.barStyle} />
-
-      <AppBar
-        title="機種変更"
-        left={(
-          <Button
-            label="<戻る"
-            onPress={() => {}}
-            backgroundColor={appStyles.appbarButton.backgroundColor}
-            color={appStyles.appbarButton.color}
-          />
-        )}
-      />
 
       <View style={styles.centeredView}>
         <TextInput
@@ -43,14 +31,19 @@ export default function SettingBackgroundImageScreen() {
         />
 
         <Button
-          label="設定"
-          onPress={() => {}}
-          color={appStyles.button.color}
+          label="はじめる"
+          onPress={() => {
+            navigation.reset({
+              index: 0,
+              routes: [{ name: 'Root', params: { screen: 'Home' } }],
+            });
+          }}
+          color={appStyles.buttonMedium.color}
           style={styles.submit}
-          height={appStyles.button.height}
-          width={80}
+          height={appStyles.buttonMedium.height}
+          width={appStyles.buttonMedium.width}
           linearGradient
-          options={{ colors: appStyles.button.gradientColors }}
+          options={{ colors: appStyles.buttonMedium.gradientColors }}
         />
       </View>
     </View>
@@ -73,10 +66,10 @@ const styles = StyleSheet.create({
     fontSize: appStyles.idPasswordInput.fontSize,
     height: appStyles.idPasswordInput.height,
     padding: appStyles.idPasswordInput.padding,
-    marginTop: 24,
+    marginTop: appStyles.idPasswordInput.margin,
   },
   submit: {
     alignSelf: 'center',
-    marginTop: 24,
+    marginTop: appStyles.buttonMedium.margin,
   },
 });

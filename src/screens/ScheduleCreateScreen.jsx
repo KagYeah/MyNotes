@@ -4,7 +4,6 @@ import {
   StatusBar, StyleSheet, TouchableOpacity, View,
 } from 'react-native';
 
-import AppBar from '../components/AppBar';
 import Button from '../components/Button';
 import DateTimeInput from '../components/DateTimeInput';
 import NoteTitleInput from '../components/NoteTitleInput';
@@ -13,7 +12,8 @@ import TypeList from '../components/TypeList';
 import { appStyles } from '../style';
 import { sleep } from '../helpers';
 
-export default function ScheduleCreateScreen() {
+export default function ScheduleCreateScreen(props) {
+  const { navigation } = props;
   const [date, setDate] = useState(new Date());
   const [startTime, setStartTime] = useState(new Date());
   const [endTime, setEndTime] = useState(new Date());
@@ -21,6 +21,35 @@ export default function ScheduleCreateScreen() {
   const [showKeyboardHidingButton, setShowKeyboardHidingButton] = useState(false);
   const [showTypeList, setShowTypeList] = useState(false);
   const typeListTranslateY = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    navigation.setOptions({
+      title: (
+        <Button
+          label="予定_"
+          onPress={toggleTypeList}
+          backgroundColor={appStyles.appbarButton.backgroundColor}
+          color={appStyles.appbarButton.color}
+          fontSize={appStyles.appbarTitle.fontSize}
+          height={appStyles.appbarTitle.fontSize}
+          width={200}
+        />
+      ),
+    });
+  }, []);
+
+  useEffect(() => {
+    navigation.setOptions({
+      headerRight: showKeyboardHidingButton ? (
+        <Button
+          label="完了"
+          onPress={() => Keyboard.dismiss()}
+          backgroundColor={appStyles.appbarButton.backgroundColor}
+          color={appStyles.appbarButton.color}
+        />
+      ) : null,
+    });
+  }, [showKeyboardHidingButton]);
 
   useEffect(() => {
     const showSubscription = Keyboard.addListener('keyboardDidShow', () => {
@@ -66,36 +95,6 @@ export default function ScheduleCreateScreen() {
       <View style={styles.container}>
         <StatusBar barStyle={appStyles.statusbar.barStyle} />
 
-        <AppBar
-          title={(
-            <Button
-              label="予定_"
-              onPress={toggleTypeList}
-              backgroundColor={appStyles.appbarButton.backgroundColor}
-              color={appStyles.appbarButton.color}
-              fontSize={appStyles.appbarTitle.fontSize}
-              height={appStyles.appbarTitle.fontSize}
-              width={100}
-            />
-          )}
-          left={(
-            <Button
-              label="<戻る"
-              onPress={() => {}}
-              backgroundColor={appStyles.appbarButton.backgroundColor}
-              color={appStyles.appbarButton.color}
-            />
-          )}
-          right={showKeyboardHidingButton ? (
-            <Button
-              label="完了"
-              onPress={() => Keyboard.dismiss()}
-              backgroundColor={appStyles.appbarButton.backgroundColor}
-              color={appStyles.appbarButton.color}
-            />
-          ) : null}
-        />
-
         {showTypeList ? (
           <>
             <TouchableOpacity
@@ -122,18 +121,21 @@ export default function ScheduleCreateScreen() {
             label="日付"
             mode="date"
             onChange={(value) => setDate(value)}
+            value={date}
           />
 
           <DateTimeInput
             label="開始時間"
             mode="time"
             onChange={(value) => setStartTime(value)}
+            value={startTime}
           />
 
           <DateTimeInput
             label="終了時間"
             mode="time"
             onChange={(value) => setEndTime(value)}
+            value={endTime}
           />
 
           <NoteTitleInput
@@ -144,7 +146,9 @@ export default function ScheduleCreateScreen() {
         </ScrollView>
 
         <SaveButton
-          onPress={() => {}}
+          onPress={() => {
+            navigation.navigate('Root', { screen: 'ScheduleList' });
+          }}
         />
       </View>
     </KeyboardAvoidingView>
@@ -158,7 +162,7 @@ const styles = StyleSheet.create({
   },
   typeList: {
     position: 'absolute',
-    top: appStyles.appbar.height - appStyles.listItem.height * appStyles.typeListItem.count,
+    top: (-1) * appStyles.listItem.height * appStyles.typeListItem.count,
     width: '100%',
   },
   typeListBackground: {

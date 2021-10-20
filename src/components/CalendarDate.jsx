@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity } from 'react-native';
 import { bool, instanceOf } from 'prop-types';
+import { useNavigation } from '@react-navigation/native';
 import HolidayJP from '@holiday-jp/holiday_jp';
 import { isToday } from 'date-fns';
 
@@ -8,6 +9,7 @@ import { appStyles } from '../style';
 import { date2string } from '../helpers';
 
 export default function CalendarDate(props) {
+  const navigation = useNavigation();
   const { date, isCurrentMonth } = props;
   let backgroundColor = appStyles.calendar.defaultBackgroundColor;
 
@@ -29,7 +31,9 @@ export default function CalendarDate(props) {
 
   return (
     <TouchableOpacity
-      onPress={() => {}}
+      onPress={() => {
+        navigation.navigate('CalendarDetail');
+      }}
       style={[
         styles.container,
         {

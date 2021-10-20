@@ -1,25 +1,42 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   Animated, FlatList, StatusBar, StyleSheet, View,
 } from 'react-native';
 import {
-  arrayOf, number, oneOfType, shape, string,
+  arrayOf, number, oneOf, oneOfType, shape, string,
 } from 'prop-types';
+import { useNavigation } from '@react-navigation/native';
 
-import AppBar from '../components/AppBar';
 import Button from '../components/Button';
 import CreateButton from '../components/CreateButton';
 import DeleteButton from '../components/DeleteButton';
 import ListHeader from '../components/ListHeader';
 import ListItemWithCheckBox from '../components/ListItemWithCheckBox';
 import { appStyles } from '../style';
-import { sleep } from '../helpers';
+import { capitalize, sleep } from '../helpers';
 
 export default function ListScreen(props) {
-  const { data, title } = props;
+  const navigation = useNavigation();
+  const { data, type } = props;
   const [showCheckBox, setShowCheckBox] = useState(false);
   const [checked, setChecked] = useState(false);
   const listTranslateY = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    navigation.setOptions({
+      headerRight: (
+        <Button
+          label={showCheckBox ? '完了' : '編集'}
+          onPress={async () => {
+            await toggleListHeader();
+            setShowCheckBox(!showCheckBox);
+          }}
+          backgroundColor={appStyles.appbarButton.backgroundColor}
+          color={appStyles.appbarButton.color}
+        />
+      ),
+    });
+  }, [showCheckBox]);
 
   async function toggleListHeader() {
     if (!showCheckBox) {
@@ -44,29 +61,6 @@ export default function ListScreen(props) {
   return (
     <View style={styles.container}>
       <StatusBar barStyle={appStyles.statusbar.barStyle} />
-
-      <AppBar
-        title={title}
-        left={(
-          <Button
-            label="三"
-            onPress={() => {}}
-            backgroundColor={appStyles.appbarButton.backgroundColor}
-            color={appStyles.appbarButton.color}
-          />
-        )}
-        right={(
-          <Button
-            label={showCheckBox ? '完了' : '編集'}
-            onPress={async () => {
-              await toggleListHeader();
-              setShowCheckBox(!showCheckBox);
-            }}
-            backgroundColor={appStyles.appbarButton.backgroundColor}
-            color={appStyles.appbarButton.color}
-          />
-        )}
-      />
 
       {showCheckBox ? (
         <Animated.View
@@ -123,13 +117,19 @@ export default function ListScreen(props) {
               showCheckBox={showCheckBox}
               checked={checked}
               onPressWithCheckBox={() => {}}
-              onPressWithoutCheckBox={() => {}}
+              onPressWithoutCheckBox={() => {
+                navigation.navigate(`${capitalize(type)}Edit`);
+              }}
             />
           )}
         />
       </Animated.View>
 
-      <CreateButton onPress={() => {}} />
+      <CreateButton
+        onPress={() => {
+          navigation.navigate(`${capitalize(type)}Create`);
+        }}
+      />
     </View>
   );
 }
@@ -140,7 +140,7 @@ ListScreen.propTypes = {
     title: string.isRequired,
     subtitle: string,
   })).isRequired,
-  title: string.isRequired,
+  type: oneOf(['memo', 'task', 'schedule']).isRequired,
 };
 
 const styles = StyleSheet.create({
@@ -152,7 +152,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   listHeader: {
-    top: appStyles.appbar.height - appStyles.listHeader.height,
+    top: (-1) * appStyles.listHeader.height,
     position: 'absolute',
     width: '100%',
   },

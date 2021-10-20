@@ -4,6 +4,14 @@ export const DATE_SEPARATOR = '/';
 export const TIME_SEPARATOR = ':';
 const DAY_OF_WEEK = ['日', '月', '火', '水', '木', '金', '土'];
 
+export function capitalize(string) {
+  if (typeof string !== 'string' || !string) {
+    return string;
+  }
+
+  return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
+}
+
 export function date2string(date) {
   if (!date) {
     return '';

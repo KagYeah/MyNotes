@@ -4,7 +4,6 @@ import {
   TouchableOpacity, StatusBar, StyleSheet, View,
 } from 'react-native';
 
-import AppBar from '../components/AppBar';
 import Button from '../components/Button';
 import NoteBodyInput from '../components/NoteBodyInput';
 import NoteTitleInput from '../components/NoteTitleInput';
@@ -13,12 +12,42 @@ import TypeList from '../components/TypeList';
 import { appStyles } from '../style';
 import { sleep } from '../helpers';
 
-export default function MemoCreateScreen() {
+export default function MemoCreateScreen(props) {
+  const { navigation } = props;
   const [title, setTitle] = useState('');
   const [body, setBody] = useState('');
   const [showKeyboardHidingButton, setShowKeyboardHidingButton] = useState(false);
   const [showTypeList, setShowTypeList] = useState(false);
   const typeListTranslateY = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    navigation.setOptions({
+      title: (
+        <Button
+          label="メモ_"
+          onPress={toggleTypeList}
+          backgroundColor={appStyles.appbarButton.backgroundColor}
+          color={appStyles.appbarButton.color}
+          fontSize={appStyles.appbarTitle.fontSize}
+          height={appStyles.appbarTitle.fontSize}
+          width={200}
+        />
+      ),
+    });
+  }, []);
+
+  useEffect(() => {
+    navigation.setOptions({
+      headerRight: showKeyboardHidingButton ? (
+        <Button
+          label="完了"
+          onPress={() => Keyboard.dismiss()}
+          backgroundColor={appStyles.appbarButton.backgroundColor}
+          color={appStyles.appbarButton.color}
+        />
+      ) : null,
+    });
+  }, [showKeyboardHidingButton]);
 
   useEffect(() => {
     const showSubscription = Keyboard.addListener('keyboardDidShow', () => {
@@ -64,36 +93,6 @@ export default function MemoCreateScreen() {
       <View style={styles.container}>
         <StatusBar barStyle={appStyles.statusbar.barStyle} />
 
-        <AppBar
-          title={(
-            <Button
-              label="メモ_"
-              onPress={toggleTypeList}
-              backgroundColor={appStyles.appbarButton.backgroundColor}
-              color={appStyles.appbarButton.color}
-              fontSize={appStyles.appbarTitle.fontSize}
-              height={appStyles.appbarTitle.fontSize}
-              width={100}
-            />
-          )}
-          left={(
-            <Button
-              label="<戻る"
-              onPress={() => {}}
-              backgroundColor={appStyles.appbarButton.backgroundColor}
-              color={appStyles.appbarButton.color}
-            />
-          )}
-          right={showKeyboardHidingButton ? (
-            <Button
-              label="完了"
-              onPress={() => Keyboard.dismiss()}
-              backgroundColor={appStyles.appbarButton.backgroundColor}
-              color={appStyles.appbarButton.color}
-            />
-          ) : null}
-        />
-
         {showTypeList ? (
           <>
             <TouchableOpacity
@@ -128,11 +127,12 @@ export default function MemoCreateScreen() {
             placeholder="メモ"
             value={body}
           />
-
         </ScrollView>
 
         <SaveButton
-          onPress={() => {}}
+          onPress={() => {
+            navigation.navigate('Root', { screen: 'MemoList' });
+          }}
         />
       </View>
     </KeyboardAvoidingView>
@@ -146,7 +146,7 @@ const styles = StyleSheet.create({
   },
   typeList: {
     position: 'absolute',
-    top: appStyles.appbar.height - appStyles.listItem.height * appStyles.typeListItem.count,
+    top: (-1) * appStyles.listItem.height * appStyles.typeListItem.count,
     width: '100%',
   },
   typeListBackground: {

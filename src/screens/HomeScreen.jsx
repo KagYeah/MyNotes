@@ -22,10 +22,12 @@ export default function HomeScreen() {
 
   const listData = [
     {
+      type: 'schedule',
       title: '今日の予定',
       data: schedules,
     },
     {
+      type: 'task',
       title: '今日のタスク',
       data: tasks,
     },

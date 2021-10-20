@@ -1,7 +1,12 @@
 import React from 'react';
+import { Animated } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator, CardStyleInterpolators } from '@react-navigation/stack';
+import { createDrawerNavigator } from '@react-navigation/drawer';
+import 'react-native-gesture-handler';
 
-import InitialStarting from './src/screens/InitialStarting';
-import InitialSetting from './src/screens/InitialSetting';
+import InitialStartingScreen from './src/screens/InitialStartingScreen';
+import InitialSettingScreen from './src/screens/InitialSettingScreen';
 import HomeScreen from './src/screens/HomeScreen';
 import MemoListScreen from './src/screens/MemoListScreen';
 import MemoEditScreen from './src/screens/MemoEditScreen';
@@ -20,26 +25,276 @@ import SettingBackgroundImageScreen from './src/screens/SettingBackgroundImageSc
 import SettingModelChangeScreen from './src/screens/SettingModelChangeScreen';
 import SettingModelChangeDoneScreen from './src/screens/SettingModelChangeDoneScreen';
 
+import AppBar from './src/components/AppBar';
+import Button from './src/components/Button';
+import { appStyles } from './src/style';
+
+const Stack = createStackNavigator();
+const Drawer = createDrawerNavigator();
+
+const changeCreateScreen = ({ current, next, inverted }) => {
+  console.log('current', current);
+  console.log('next', next);
+  console.log('inverted', inverted);
+  return {};
+};
+const forFade = ({ current }) => ({
+  cardStyle: {
+    opacity: current.progress,
+  },
+});
+const forSlide = ({ current, next, inverted, layouts: { screen } }) => {
+  const progress = Animated.add(
+    current.progress.interpolate({
+      inputRange: [0, 1],
+      outputRange: [0, 1],
+      extrapolate: 'clamp',
+    }),
+    next
+      ? next.progress.interpolate({
+          inputRange: [0, 1],
+          outputRange: [0, 1],
+          extrapolate: 'clamp',
+        })
+      : 0
+  );
+
+  return {
+    cardStyle: {
+      transform: [
+        {
+          translateX: Animated.multiply(
+            progress.interpolate({
+              inputRange: [0, 1, 2],
+              outputRange: [
+                screen.width, // Focused, but offscreen in the beginning
+                0, // Fully focused
+                screen.width * -0.3, // Fully unfocused
+              ],
+              extrapolate: 'clamp',
+            }),
+            inverted
+          ),
+        },
+      ],
+    },
+  };
+};
+const forUp = ({ current, next, inverted, layouts: { screen } }) => {
+  const progress = Animated.add(
+    current.progress.interpolate({
+      inputRange: [0, 1],
+      outputRange: [0, 1],
+      extrapolate: 'clamp',
+    }),
+    next
+      ? next.progress.interpolate({
+          inputRange: [0, 1],
+          outputRange: [0, 1],
+          extrapolate: 'clamp',
+        })
+      : 0
+  );
+
+  return {
+    cardStyle: {
+      transform: [
+        {
+          translateY: Animated.multiply(
+            progress.interpolate({
+              inputRange: [0, 1, 2],
+              outputRange: [
+                screen.height, // Focused, but offscreen in the beginning
+                0, // Fully focused
+                screen.height * -0.3, // Fully unfocused
+              ],
+              extrapolate: 'clamp',
+            }),
+            inverted
+          ),
+        },
+      ],
+    },
+  };
+};
+
 export default function App() {
   return (
-    <InitialStarting />
-    // <InitialSetting />
-    // <HomeScreen />
-    // <MemoListScreen />
-    // <MemoEditScreen />
-    // <MemoCreateScreen />
-    // <TaskListScreen />
-    // <TaskEditScreen />
-    // <TaskCreateScreen />
-    // <ScheduleListScreen />
-    // <ScheduleEditScreen />
-    // <ScheduleCreateScreen />
-    // <CalendarScreen />
-    // <CalendarDetailScreen />
-    // <SettingScreen />
-    // <SettingMainColorScreen />
-    // <SettingBackgroundImageScreen />
-    // <SettingModelChangeScreen />
-    // <SettingModelChangeDoneScreen />
+    <NavigationContainer>
+      <Stack.Navigator
+        // initialRouteName="Root"
+        initialRouteName="InitialStarting"
+        screenOptions={{
+          // cardStyleInterpolator: forFade,
+          cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+          header: ({ navigation, options, back }) => (
+            <AppBar
+              title={options.title}
+              left={
+                back ? (
+                  <Button
+                    label="<"
+                    onPress={navigation.goBack}
+                    backgroundColor={appStyles.appbarButton.backgroundColor}
+                    color={appStyles.appbarButton.color}
+                    height={appStyles.appbarButton.height}
+                    width={appStyles.appbarButton.width}
+                  />
+                ) : null
+              }
+              right={options.headerRight}
+            />
+          ),
+        }}
+      >
+        <Stack.Screen
+          name="InitialStarting"
+          component={InitialStartingScreen}
+          options={{ title: 'My Notes' }}
+        />
+        <Stack.Screen
+          name="InitialSetting"
+          component={InitialSettingScreen}
+          options={{ title: 'My Notes' }}
+        />
+        <Stack.Screen
+          name="Root"
+          component={Root}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="MemoEdit"
+          component={MemoEditScreen}
+          options={{ title: 'メモ' }}
+        />
+        <Stack.Screen
+          name="TaskEdit"
+          component={TaskEditScreen}
+          options={{ title: 'タスク' }}
+        />
+        <Stack.Screen
+          name="ScheduleEdit"
+          component={ScheduleEditScreen}
+          options={{ title: '予定' }}
+        />
+        <Stack.Screen
+          name="CalendarDetail"
+          component={CalendarDetailScreen}
+          options={{ title: '' }}
+        />
+        <Stack.Screen
+          name="Setting"
+          component={SettingScreen}
+          options={{ title: '設定' }}
+        />
+        <Stack.Screen
+          name="SettingMainColor"
+          component={SettingMainColorScreen}
+          options={{ title: 'メインカラー' }}
+        />
+        <Stack.Screen
+          name="SettingBackgroundImage"
+          component={SettingBackgroundImageScreen}
+          options={{ title: '背景' }}
+        />
+        <Stack.Screen
+          name="SettingModelChange"
+          component={SettingModelChangeScreen}
+          options={{ title: '機種変更' }}
+        />
+        <Stack.Screen
+          name="SettingModelChangeDone"
+          component={SettingModelChangeDoneScreen}
+          options={{ title: '機種変更' }}
+        />
+        <Stack.Group
+          screenOptions={{ cardStyleInterpolator: CardStyleInterpolators.forVerticalIOS }}
+          // screenOptions={{ cardStyleInterpolator: forSlide }}
+          // screenOptions={{ cardStyleInterpolator: changeCreateScreen }}
+        >
+          <Stack.Screen
+            name="MemoCreate"
+            component={MemoCreateScreen}
+            options={{ title: 'メモ' }}
+          />
+          <Stack.Screen
+            name="TaskCreate"
+            component={TaskCreateScreen}
+            options={{ title: 'タスク' }}
+          />
+          <Stack.Screen
+            name="ScheduleCreate"
+            component={ScheduleCreateScreen}
+            options={{ title: '予定' }}
+          />
+        </Stack.Group>
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+}
+
+function Root() {
+  return (
+    <Drawer.Navigator
+      screenOptions={{
+        header: ({ navigation, options }) => (
+          <AppBar
+            title={options.title}
+            left={(
+              <Button
+                label="三"
+                onPress={() => navigation.openDrawer()}
+                backgroundColor={appStyles.appbarButton.backgroundColor}
+                color={appStyles.appbarButton.color}
+                height={appStyles.appbarButton.height}
+                width={appStyles.appbarButton.width}
+              />
+            )}
+            right={options.headerRight}
+          />
+        ),
+        drawerActiveBackgroundColor: appStyles.drawer.activeBackgroundColor,
+        drawerStyle: {
+          backgroundColor: appStyles.drawer.backgroundColor,
+        },
+        drawerActiveTintColor: appStyles.drawer.activeTintColor,
+        drawerInactiveTintColor: appStyles.drawer.inactiveTintColor,
+        drawerLabelStyle: {
+          fontSize: appStyles.drawer.fontSize,
+          paddingLeft: appStyles.drawer.paddingLeft,
+        },
+      }}
+    >
+      <Drawer.Screen
+        name="Home"
+        component={HomeScreen}
+        options={{ title: 'ホーム' }}
+      />
+      <Drawer.Screen
+        name="MemoList"
+        component={MemoListScreen}
+        options={{ title: 'メモ' }}
+      />
+      <Drawer.Screen
+        name="TaskList"
+        component={TaskListScreen}
+        options={{ title: 'タスク' }}
+      />
+      <Drawer.Screen
+        name="ScheduleList"
+        component={ScheduleListScreen}
+        options={{ title: '予定' }}
+      />
+      <Stack.Screen
+        name="Calendar"
+        component={CalendarScreen}
+        options={{ title: 'カレンダー' }}
+      />
+      <Drawer.Screen
+        name="Setting"
+        component={SettingScreen}
+        options={{ title: '設定' }}
+      />
+    </Drawer.Navigator>
   );
 }

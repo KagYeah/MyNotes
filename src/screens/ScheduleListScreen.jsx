@@ -11,5 +11,5 @@ export default function ScheduleListScreen() {
     });
   }
 
-  return <ListScreen data={schedules} title="予定一覧" />;
+  return <ListScreen data={schedules} type="schedule" />;
 }

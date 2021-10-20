@@ -5,7 +5,6 @@ import {
 import { LinearGradient } from 'expo-linear-gradient';
 import SegmentedPicker from 'react-native-segmented-picker';
 
-import AppBar from '../components/AppBar';
 import Button from '../components/Button';
 import Calendar from '../components/Calendar';
 import { appStyles } from '../style';
@@ -64,18 +63,6 @@ export default function CalendarScreen() {
   return (
     <View style={styles.container}>
       <StatusBar barStyle={appStyles.statusbar.barStyle} />
-
-      <AppBar
-        title="カレンダー"
-        left={(
-          <Button
-            label="三"
-            onPress={() => {}}
-            backgroundColor={appStyles.appbarButton.backgroundColor}
-            color={appStyles.appbarButton.color}
-          />
-        )}
-      />
 
       <LinearGradient
         colors={appStyles.calendarHeader.gradientColors}

@@ -3,7 +3,6 @@ import {
   Keyboard, KeyboardAvoidingView, Platform, ScrollView, StatusBar, StyleSheet, View,
 } from 'react-native';
 
-import AppBar from '../components/AppBar';
 import Button from '../components/Button';
 import DeleteButton from '../components/DeleteButton';
 import NoteBodyInput from '../components/NoteBodyInput';
@@ -11,10 +10,24 @@ import NoteTitleInput from '../components/NoteTitleInput';
 import SaveButton from '../components/SaveButton';
 import { appStyles } from '../style';
 
-export default function MemoEditScreen() {
+export default function MemoEditScreen(props) {
+  const { navigation } = props;
   const [title, setTitle] = useState('');
   const [body, setBody] = useState('');
   const [showKeyboardHidingButton, setShowKeyboardHidingButton] = useState(false);
+
+  useEffect(() => {
+    navigation.setOptions({
+      headerRight: showKeyboardHidingButton ? (
+        <Button
+          label="完了"
+          onPress={() => Keyboard.dismiss()}
+          backgroundColor={appStyles.appbarButton.backgroundColor}
+          color={appStyles.appbarButton.color}
+        />
+      ) : null,
+    });
+  }, [showKeyboardHidingButton]);
 
   useEffect(() => {
     const showSubscription = Keyboard.addListener('keyboardDidShow', () => {
@@ -35,26 +48,6 @@ export default function MemoEditScreen() {
       <View style={styles.container}>
         <StatusBar barStyle={appStyles.statusbar.barStyle} />
 
-        <AppBar
-          title="メモ"
-          left={(
-            <Button
-              label="<戻る"
-              onPress={() => {}}
-              backgroundColor={appStyles.appbarButton.backgroundColor}
-              color={appStyles.appbarButton.color}
-            />
-          )}
-          right={showKeyboardHidingButton ? (
-            <Button
-              label="完了"
-              onPress={() => Keyboard.dismiss()}
-              backgroundColor={appStyles.appbarButton.backgroundColor}
-              color={appStyles.appbarButton.color}
-            />
-          ) : null}
-        />
-
         <ScrollView>
           <NoteTitleInput
             onChangeText={(text) => setTitle(text)}
@@ -69,7 +62,9 @@ export default function MemoEditScreen() {
           />
 
           <DeleteButton
-            onPress={() => {}}
+            onPress={() => {
+              navigation.goBack();
+            }}
             style={{ alignSelf: 'center' }}
             height={appStyles.deleteButton.height}
             width={appStyles.deleteButton.width}
@@ -78,7 +73,9 @@ export default function MemoEditScreen() {
         </ScrollView>
 
         <SaveButton
-          onPress={() => {}}
+          onPress={() => {
+            navigation.goBack();
+          }}
         />
       </View>
     </KeyboardAvoidingView>

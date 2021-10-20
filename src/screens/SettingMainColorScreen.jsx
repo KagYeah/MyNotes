@@ -3,8 +3,6 @@ import {
   FlatList, StatusBar, StyleSheet, Text, View,
 } from 'react-native';
 
-import AppBar from '../components/AppBar';
-import Button from '../components/Button';
 import ListItem from '../components/ListItem';
 import { appStyles } from '../style';
 import { getHexFromColor } from '../helpers';
@@ -27,18 +25,6 @@ export default function SettingMainColorScreen() {
   return (
     <View style={styles.container}>
       <StatusBar barStyle={appStyles.statusbar.barStyle} />
-
-      <AppBar
-        title="メインカラー"
-        left={(
-          <Button
-            label="<戻る"
-            onPress={() => {}}
-            backgroundColor={appStyles.appbarButton.backgroundColor}
-            color={appStyles.appbarButton.color}
-          />
-        )}
-      />
 
       <FlatList
         data={colors}

@@ -3,12 +3,11 @@ import {
   FlatList, StatusBar, StyleSheet, Switch, Text, View,
 } from 'react-native';
 
-import AppBar from '../components/AppBar';
-import Button from '../components/Button';
 import ListItem from '../components/ListItem';
 import { appStyles } from '../style';
 
-export default function SettingScreen() {
+export default function SettingScreen(props) {
+  const { navigation } = props;
   const [enableNotification, setEnableNotification] = useState(false);
 
   const settings = [
@@ -26,19 +25,26 @@ export default function SettingScreen() {
     {
       id: 1,
       label: 'メインカラー',
-      onPress: () => {},
+      onPress: () => {
+        navigation.navigate('SettingMainColor');
+      },
       with: null,
     },
     {
       id: 2,
       label: '背景',
-      onPress: () => {},
+      onPress: () => {
+        navigation.navigate('SettingBackgroundImage');
+      },
       with: null,
     },
     {
       id: 3,
       label: '機種変更',
-      onPress: () => {},
+      onPress: () => {
+        // navigation.navigate('SettingModelChange');
+        navigation.navigate('SettingModelChangeDone');
+      },
       with: null,
     },
   ];
@@ -46,18 +52,6 @@ export default function SettingScreen() {
   return (
     <View style={styles.container}>
       <StatusBar barStyle={appStyles.statusbar.barStyle} />
-
-      <AppBar
-        title="設定"
-        left={(
-          <Button
-            label="三"
-            onPress={() => {}}
-            backgroundColor={appStyles.appbarButton.backgroundColor}
-            color={appStyles.appbarButton.color}
-          />
-        )}
-      />
 
       <FlatList
         data={settings}

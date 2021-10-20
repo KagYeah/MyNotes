@@ -3,8 +3,6 @@ import {
   ScrollView, StatusBar, StyleSheet, View,
 } from 'react-native';
 
-import AppBar from '../components/AppBar';
-import Button from '../components/Button';
 import ListItem from '../components/ListItem';
 import { appStyles } from '../style';
 
@@ -12,18 +10,6 @@ export default function SettingBackgroundImageScreen() {
   return (
     <View style={styles.container}>
       <StatusBar barStyle={appStyles.statusbar.barStyle} />
-
-      <AppBar
-        title="背景"
-        left={(
-          <Button
-            label="<戻る"
-            onPress={() => {}}
-            backgroundColor={appStyles.appbarButton.backgroundColor}
-            color={appStyles.appbarButton.color}
-          />
-        )}
-      />
 
       <ScrollView>
         <ListItem

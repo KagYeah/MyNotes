@@ -3,11 +3,11 @@ import {
   ScrollView, StatusBar, StyleSheet, Text, TextInput, View,
 } from 'react-native';
 
-import AppBar from '../components/AppBar';
 import Button from '../components/Button';
 import { appStyles } from '../style';
 
-export default function SettingBackgroundImageScreen() {
+export default function SettingBackgroundImageScreen(props) {
+  const { navigation } = props;
   const message = `あなたのIDは「abc123」です。以下でパスワードを設定し、ID・パスワードを大事に保管してください。
 
 設定が完了して24時間以内に、機種変更後の端末にデータを移行してください。データの移行は、本アプリ初回起動時に「機種変更」ボタンを押してから行ってください。`;
@@ -17,18 +17,6 @@ export default function SettingBackgroundImageScreen() {
   return (
     <View style={styles.container}>
       <StatusBar barStyle={appStyles.statusbar.barStyle} />
-
-      <AppBar
-        title="機種変更"
-        left={(
-          <Button
-            label="<戻る"
-            onPress={() => {}}
-            backgroundColor={appStyles.appbarButton.backgroundColor}
-            color={appStyles.appbarButton.color}
-          />
-        )}
-      />
 
       <ScrollView style={styles.scroll}>
         <Text style={styles.description}>{message}</Text>
@@ -42,13 +30,15 @@ export default function SettingBackgroundImageScreen() {
 
         <Button
           label="設定"
-          onPress={() => {}}
-          color={appStyles.button.color}
+          onPress={() => {
+            navigation.goBack();
+          }}
+          color={appStyles.buttonMedium.color}
           style={styles.submit}
-          height={appStyles.button.height}
-          width={80}
+          height={appStyles.buttonMedium.height}
+          width={appStyles.buttonMedium.width}
           linearGradient
-          options={{ colors: appStyles.button.gradientColors }}
+          options={{ colors: appStyles.buttonMedium.gradientColors }}
         />
       </ScrollView>
     </View>
@@ -74,10 +64,10 @@ const styles = StyleSheet.create({
     fontSize: appStyles.idPasswordInput.fontSize,
     height: appStyles.idPasswordInput.height,
     padding: appStyles.idPasswordInput.padding,
-    marginTop: 24,
+    marginTop: appStyles.idPasswordInput.margin,
   },
   submit: {
     alignSelf: 'center',
-    marginTop: 24,
+    marginTop: appStyles.buttonMedium.margin,
   },
 });

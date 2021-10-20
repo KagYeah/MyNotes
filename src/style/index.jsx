@@ -10,6 +10,7 @@ const transparent = '#0000';
 
 const colorOnMainGradientColors = white;
 const colorOnSubMainBackgroundColor = black;
+const mainBackgraoundColor = '#003';
 const subMainBackgorundColor = '#e3e3ed';
 
 // colors for LinearGradient
@@ -57,10 +58,19 @@ export const appStyles = {
     fontSize: 16,
     lineHeight: 24,
   },
-  button: {
+  buttonLarge: {
     color: colorOnMainGradientColors,
     gradientColors: mainGradientColors,
     height: 40,
+    margin: 40,
+    width: 200,
+  },
+  buttonMedium: {
+    color: colorOnMainGradientColors,
+    gradientColors: mainGradientColors,
+    height: 40,
+    margin: 24,
+    width: 80,
   },
   calendar: {
     borderColor: black,
@@ -133,11 +143,20 @@ export const appStyles = {
     height: 32,
     width: 68,
   },
+  drawer: {
+    activeBackgroundColor: white,
+    activeTintColor: mainBackgraoundColor,
+    backgroundColor: mainBackgraoundColor,
+    inactiveTintColor: white,
+    fontSize: 18,
+    paddingLeft: 24,
+  },
   idPasswordInput: {
     borderColor: 'rgba(0, 0, 0, 0.25)',
     borderWidth: 1,
     fontSize: 18,
     height: 34,
+    margin: 24,
     padding: 8,
   },
   listHeader: {
@@ -214,6 +233,8 @@ export const appStyles = {
     count: 3,
     fontSize: 18,
     gradientColors: mainGradientColors,
+    height: 48,
+    opacity: 1,
   },
   typeListBackground: {
     backgroundColor: black,

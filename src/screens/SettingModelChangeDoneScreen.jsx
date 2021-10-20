@@ -3,41 +3,31 @@ import {
   ScrollView, StatusBar, StyleSheet, Text, View,
 } from 'react-native';
 
-import AppBar from '../components/AppBar';
 import Button from '../components/Button';
 import { appStyles } from '../style';
 
-export default function SettingBackgroundImageScreen() {
+export default function SettingBackgroundImageScreen(props) {
+  const { navigation } = props;
   const message = 'すでにID「abc123」で設定しています。設定し直す場合は、以下の「再設定」ボタンを押してください。';
 
   return (
     <View style={styles.container}>
       <StatusBar barStyle={appStyles.statusbar.barStyle} />
 
-      <AppBar
-        title="機種変更"
-        left={(
-          <Button
-            label="<戻る"
-            onPress={() => {}}
-            backgroundColor={appStyles.appbarButton.backgroundColor}
-            color={appStyles.appbarButton.color}
-          />
-        )}
-      />
-
       <ScrollView style={styles.scroll}>
         <Text style={styles.description}>{message}</Text>
 
         <Button
           label="再設定"
-          onPress={() => {}}
-          color={appStyles.button.color}
+          onPress={() => {
+            navigation.goBack();
+          }}
+          color={appStyles.buttonMedium.color}
           style={styles.button}
-          height={appStyles.button.height}
-          width={80}
+          height={appStyles.buttonMedium.height}
+          width={appStyles.buttonMedium.width}
           linearGradient
-          options={{ colors: appStyles.button.gradientColors }}
+          options={{ colors: appStyles.buttonMedium.gradientColors }}
         />
       </ScrollView>
     </View>
@@ -56,10 +46,9 @@ const styles = StyleSheet.create({
   description: {
     fontSize: appStyles.body.fontSize,
     lineHeight: appStyles.body.lineHeight,
-    fontFamily: 'Roboto',
   },
   button: {
     alignSelf: 'center',
-    marginTop: 24,
+    marginTop: appStyles.buttonMedium.margin,
   },
 });

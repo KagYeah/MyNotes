@@ -11,5 +11,5 @@ export default function MemoListScreen() {
     });
   }
 
-  return <ListScreen data={memos} title="メモ一覧" />;
+  return <ListScreen data={memos} type="memo" />;
 }
