@@ -1,5 +1,4 @@
 import React from 'react';
-import { Animated } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator, CardStyleInterpolators } from '@react-navigation/stack';
 import { createDrawerNavigator } from '@react-navigation/drawer';
@@ -31,92 +30,6 @@ import { appStyles } from './src/style';
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
-
-const changeCreateScreen = ({ current, next, inverted }) => {
-  console.log('current', current);
-  console.log('next', next);
-  console.log('inverted', inverted);
-  return {};
-};
-const forFade = ({ current }) => ({
-  cardStyle: {
-    opacity: current.progress,
-  },
-});
-const forSlide = ({ current, next, inverted, layouts: { screen } }) => {
-  const progress = Animated.add(
-    current.progress.interpolate({
-      inputRange: [0, 1],
-      outputRange: [0, 1],
-      extrapolate: 'clamp',
-    }),
-    next
-      ? next.progress.interpolate({
-          inputRange: [0, 1],
-          outputRange: [0, 1],
-          extrapolate: 'clamp',
-        })
-      : 0
-  );
-
-  return {
-    cardStyle: {
-      transform: [
-        {
-          translateX: Animated.multiply(
-            progress.interpolate({
-              inputRange: [0, 1, 2],
-              outputRange: [
-                screen.width, // Focused, but offscreen in the beginning
-                0, // Fully focused
-                screen.width * -0.3, // Fully unfocused
-              ],
-              extrapolate: 'clamp',
-            }),
-            inverted
-          ),
-        },
-      ],
-    },
-  };
-};
-const forUp = ({ current, next, inverted, layouts: { screen } }) => {
-  const progress = Animated.add(
-    current.progress.interpolate({
-      inputRange: [0, 1],
-      outputRange: [0, 1],
-      extrapolate: 'clamp',
-    }),
-    next
-      ? next.progress.interpolate({
-          inputRange: [0, 1],
-          outputRange: [0, 1],
-          extrapolate: 'clamp',
-        })
-      : 0
-  );
-
-  return {
-    cardStyle: {
-      transform: [
-        {
-          translateY: Animated.multiply(
-            progress.interpolate({
-              inputRange: [0, 1, 2],
-              outputRange: [
-                screen.height, // Focused, but offscreen in the beginning
-                0, // Fully focused
-                screen.height * -0.3, // Fully unfocused
-              ],
-              extrapolate: 'clamp',
-            }),
-            inverted
-          ),
-        },
-      ],
-    },
-  };
-};
 
 export default function App() {
   return (
@@ -209,8 +122,6 @@ export default function App() {
         />
         <Stack.Group
           screenOptions={{ cardStyleInterpolator: CardStyleInterpolators.forVerticalIOS }}
-          // screenOptions={{ cardStyleInterpolator: forSlide }}
-          // screenOptions={{ cardStyleInterpolator: changeCreateScreen }}
         >
           <Stack.Screen
             name="MemoCreate"

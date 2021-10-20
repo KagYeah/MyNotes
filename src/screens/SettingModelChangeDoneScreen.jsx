@@ -2,6 +2,7 @@ import React from 'react';
 import {
   ScrollView, StatusBar, StyleSheet, Text, View,
 } from 'react-native';
+import { StackActions } from '@react-navigation/native';
 
 import Button from '../components/Button';
 import { appStyles } from '../style';
@@ -20,7 +21,7 @@ export default function SettingBackgroundImageScreen(props) {
         <Button
           label="再設定"
           onPress={() => {
-            navigation.goBack();
+            navigation.dispatch(StackActions.replace('SettingModelChange'));
           }}
           color={appStyles.buttonMedium.color}
           style={styles.button}

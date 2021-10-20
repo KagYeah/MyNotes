@@ -23,10 +23,12 @@ export default function CalendarDetailScreen() {
 
   const listData = [
     {
+      type: 'schedule',
       title: '2021/10/05の予定',
       data: schedules,
     },
     {
+      type: 'task',
       title: '2021/10/05のタスク',
       data: tasks,
     },
