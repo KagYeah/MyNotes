@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import {
-  Animated, Keyboard, KeyboardAvoidingView, Platform, ScrollView,
+  Animated, Keyboard, KeyboardAvoidingView, ScrollView,
   TouchableOpacity, StatusBar, StyleSheet, View,
 } from 'react-native';
 
@@ -25,7 +25,10 @@ export default function MemoCreateScreen(props) {
       title: (
         <Button
           label="メモ_"
-          onPress={toggleTypeList}
+          onPress={() => {
+            toggleTypeList();
+            Keyboard.dismiss();
+          }}
           backgroundColor={appStyles.appbarButton.backgroundColor}
           color={appStyles.appbarButton.color}
           fontSize={appStyles.appbarTitle.fontSize}
@@ -34,7 +37,7 @@ export default function MemoCreateScreen(props) {
         />
       ),
     });
-  }, []);
+  }, [showTypeList]);
 
   useEffect(() => {
     navigation.setOptions({
@@ -50,10 +53,10 @@ export default function MemoCreateScreen(props) {
   }, [showKeyboardHidingButton]);
 
   useEffect(() => {
-    const showSubscription = Keyboard.addListener('keyboardDidShow', () => {
+    const showSubscription = Keyboard.addListener('keyboardWillShow', () => {
       setShowKeyboardHidingButton(true);
     });
-    const hideSubscription = Keyboard.addListener('keyboardDidHide', () => {
+    const hideSubscription = Keyboard.addListener('keyboardWillHide', () => {
       setShowKeyboardHidingButton(false);
     });
 
@@ -89,7 +92,11 @@ export default function MemoCreateScreen(props) {
   }
 
   return (
-    <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : null}>
+    <KeyboardAvoidingView
+      style={{ flex: 1 }}
+      behavior={appStyles.keyboardAvoidingView.behavior}
+      keyboardVerticalOffset={appStyles.keyboardAvoidingView.verticalOffset}
+    >
       <View style={styles.container}>
         <StatusBar barStyle={appStyles.statusbar.barStyle} />
 

@@ -1,3 +1,5 @@
+import { Platform } from 'react-native';
+
 // color
 const black = '#000';
 const blue = '#39f';
@@ -158,6 +160,10 @@ export const appStyles = {
     height: 34,
     margin: 24,
     padding: 8,
+  },
+  keyboardAvoidingView: {
+    behavior: Platform.OS === 'ios' ? 'padding' : null,
+    verticalOffset: Platform.OS === 'ios' ? 104 : 0,
   },
   listHeader: {
     fontSize: 18,

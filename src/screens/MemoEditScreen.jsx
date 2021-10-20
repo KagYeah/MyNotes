@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import {
-  Keyboard, KeyboardAvoidingView, Platform, ScrollView, StatusBar, StyleSheet, View,
+  Keyboard, KeyboardAvoidingView, ScrollView, StatusBar, StyleSheet, View,
 } from 'react-native';
 
 import Button from '../components/Button';
@@ -30,10 +30,10 @@ export default function MemoEditScreen(props) {
   }, [showKeyboardHidingButton]);
 
   useEffect(() => {
-    const showSubscription = Keyboard.addListener('keyboardDidShow', () => {
+    const showSubscription = Keyboard.addListener('keyboardWillShow', () => {
       setShowKeyboardHidingButton(true);
     });
-    const hideSubscription = Keyboard.addListener('keyboardDidHide', () => {
+    const hideSubscription = Keyboard.addListener('keyboardWillHide', () => {
       setShowKeyboardHidingButton(false);
     });
 
@@ -44,7 +44,11 @@ export default function MemoEditScreen(props) {
   }, []);
 
   return (
-    <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : null}>
+    <KeyboardAvoidingView
+      style={{ flex: 1 }}
+      behavior={appStyles.keyboardAvoidingView.behavior}
+      keyboardVerticalOffset={appStyles.keyboardAvoidingView.verticalOffset}
+    >
       <View style={styles.container}>
         <StatusBar barStyle={appStyles.statusbar.barStyle} />
 
