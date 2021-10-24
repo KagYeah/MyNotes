@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator, CardStyleInterpolators } from '@react-navigation/stack';
 import { createDrawerNavigator } from '@react-navigation/drawer';
@@ -31,7 +31,19 @@ import { appStyles } from './src/style';
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
 
+import * as FileSystem from 'expo-file-system';
 export default function App() {
+  console.log(FileSystem.documentDirectory);
+  useEffect(() => {
+    // memosTable.createMemosTable()
+    //   .then(() => {
+    //     console.log('Created memos table!');
+    //   })
+    //   .catch((error) => {
+    //     console.log('Failed to create memos table!');
+    //     console.log(error);
+    //   });
+  }, []);
   return (
     <NavigationContainer>
       <Stack.Navigator

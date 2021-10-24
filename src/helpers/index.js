@@ -13,11 +13,25 @@ export function capitalize(string) {
 }
 
 export function date2string(date) {
-  if (!date) {
+  if (!empty(date)) {
     return '';
   }
 
-  return format(date, `yyyy${DATE_SEPARATOR}MM${DATE_SEPARATOR}dd (${DAY_OF_WEEK[date.getDay()]})`);
+  return format(date, `yyyy${DATE_SEPARATOR}MM${DATE_SEPARATOR}dd`);
+}
+
+export function datetime2string(datetime) {
+  if (datetime instanceof Date) {
+    return `yyyy${DATE_SEPARATOR}MM${DATE_SEPARATOR}dd HH${TIME_SEPARATOR}mm`;
+  }
+
+  if (typeof datetime === 'string') {
+    const datetimeArr = datetime.match(/^(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2})$/i);
+
+    return `${datetimeArr[1]}${DATE_SEPARATOR}${datetimeArr[2]}${DATE_SEPARATOR}${datetimeArr[3]} ${datetimeArr[4]}${TIME_SEPARATOR}${datetimeArr[5]}`;
+  }
+
+  return '';
 }
 
 export function time2string(date) {
@@ -26,6 +40,18 @@ export function time2string(date) {
   }
 
   return format(date, `HH${TIME_SEPARATOR}mm`);
+}
+
+export function empty(value) {
+  if (Array.isArray(value) && value.length === 0) {
+    return true;
+  }
+
+  if ([null, undefined, '', {}].includes(value)) {
+    return true;
+  }
+
+  return false;
 }
 
 export function getHexFromColor(color) {

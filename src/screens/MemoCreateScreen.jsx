@@ -12,6 +12,8 @@ import TypeList from '../components/TypeList';
 import { appStyles } from '../style';
 import { sleep } from '../helpers';
 
+import MemosTable from '../classes/storage/MemosTable';
+
 export default function MemoCreateScreen(props) {
   const { navigation } = props;
   const [title, setTitle] = useState('');
@@ -19,6 +21,7 @@ export default function MemoCreateScreen(props) {
   const [showKeyboardHidingButton, setShowKeyboardHidingButton] = useState(false);
   const [showTypeList, setShowTypeList] = useState(false);
   const typeListTranslateY = useRef(new Animated.Value(0)).current;
+  const memosTable = new MemosTable();
 
   useEffect(() => {
     navigation.setOptions({
@@ -91,6 +94,21 @@ export default function MemoCreateScreen(props) {
     setShowTypeList(!showTypeList);
   }
 
+  function saveMemo() {
+    const values = {
+      title: title,
+      body: body,
+    };
+    memosTable.insert(values)
+      .then(() => {
+        console.log('Saved!');
+        navigation.navigate('Root', { screen: 'MemoList' });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
+
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}
@@ -137,9 +155,7 @@ export default function MemoCreateScreen(props) {
         </ScrollView>
 
         <SaveButton
-          onPress={() => {
-            navigation.navigate('Root', { screen: 'MemoList' });
-          }}
+          onPress={saveMemo}
         />
       </View>
     </KeyboardAvoidingView>

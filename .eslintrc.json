@@ -2,6 +2,7 @@
     "env": {
         "browser": true,
         "es2021": true,
+        "es12": true,
         "node": true
     },
     "extends": [
