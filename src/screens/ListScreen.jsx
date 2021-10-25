@@ -118,7 +118,7 @@ export default function ListScreen(props) {
               checked={checked}
               onPressWithCheckBox={() => {}}
               onPressWithoutCheckBox={() => {
-                navigation.navigate(`${capitalize(type)}Edit`);
+                navigation.navigate(`${capitalize(type)}Edit`, { id: item.id });
               }}
             />
           )}

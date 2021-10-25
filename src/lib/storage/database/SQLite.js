@@ -1,5 +1,6 @@
 import * as ExpoSQLite from 'expo-sqlite';
 import { Platform } from 'react-native';
+import { format } from 'date-fns';
 
 import AbstractTable from '../AbstractTable';
 import { DATE_SEPARATOR, TIME_SEPARATOR, empty } from '../../../helpers';
@@ -24,6 +25,14 @@ export default class SQLite {
     } else {
       this.#db = ExpoSQLite.openDatabase(this.#config.dbName);
     }
+  }
+
+  static datetime(date) {
+    if (!(date instanceof Date)) {
+      return '';
+    }
+
+    return format(date, 'yyyy-MM-dd HH:mm:ss');
   }
 
   static datetime2string(datetime) {
@@ -55,7 +64,7 @@ export default class SQLite {
   insert(table, valueObj) {
     this.#validateInsertArgs(table, valueObj);
 
-    const { values, columns, placeholders } = this.#getValues(valueObj);
+    const { values, columns, placeholders } = this.#getInsertValues(valueObj);
 
     return new Promise((resolve, reject) => {
       this.#db.transaction(
@@ -92,6 +101,45 @@ export default class SQLite {
         },
         reject,
         () => { resolve(result); },
+      );
+    });
+  }
+
+  update(table, values, condition) {
+    this.#validateUpdateArgs(table, values, condition);
+
+    const { setPhrase, setArgs } = this.#createSetPhrase(values);
+    const { wherePhrase, whereArgs } = this.#createWherePhrase(condition);
+
+    const sqlStmt = `UPDATE ${table.name} ${setPhrase} ${wherePhrase};`;
+    const args = setArgs.concat(whereArgs);
+
+    return new Promise((resolve, reject) => {
+      this.#db.transaction(
+        (tx) => {
+          tx.executeSql(sqlStmt, args);
+        },
+        reject,
+        resolve,
+      );
+    });
+  }
+
+  delete(table, condition) {
+    this.#validateDeleteArgs(table, condition);
+
+    const { wherePhrase, whereArgs } = this.#createWherePhrase(condition);
+
+    const sqlStmt = `DELETE FROM ${table.name} ${wherePhrase};`;
+    const args = whereArgs;
+
+    return new Promise((resolve, reject) => {
+      this.#db.transaction(
+        (tx) => {
+          tx.executeSql(sqlStmt, args);
+        },
+        reject,
+        resolve,
       );
     });
   }
@@ -154,9 +202,25 @@ export default class SQLite {
     return ` ORDER BY ${orderByArr.join(', ')} `;
   };
 
+  #createSetPhrase = (values) => {
+    const setPhraseArr = [];
+    const setArgs = [];
+
+    Object.keys(values).forEach((column) => {
+      setPhraseArr.push(` ${column} = ? `);
+      setArgs.push(values[column]);
+    });
+
+    return {
+      setPhrase: ` SET ${setPhraseArr.join(',')} `,
+      setArgs,
+    };
+  };
+
   #createWherePhrase = (condition) => {
     const whereArgs = [];
-    const wherePhrase = empty(condition) ? '' : ` WHERE ${this.#createConditionStr(condition, whereArgs)} `;
+    const conditionStr = this.#createConditionStr(condition, whereArgs).trim();
+    const wherePhrase = empty(conditionStr) ? '' : ` WHERE ${conditionStr} `;
 
     return { wherePhrase, whereArgs };
   };
@@ -180,7 +244,7 @@ export default class SQLite {
     return 'BLOB';
   };
 
-  #getValues = (valueObj) => {
+  #getInsertValues = (valueObj) => {
     const columns = [];
     const values = [];
 
@@ -237,21 +301,10 @@ export default class SQLite {
     }
   };
 
-  #validateInsertArgs = (table, columnValues) => {
+  #validateInsertArgs = (table, valueObj) => {
     this.#validateType(table, AbstractTable);
-    this.#validateType(columnValues, 'object');
-
-    Object.keys(columnValues).forEach((column) => {
-      this.#validateType(column, 'string');
-      this.#validateColumn(table, column);
-
-      if (
-        this.#getType(columnValues[column]).toUpperCase()
-        !== table.columnTypes[column].toUpperCase()
-      ) {
-        throw new TypeError(`Type Error: insert(): The type of '${column}' must be '${table.columnTypes[column]}'.`);
-      }
-    });
+    this.#validateType(valueObj, 'object');
+    this.#validateValueObj(table, valueObj);
   }
 
   #validateSelectArgs = (table, columns, condition, orderBy, limit, offset) => {
@@ -296,6 +349,27 @@ export default class SQLite {
     }
   };
 
+  #validateUpdateArgs = (table, values, condition) => {
+    this.#validateType(table, AbstractTable);
+    this.#validateType(values, 'object');
+    this.#validateType(condition, 'object', true);
+
+    this.#validateValueObj(table, values);
+
+    if (!empty(condition)) {
+      this.#validateConditionObj(table, condition);
+    }
+  };
+
+  #validateDeleteArgs = (table, condition) => {
+    this.#validateType(table, AbstractTable);
+    this.#validateType(condition, 'object', true);
+
+    if (!empty(condition)) {
+      this.#validateConditionObj(table, condition);
+    }
+  };
+
   #validateConditionObj = (table, condition) => {
     this.#validateType(condition, 'object');
 
@@ -318,5 +392,19 @@ export default class SQLite {
         throw TypeError("Type Error: If operator is not 'AND' or 'OR', type of value must be string or number.");
       }
     }
+  };
+
+  #validateValueObj = (table, values) => {
+    Object.keys(values).forEach((column) => {
+      this.#validateType(column, 'string');
+      this.#validateColumn(table, column);
+
+      if (
+        this.#getType(values[column]).toUpperCase()
+        !== table.columnTypes[column].toUpperCase()
+      ) {
+        throw new TypeError(`Type Error: The type of '${column}' must be '${table.columnTypes[column]}'.`);
+      }
+    });
   };
 }

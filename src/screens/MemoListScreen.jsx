@@ -5,7 +5,6 @@ import ListScreen from './ListScreen';
 
 import MemosTable from '../classes/storage/MemosTable';
 import Loading from '../components/Loading';
-import { sleep } from '../helpers';
 
 export default function MemoListScreen(props) {
   const { navigation } = props;
@@ -20,8 +19,7 @@ export default function MemoListScreen(props) {
         ['id', 'title', 'updated_at'],
         null,
         [{ column: 'updated_at', order: 'DESC' }],
-      ).then(async (result) => {
-        await sleep(3000);
+      ).then((result) => {
         console.log('fetched!', result._array);
         const memosArr = result._array.map((memo) => ({
           id: memo.id,
