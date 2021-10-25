@@ -3,7 +3,6 @@ import React, { useEffect, useState } from 'react';
 import ListScreen from './ListScreen';
 
 import MemosTable from '../classes/storage/MemosTable';
-import { datetime2string } from '../helpers';
 
 export default function MemoListScreen() {
   const [memos, setMemos] = useState([]);
@@ -20,7 +19,7 @@ export default function MemoListScreen() {
         return {
           id: memo.id,
           title: memo.title,
-          subtitle: `保存 ${datetime2string(memo.updated_at)}`,
+          subtitle: `保存 ${memosTable.datetime2string(memo.updated_at)}`,
         };
       })
       setMemos(memosArr);

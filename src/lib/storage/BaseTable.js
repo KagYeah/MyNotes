@@ -27,6 +27,10 @@ export default class BaseTable {
     return this.#db.select(this, columns, condition, orderBy, limit, offset);
   }
 
+  datetime2string(datetime) {
+    return this.#db.datetime2string(datetime);
+  }
+
   hasColumn(column) {
     if (Object.keys(this.columnTypes).includes(column)) {
       return true;

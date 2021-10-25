@@ -22,7 +22,7 @@ export default function CalendarDate(props) {
   }
 
   function hasNotes() {
-    if (date2string(date) === '2021/10/05 (火)') {
+    if (date2string(date) === '2021/10/05') {
       return true;
     }
 

@@ -12,30 +12,18 @@ export function capitalize(string) {
   return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
 }
 
-export function date2string(date) {
-  if (!empty(date)) {
+export function date2string(date, withDay = false) {
+  if (!(date instanceof Date)) {
     return '';
   }
 
-  return format(date, `yyyy${DATE_SEPARATOR}MM${DATE_SEPARATOR}dd`);
-}
+  const dayStr = withDay ? ` (${DAY_OF_WEEK[date.getDay()]})` : '';
 
-export function datetime2string(datetime) {
-  if (datetime instanceof Date) {
-    return `yyyy${DATE_SEPARATOR}MM${DATE_SEPARATOR}dd HH${TIME_SEPARATOR}mm`;
-  }
-
-  if (typeof datetime === 'string') {
-    const datetimeArr = datetime.match(/^(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2})$/i);
-
-    return `${datetimeArr[1]}${DATE_SEPARATOR}${datetimeArr[2]}${DATE_SEPARATOR}${datetimeArr[3]} ${datetimeArr[4]}${TIME_SEPARATOR}${datetimeArr[5]}`;
-  }
-
-  return '';
+  return format(date, `yyyy${DATE_SEPARATOR}MM${DATE_SEPARATOR}dd`) + dayStr;
 }
 
 export function time2string(date) {
-  if (!date) {
+  if (!(date instanceof Date)) {
     return '';
   }
 

@@ -2,7 +2,7 @@ import * as ExpoSQLite from 'expo-sqlite';
 import { Platform } from 'react-native';
 
 import BaseTable from '../BaseTable';
-import { empty } from '../../../helpers';
+import { DATE_SEPARATOR, TIME_SEPARATOR ,empty } from '../../../helpers';
 import { DB_CONFIG } from '../../../config/database';
 
 export default class SQLite {
@@ -83,6 +83,18 @@ export default class SQLite {
         () => { resolve(result) },
       );
     });
+  }
+
+  datetime2string(datetime) {
+    if (typeof datetime === 'string') {
+      const datetimeArr = datetime.match(/^(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2})$/);
+
+      if (datetimeArr) {
+        return `${datetimeArr[1]}${DATE_SEPARATOR}${datetimeArr[2]}${DATE_SEPARATOR}${datetimeArr[3]} ${datetimeArr[4]}${TIME_SEPARATOR}${datetimeArr[5]}`;
+      }
+    }
+
+    return '';
   }
 
   // private methods

@@ -35,7 +35,7 @@ export default function DateTimeInput(props) {
               height={styles.container.height - styles.container.paddingVertical}
             />
           ) : (
-            <Text style={styles.text}>{mode === 'date' ? date2string(_value) : time2string(_value)}</Text>
+            <Text style={styles.text}>{mode === 'date' ? date2string(_value, true) : time2string(_value)}</Text>
           )}
       </TouchableOpacity>
 
