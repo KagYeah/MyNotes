@@ -96,8 +96,8 @@ export default function MemoCreateScreen(props) {
 
   function saveMemo() {
     const values = {
-      title: title,
-      body: body,
+      title,
+      body,
     };
     memosTable.insert(values)
       .then(() => {

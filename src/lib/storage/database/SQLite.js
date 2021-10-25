@@ -1,12 +1,13 @@
 import * as ExpoSQLite from 'expo-sqlite';
 import { Platform } from 'react-native';
 
-import BaseTable from '../BaseTable';
-import { DATE_SEPARATOR, TIME_SEPARATOR ,empty } from '../../../helpers';
+import AbstractTable from '../AbstractTable';
+import { DATE_SEPARATOR, TIME_SEPARATOR, empty } from '../../../helpers';
 import { DB_CONFIG } from '../../../config/database';
 
 export default class SQLite {
   #db;
+
   #config = {
     dbName: 'mynotes.db',
   };
@@ -16,15 +17,25 @@ export default class SQLite {
 
     if (Platform.OS === 'web') {
       this.#db = {
-        transaction: () => {
-          return {
-            executeSql: () => {},
-          };
-        },
-      }
+        transaction: () => ({
+          executeSql: () => {},
+        }),
+      };
     } else {
       this.#db = ExpoSQLite.openDatabase(this.#config.dbName);
     }
+  }
+
+  static datetime2string(datetime) {
+    if (typeof datetime === 'string') {
+      const datetimeArr = datetime.match(/^(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2})$/);
+
+      if (datetimeArr) {
+        return `${datetimeArr[1]}${DATE_SEPARATOR}${datetimeArr[2]}${DATE_SEPARATOR}${datetimeArr[3]} ${datetimeArr[4]}${TIME_SEPARATOR}${datetimeArr[5]}`;
+      }
+    }
+
+    return '';
   }
 
   createMemosTable() {
@@ -32,7 +43,7 @@ export default class SQLite {
       this.#db.transaction(
         (tx) => {
           tx.executeSql(
-            "CREATE TABLE IF NOT EXISTS memos (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, title TEXT, body TEXT, updated_at TEXT DEFAULT (datetime(CURRENT_TIMESTAMP, 'localtime')));"
+            "CREATE TABLE IF NOT EXISTS memos (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, title TEXT, body TEXT, updated_at TEXT DEFAULT (datetime(CURRENT_TIMESTAMP, 'localtime')));",
           );
         },
         reject,
@@ -52,7 +63,7 @@ export default class SQLite {
           tx.executeSql(
             `INSERT INTO ${table.name} (${columns.join(', ')}) VALUES (${placeholders.join(', ')})`,
             values,
-          )
+          );
         },
         reject,
         resolve,
@@ -80,21 +91,9 @@ export default class SQLite {
           });
         },
         reject,
-        () => { resolve(result) },
+        () => { resolve(result); },
       );
     });
-  }
-
-  datetime2string(datetime) {
-    if (typeof datetime === 'string') {
-      const datetimeArr = datetime.match(/^(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2})$/);
-
-      if (datetimeArr) {
-        return `${datetimeArr[1]}${DATE_SEPARATOR}${datetimeArr[2]}${DATE_SEPARATOR}${datetimeArr[3]} ${datetimeArr[4]}${TIME_SEPARATOR}${datetimeArr[5]}`;
-      }
-    }
-
-    return '';
   }
 
   // private methods
@@ -107,9 +106,13 @@ export default class SQLite {
     if (['AND', 'OR'].includes(operator)) {
       const innerConditions = condition.value.map((c) => this.#createConditionStr(c, args));
       return innerConditions.join(` ${operator} `);
-    } else if (operator === 'NOT') {
+    }
+
+    if (operator === 'NOT') {
       return ` NOT ${this.#createConditionStr(condition.value, args)} `;
-    } else if (['IS_NULL', 'IS_NOT_NULL'].includes(operator)) {
+    }
+
+    if (['IS_NULL', 'IS_NOT_NULL'].includes(operator)) {
       return ` ${condition.column} ${operator} `;
     }
 
@@ -119,7 +122,7 @@ export default class SQLite {
   }
 
   #createLimitPhrase = (limit, offset) => {
-    const limitPhrase = '';
+    let limitPhrase = '';
     const limitArgs = [];
 
     if (!empty(limit)) {
@@ -161,13 +164,16 @@ export default class SQLite {
   #getType = (value) => {
     if (value === null) {
       return 'NULL';
-    } else if (typeof value === 'number') {
+    }
+
+    if (typeof value === 'number') {
       if (String(value).match(/^\d+$/g)) {
         return 'INTEGER';
-      } else {
-        return 'REAL';
       }
-    } else if (typeof value === 'string') {
+      return 'REAL';
+    }
+
+    if (typeof value === 'string') {
       return 'TEXT';
     }
 
@@ -196,7 +202,9 @@ export default class SQLite {
 
     if (['==', '==='].includes(op)) {
       return '=';
-    } else if (['!=', '!=='].includes(op)) {
+    }
+
+    if (['!=', '!=='].includes(op)) {
       return '<>';
     }
 
@@ -213,42 +221,41 @@ export default class SQLite {
     if (value === null) {
       if (nullable) {
         return;
-      } else {
-        throw new TypeError('Type Error: forbit null.');
       }
+      throw new TypeError('Type Error: forbit null.');
     }
 
-    if (!nullable && value === null)
     if (typeof type === 'string') {
       if (
         (type === 'array' && !Array.isArray(value))
-        || typeof value !== type
+        || (type !== 'array' && typeof value !== type)
       ) {
         throw new TypeError(`Type Error: expected '${type}', but given '${typeof value}'.`);
       }
-    } else {
-      if (!(value instanceof type)) {
-        throw new TypeError(`Type Error: expected an instance of ${type.toString()}, but actually not.`);
-      }
+    } else if (!(value instanceof type)) {
+      throw new TypeError(`Type Error: expected an instance of ${type.toString()}, but actually not.`);
     }
   };
 
   #validateInsertArgs = (table, columnValues) => {
-    this.#validateType(table, BaseTable);
+    this.#validateType(table, AbstractTable);
     this.#validateType(columnValues, 'object');
 
     Object.keys(columnValues).forEach((column) => {
       this.#validateType(column, 'string');
       this.#validateColumn(table, column);
 
-      if (this.#getType(columnValues[column]).toUpperCase() !== table.columnTypes[column].toUpperCase()) {
+      if (
+        this.#getType(columnValues[column]).toUpperCase()
+        !== table.columnTypes[column].toUpperCase()
+      ) {
         throw new TypeError(`Type Error: insert(): The type of '${column}' must be '${table.columnTypes[column]}'.`);
       }
     });
   }
 
   #validateSelectArgs = (table, columns, condition, orderBy, limit, offset) => {
-    this.#validateType(table, BaseTable);
+    this.#validateType(table, AbstractTable);
     this.#validateType(columns, 'array');
     this.#validateType(condition, 'object', true);
     this.#validateType(orderBy, 'array', true);
@@ -263,7 +270,7 @@ export default class SQLite {
     });
 
     if (!empty(condition)) {
-      this.#validateConditionObj(condition);
+      this.#validateConditionObj(table, condition);
     }
 
     if (!empty(orderBy)) {
@@ -289,7 +296,7 @@ export default class SQLite {
     }
   };
 
-  #validateConditionObj = (condition) => {
+  #validateConditionObj = (table, condition) => {
     this.#validateType(condition, 'object');
 
     const operator = this.#normalizeOperator(condition.operator);
@@ -297,10 +304,10 @@ export default class SQLite {
     if (['AND', 'OR'].includes(operator)) {
       this.#validateType(condition.value, 'array');
       condition.value.forEach((innerCondition) => {
-        this.#validateConditionObj(innerCondition);
+        this.#validateConditionObj(table, innerCondition);
       });
     } else if (operator === 'NOT') {
-      this.#validateConditionObj(condition.value);
+      this.#validateConditionObj(table, condition.value);
     } else {
       this.#validateType(condition.column, 'string');
       this.#validateColumn(table, condition.column);

@@ -15,13 +15,11 @@ export default function MemoListScreen() {
       [{ column: 'updated_at', order: 'DESC' }],
     ).then((result) => {
       console.log('fetched!', result._array);
-      const memosArr = result._array.map((memo) => {
-        return {
-          id: memo.id,
-          title: memo.title,
-          subtitle: `保存 ${memosTable.datetime2string(memo.updated_at)}`,
-        };
-      })
+      const memosArr = result._array.map((memo) => ({
+        id: memo.id,
+        title: memo.title,
+        subtitle: `保存 ${MemosTable.datetime2string(memo.updated_at)}`,
+      }));
       setMemos(memosArr);
     }).catch((error) => {
       console.log(error);

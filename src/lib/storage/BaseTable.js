@@ -1,18 +1,28 @@
+import AbstractTable from './AbstractTable';
 import SQLite from './database/SQLite';
 
-export default class BaseTable {
+export default class BaseTable extends AbstractTable {
   #db;
 
+  #columnTypes = {};
+
+  #name = '';
+
   constructor() {
+    super();
     this.#db = new SQLite();
   }
 
   get columnTypes() {
-    return {};
+    return this.#columnTypes;
   }
 
   get name() {
-    return '';
+    return this.#name;
+  }
+
+  static datetime2string(datetime) {
+    return SQLite.datetime2string(datetime);
   }
 
   createMemosTable() {
@@ -26,16 +36,4 @@ export default class BaseTable {
   select(columns = ['*'], condition = null, orderBy = null, limit = null, offset = null) {
     return this.#db.select(this, columns, condition, orderBy, limit, offset);
   }
-
-  datetime2string(datetime) {
-    return this.#db.datetime2string(datetime);
-  }
-
-  hasColumn(column) {
-    if (Object.keys(this.columnTypes).includes(column)) {
-      return true;
-    }
-
-    return false;
-  };
 }
