@@ -200,6 +200,11 @@ export const appStyles = {
   listItemWithCheckBox: {
     gradientColors: whiteGradientColors,
   },
+  loading: {
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    color: black,
+    zIndex: 200,
+  },
   noteBodyInput: {
     backgroundColor: transparent,
     borderBottomColor: 'rgba(0, 0, 0, 0.25)',
