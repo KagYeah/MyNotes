@@ -1,6 +1,8 @@
 import AbstractTable from './AbstractTable';
 import SQLite from './database/SQLite';
 
+import { empty } from '../../helpers';
+
 export default class BaseTable extends AbstractTable {
   #db;
 
@@ -60,6 +62,10 @@ export default class BaseTable extends AbstractTable {
   }
 
   deleteByIds(ids = []) {
+    if (empty(ids)) {
+      return new Promise(() => {});
+    }
+
     const condition = {
       operator: 'OR',
       value: [],
@@ -72,6 +78,6 @@ export default class BaseTable extends AbstractTable {
       });
     });
 
-    return this.#db.delete(this.delete, condition);
+    return this.#db.delete(this, condition);
   }
 }

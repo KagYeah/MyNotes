@@ -13,34 +13,36 @@ export default function MemoListScreen(props) {
   const memosTable = new MemosTable();
 
   useEffect(() => {
-    const unsubscribe = navigation.addListener('focus', () => {
-      setIsLoading(true);
-      memosTable.select(
-        ['id', 'title', 'updated_at'],
-        null,
-        [{ column: 'updated_at', order: 'DESC' }],
-      ).then((result) => {
-        console.log('fetched!', result._array);
-        const memosArr = result._array.map((memo) => ({
-          id: memo.id,
-          title: memo.title,
-          subtitle: `保存 ${MemosTable.datetime2string(memo.updated_at)}`,
-        }));
-        setMemos(memosArr);
-      }).catch((error) => {
-        console.log(error);
-      }).finally(() => {
-        setIsLoading(false);
-      });
-    });
+    const unsubscribe = navigation.addListener('focus', fetch);
 
     return unsubscribe;
   }, []);
 
+  function fetch() {
+    setIsLoading(true);
+    memosTable.select(
+      ['id', 'title', 'updated_at'],
+      null,
+      [{ column: 'updated_at', order: 'DESC' }],
+    ).then((result) => {
+      console.log('fetched!', result._array);
+      const memosArr = result._array.map((memo) => ({
+        id: memo.id,
+        title: memo.title,
+        subtitle: `保存 ${MemosTable.datetime2string(memo.updated_at)}`,
+      }));
+      setMemos(memosArr);
+    }).catch((error) => {
+      console.log(error);
+    }).finally(() => {
+      setIsLoading(false);
+    });
+  }
+
   return (
     <View style={{ flex: 1 }}>
       <Loading isLoading={isLoading} />
-      <ListScreen data={memos} type="memo" />
+      <ListScreen data={memos} type="memo" reload={fetch} />
     </View>
   );
 }

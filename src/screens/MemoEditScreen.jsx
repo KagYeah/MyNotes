@@ -65,7 +65,18 @@ export default function MemoEditScreen(props) {
           setTitle(row.title);
           setBody(row.body);
         }).catch(() => {
-          Alert.alert('データの取得に失敗しました。');
+          Alert.alert(
+            'データの取得に失敗しました。',
+            null,
+            [
+              {
+                title: 'OK',
+                onPress: () => {
+                  navigation.goBack();
+                },
+              },
+            ],
+          );
         }).finally(() => {
           setIsLoading(false);
         });

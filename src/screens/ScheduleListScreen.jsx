@@ -11,5 +11,5 @@ export default function ScheduleListScreen() {
     });
   }
 
-  return <ListScreen data={schedules} type="schedule" />;
+  return <ListScreen data={schedules} type="schedule" reload={() => {}} />;
 }

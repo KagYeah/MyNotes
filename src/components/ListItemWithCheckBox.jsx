@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { StyleSheet, View, Text } from 'react-native';
 import { bool, func, string } from 'prop-types';
 
@@ -9,15 +9,6 @@ export default function ListItemWithCheckBox(props) {
   const {
     title, subtitle, checked, showCheckBox, onPressWithCheckBox, onPressWithoutCheckBox,
   } = props;
-  const [_checked, setChecked] = useState(checked);
-
-  useEffect(() => {
-    setChecked(false);
-  }, [showCheckBox]);
-
-  useEffect(() => {
-    setChecked(checked);
-  }, [checked]);
 
   return (
     <ListItem
@@ -29,21 +20,14 @@ export default function ListItemWithCheckBox(props) {
           </View>
           {showCheckBox ? (
             <View style={styles.right}>
-              {_checked
+              {checked
                 ? <Text style={styles.checked}>[*]</Text>
                 : <Text style={styles.unchecked}>[  ]</Text>}
             </View>
           ) : null}
         </View>
       )}
-      onPress={
-        showCheckBox
-          ? () => {
-            onPressWithCheckBox();
-            setChecked(!_checked);
-          }
-          : () => onPressWithoutCheckBox()
-      }
+      onPress={showCheckBox ? onPressWithCheckBox : onPressWithoutCheckBox}
       linearGradient
       options={{
         colors: appStyles.listItemWithCheckBox.gradientColors,

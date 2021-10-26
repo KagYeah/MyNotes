@@ -1,9 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
 import {
-  Animated, FlatList, StatusBar, StyleSheet, View,
+  Alert, Animated, FlatList, StatusBar, StyleSheet, View,
 } from 'react-native';
 import {
-  arrayOf, number, oneOf, oneOfType, shape, string,
+  arrayOf, func, number, oneOf, oneOfType, shape, string,
 } from 'prop-types';
 import { useNavigation } from '@react-navigation/native';
 
@@ -15,14 +15,19 @@ import ListItemWithCheckBox from '../components/ListItemWithCheckBox';
 import { appStyles } from '../style';
 import { capitalize, sleep } from '../helpers';
 
+import MemosTable from '../classes/storage/MemosTable';
+
 export default function ListScreen(props) {
   const navigation = useNavigation();
-  const { data, type } = props;
+  const { data, type, reload } = props;
   const [showCheckBox, setShowCheckBox] = useState(false);
-  const [checked, setChecked] = useState(false);
   const listTranslateY = useRef(new Animated.Value(0)).current;
+  const [checkedIds, setCheckedIds] = useState([]);
+
+  const table = new MemosTable();
 
   useEffect(() => {
+    setCheckedIds([]);
     navigation.setOptions({
       headerRight: (
         <Button
@@ -58,6 +63,25 @@ export default function ListScreen(props) {
     return sleep(500);
   }
 
+  function toggleCheckedId(noteId) {
+    if (checkedIds.includes(noteId)) {
+      setCheckedIds(checkedIds.filter((id) => id !== noteId));
+    } else {
+      setCheckedIds([...checkedIds, noteId]);
+    }
+  }
+
+  function deleteMemos() {
+    table.deleteByIds(checkedIds)
+      .then(() => {
+        console.log('Deleted!');
+        reload();
+      })
+      .catch(() => {
+        Alert.alert('データの削除に失敗しました。');
+      });
+  }
+
   return (
     <View style={styles.container}>
       <StatusBar barStyle={appStyles.statusbar.barStyle} />
@@ -74,7 +98,13 @@ export default function ListScreen(props) {
               <View style={styles.listHeaderLeft}>
                 <Button
                   label="全て選択"
-                  onPress={() => setChecked(true)}
+                  onPress={() => {
+                    const dataIds = [];
+                    data.forEach((item) => {
+                      dataIds.push(item.id);
+                    });
+                    setCheckedIds(dataIds);
+                  }}
                   backgroundColor={appStyles.allCheckButton.backgroundColor}
                   color={appStyles.allCheckButton.color}
                   height={appStyles.listHeader.height - appStyles.listHeader.paddingVertical}
@@ -82,7 +112,9 @@ export default function ListScreen(props) {
                 />
                 <Button
                   label="全て解除"
-                  onPress={() => setChecked(false)}
+                  onPress={() => {
+                    setCheckedIds([]);
+                  }}
                   backgroundColor={appStyles.allCheckButton.backgroundColor}
                   color={appStyles.allCheckButton.color}
                   height={appStyles.listHeader.height - appStyles.listHeader.paddingVertical}
@@ -92,7 +124,23 @@ export default function ListScreen(props) {
             )}
             right={(
               <DeleteButton
-                onPress={() => {}}
+                onPress={() => {
+                  Alert.alert(
+                    '選択した項目を削除します',
+                    '本当によろしいですか？',
+                    [
+                      {
+                        text: 'キャンセル',
+                        style: 'cancel',
+                      },
+                      {
+                        text: '削除',
+                        onPress: deleteMemos,
+                        style: 'destructive',
+                      },
+                    ],
+                  );
+                }}
                 height={appStyles.deleteButtonInListHeader.height}
                 width={appStyles.deleteButtonInListHeader.width}
               />
@@ -115,8 +163,10 @@ export default function ListScreen(props) {
               title={item.title}
               subtitle={item.subtitle}
               showCheckBox={showCheckBox}
-              checked={checked}
-              onPressWithCheckBox={() => {}}
+              checked={checkedIds.includes(item.id)}
+              onPressWithCheckBox={() => {
+                toggleCheckedId(item.id);
+              }}
               onPressWithoutCheckBox={() => {
                 navigation.navigate(`${capitalize(type)}Edit`, { id: item.id });
               }}
@@ -141,6 +191,7 @@ ListScreen.propTypes = {
     subtitle: string,
   })).isRequired,
   type: oneOf(['memo', 'task', 'schedule']).isRequired,
+  reload: func.isRequired,
 };
 
 const styles = StyleSheet.create({

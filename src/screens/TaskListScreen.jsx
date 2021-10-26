@@ -11,5 +11,5 @@ export default function TaskListScreen() {
     });
   }
 
-  return <ListScreen data={tasks} type="task" />;
+  return <ListScreen data={tasks} type="task" reload={() => {}} />;
 }
