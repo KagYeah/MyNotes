@@ -1,6 +1,6 @@
-import BaseTable from '../../lib/storage/BaseTable';
+import MyNotesTable from './MyNotesTable';
 
-export default class MemosTable extends BaseTable {
+export default class MemosTable extends MyNotesTable {
   #columnTypes = {
     id: 'INTEGER',
     title: 'TEXT',

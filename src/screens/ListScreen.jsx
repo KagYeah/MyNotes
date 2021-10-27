@@ -15,7 +15,7 @@ import ListItemWithCheckBox from '../components/ListItemWithCheckBox';
 import { appStyles } from '../style';
 import { capitalize, sleep } from '../helpers';
 
-import MemosTable from '../classes/storage/MemosTable';
+import { MemosTable } from '../classes/storage';
 
 export default function ListScreen(props) {
   const navigation = useNavigation();

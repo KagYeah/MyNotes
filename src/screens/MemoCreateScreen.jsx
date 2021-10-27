@@ -12,7 +12,7 @@ import TypeList from '../components/TypeList';
 import { appStyles } from '../style';
 import { sleep } from '../helpers';
 
-import MemosTable from '../classes/storage/MemosTable';
+import { MemosTable } from '../classes/storage';
 
 export default function MemoCreateScreen(props) {
   const { navigation } = props;

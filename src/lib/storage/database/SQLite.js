@@ -47,20 +47,6 @@ export default class SQLite {
     return '';
   }
 
-  createMemosTable() {
-    return new Promise((resolve, reject) => {
-      this.#db.transaction(
-        (tx) => {
-          tx.executeSql(
-            "CREATE TABLE IF NOT EXISTS memos (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, title TEXT, body TEXT, updated_at TEXT DEFAULT (datetime(CURRENT_TIMESTAMP, 'localtime')));",
-          );
-        },
-        reject,
-        resolve,
-      );
-    });
-  }
-
   insert(table, valueObj) {
     this.#validateInsertArgs(table, valueObj);
 

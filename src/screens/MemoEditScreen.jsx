@@ -18,7 +18,7 @@ import NoteTitleInput from '../components/NoteTitleInput';
 import SaveButton from '../components/SaveButton';
 import { appStyles } from '../style';
 
-import MemosTable from '../classes/storage/MemosTable';
+import { MemosTable } from '../classes/storage';
 
 export default function MemoEditScreen(props) {
   const { navigation, route } = props;

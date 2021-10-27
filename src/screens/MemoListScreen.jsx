@@ -3,7 +3,7 @@ import { View } from 'react-native';
 
 import ListScreen from './ListScreen';
 
-import MemosTable from '../classes/storage/MemosTable';
+import { MemosTable } from '../classes/storage';
 import Loading from '../components/Loading';
 
 export default function MemoListScreen(props) {
