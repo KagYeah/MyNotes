@@ -1,12 +1,10 @@
 /* eslint-disable class-methods-use-this */
-import AbstractTable from './AbstractTable';
 import SQLite from './database/SQLite';
 
-export default class BaseTable extends AbstractTable {
+export default class BaseTable {
   #db;
 
   constructor() {
-    super();
     this.#db = new SQLite();
   }
 
@@ -19,19 +17,7 @@ export default class BaseTable extends AbstractTable {
   }
 
   get name() {
-    throw new Error('File AbstractTable.js: getter of name is not implemented.');
-  }
-
-  get columnTypes() {
-    throw new Error('File AbstractTable.js: getter of columnTypes is not implemented.');
-  }
-
-  hasColumn(column) {
-    if (Object.keys(this.columnTypes).includes(column)) {
-      return true;
-    }
-
-    return false;
+    throw new Error('File BaseTable.js: getter of name is not implemented.');
   }
 
   insert(values) {
