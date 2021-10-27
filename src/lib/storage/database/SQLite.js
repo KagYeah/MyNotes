@@ -2,7 +2,6 @@ import * as ExpoSQLite from 'expo-sqlite';
 import { Platform } from 'react-native';
 import { format } from 'date-fns';
 
-import AbstractTable from '../AbstractTable';
 import { DATE_SEPARATOR, TIME_SEPARATOR, empty } from '../../../helpers';
 import { DB_CONFIG } from '../../../config/database';
 
@@ -48,8 +47,6 @@ export default class SQLite {
   }
 
   insert(table, valueObj) {
-    this.#validateInsertArgs(table, valueObj);
-
     const { values, columns, placeholders } = this.#getInsertValues(valueObj);
 
     return new Promise((resolve, reject) => {
@@ -67,8 +64,6 @@ export default class SQLite {
   }
 
   select(table, columns = ['*'], condition = null, orderBy = null, limit = null, offset = null) {
-    this.#validateSelectArgs(table, columns, condition, orderBy, limit, offset);
-
     const { wherePhrase, whereArgs } = this.#createWherePhrase(condition);
     const orderByPhrase = this.#createOrderByPhrase(orderBy);
     const { limitPhrase, limitArgs } = this.#createLimitPhrase(limit, offset);
@@ -92,8 +87,6 @@ export default class SQLite {
   }
 
   update(table, values, condition) {
-    this.#validateUpdateArgs(table, values, condition);
-
     const { setPhrase, setArgs } = this.#createSetPhrase(values);
     const { wherePhrase, whereArgs } = this.#createWherePhrase(condition);
 
@@ -112,8 +105,6 @@ export default class SQLite {
   }
 
   delete(table, condition) {
-    this.#validateDeleteArgs(table, condition);
-
     const { wherePhrase, whereArgs } = this.#createWherePhrase(condition);
 
     const sqlStmt = `DELETE FROM ${table.name} ${wherePhrase};`;
@@ -259,138 +250,5 @@ export default class SQLite {
     }
 
     return op;
-  };
-
-  #validateColumn = (table, column) => {
-    if (!table.hasColumn(column)) {
-      throw new RangeError(`Range Error: Column '${column}' is not defined in table '${table.name}'.`);
-    }
-  };
-
-  #validateType = (value, type, nullable = false) => {
-    if (value === null) {
-      if (nullable) {
-        return;
-      }
-      throw new TypeError('Type Error: forbit null.');
-    }
-
-    if (typeof type === 'string') {
-      if (
-        (type === 'array' && !Array.isArray(value))
-        || (type !== 'array' && typeof value !== type)
-      ) {
-        throw new TypeError(`Type Error: expected '${type}', but given '${typeof value}'.`);
-      }
-    } else if (!(value instanceof type)) {
-      throw new TypeError(`Type Error: expected an instance of ${type.toString()}, but actually not.`);
-    }
-  };
-
-  #validateInsertArgs = (table, valueObj) => {
-    this.#validateType(table, AbstractTable);
-    this.#validateType(valueObj, 'object');
-    this.#validateValueObj(table, valueObj);
-  }
-
-  #validateSelectArgs = (table, columns, condition, orderBy, limit, offset) => {
-    this.#validateType(table, AbstractTable);
-    this.#validateType(columns, 'array');
-    this.#validateType(condition, 'object', true);
-    this.#validateType(orderBy, 'array', true);
-    this.#validateType(limit, 'number', true);
-    this.#validateType(offset, 'number', true);
-
-    columns.forEach((column) => {
-      if (column !== '*') {
-        this.#validateType(column, 'string');
-        this.#validateColumn(table, column);
-      }
-    });
-
-    if (!empty(condition)) {
-      this.#validateConditionObj(table, condition);
-    }
-
-    if (!empty(orderBy)) {
-      orderBy.forEach((orderByObj) => {
-        this.#validateType(orderByObj, 'object');
-        this.#validateType(orderByObj.column, 'string');
-        this.#validateColumn(table, orderByObj.column);
-        if (!empty(orderByObj.order)) {
-          this.#validateType(orderByObj.order, 'string');
-          if (!(['ASC', 'DESC'].includes(orderByObj.order.toUpperCase()))) {
-            throw new RangeError("Range Error: 'order' must be 'ASC' or 'DESC'.");
-          }
-        }
-      });
-    }
-
-    if (!empty(limit) && !limit.toString().match(/^\d+$/g)) {
-      throw new RangeError("Range Error: Argument 'limit' must be integer and >= 0.");
-    }
-
-    if (!empty(offset) && !offset.toString().match(/^\d+$/g)) {
-      throw new RangeError("Range Error: Argument 'offset' must be integer and >= 0.");
-    }
-  };
-
-  #validateUpdateArgs = (table, values, condition) => {
-    this.#validateType(table, AbstractTable);
-    this.#validateType(values, 'object');
-    this.#validateType(condition, 'object', true);
-
-    this.#validateValueObj(table, values);
-
-    if (!empty(condition)) {
-      this.#validateConditionObj(table, condition);
-    }
-  };
-
-  #validateDeleteArgs = (table, condition) => {
-    this.#validateType(table, AbstractTable);
-    this.#validateType(condition, 'object', true);
-
-    if (!empty(condition)) {
-      this.#validateConditionObj(table, condition);
-    }
-  };
-
-  #validateConditionObj = (table, condition) => {
-    this.#validateType(condition, 'object');
-
-    const operator = this.#normalizeOperator(condition.operator);
-
-    if (['AND', 'OR'].includes(operator)) {
-      this.#validateType(condition.value, 'array');
-      condition.value.forEach((innerCondition) => {
-        this.#validateConditionObj(table, innerCondition);
-      });
-    } else if (operator === 'NOT') {
-      this.#validateConditionObj(table, condition.value);
-    } else {
-      this.#validateType(condition.column, 'string');
-      this.#validateColumn(table, condition.column);
-      if (
-        typeof condition.value !== 'number'
-        && typeof condition.value !== 'string'
-      ) {
-        throw TypeError("Type Error: If operator is not 'AND' or 'OR', type of value must be string or number.");
-      }
-    }
-  };
-
-  #validateValueObj = (table, values) => {
-    Object.keys(values).forEach((column) => {
-      this.#validateType(column, 'string');
-      this.#validateColumn(table, column);
-
-      if (
-        this.#getType(values[column]).toUpperCase()
-        !== table.columnTypes[column].toUpperCase()
-      ) {
-        throw new TypeError(`Type Error: The type of '${column}' must be '${table.columnTypes[column]}'.`);
-      }
-    });
   };
 }
