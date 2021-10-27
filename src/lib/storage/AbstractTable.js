@@ -1,14 +1,11 @@
+/* eslint-disable class-methods-use-this */
 export default class AbstractTable {
-  #columnTypes = {};
-
-  #name = '';
-
   get columnTypes() {
-    return this.#columnTypes;
+    throw new Error('File AbstractTable.js: getter of columnTypes is not implemented.');
   }
 
   get name() {
-    return this.#name;
+    throw new Error('File AbstractTable.js: getter of name is not implemented.');
   }
 
   hasColumn(column) {
