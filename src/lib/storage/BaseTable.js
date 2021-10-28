@@ -1,19 +1,19 @@
 /* eslint-disable class-methods-use-this */
-import SQLite from './database/SQLite';
+import Database from './database';
 
 export default class BaseTable {
   #db;
 
   constructor() {
-    this.#db = new SQLite();
+    this.#db = new Database();
   }
 
   static datetime(date) {
-    return SQLite.datetime(date);
+    return Database.datetime(date);
   }
 
   static datetime2string(datetime) {
-    return SQLite.datetime2string(datetime);
+    return Database.datetime2string(datetime);
   }
 
   get name() {

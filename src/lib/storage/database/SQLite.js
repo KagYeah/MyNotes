@@ -12,8 +12,8 @@ export default class SQLite {
     dbName: 'mynotes.db',
   };
 
-  constructor() {
-    this.#config = { ...this.#config, ...DB_CONFIG };
+  constructor(config = null) {
+    this.#config = { ...this.#config, ...DB_CONFIG, ...config };
 
     if (Platform.OS === 'web') {
       this.#db = {
