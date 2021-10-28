@@ -35,7 +35,14 @@ export function empty(value) {
     return true;
   }
 
-  if ([null, undefined, '', {}].includes(value)) {
+  if ([null, undefined, ''].includes(value)) {
+    return true;
+  }
+
+  if (
+    typeof value === 'object'
+    && Object.keys(value).length === 0
+  ) {
     return true;
   }
 
