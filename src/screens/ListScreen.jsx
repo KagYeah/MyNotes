@@ -15,7 +15,9 @@ import ListItemWithCheckBox from '../components/ListItemWithCheckBox';
 import { appStyles } from '../style';
 import { capitalize, sleep } from '../helpers';
 
-import { MemosTable } from '../classes/storage';
+import {
+  MemosTable, MyNotesTable, TasksTable, SchedulesTable,
+} from '../classes/storage';
 
 export default function ListScreen(props) {
   const navigation = useNavigation();
@@ -24,7 +26,19 @@ export default function ListScreen(props) {
   const listTranslateY = useRef(new Animated.Value(0)).current;
   const [checkedIds, setCheckedIds] = useState([]);
 
-  const table = new MemosTable();
+  let table = new MyNotesTable();
+  switch (type) {
+    case 'memo':
+      table = new MemosTable();
+      break;
+    case 'task':
+      table = new TasksTable();
+      break;
+    case 'schedule':
+      table = new SchedulesTable();
+      break;
+    default:
+  }
 
   useEffect(() => {
     setCheckedIds([]);
@@ -71,7 +85,7 @@ export default function ListScreen(props) {
     }
   }
 
-  function deleteMemos() {
+  function deleteNotes() {
     table.deleteByIds(checkedIds)
       .then(() => {
         console.log('Deleted!');
@@ -135,7 +149,7 @@ export default function ListScreen(props) {
                       },
                       {
                         text: '削除',
-                        onPress: deleteMemos,
+                        onPress: deleteNotes,
                         style: 'destructive',
                       },
                     ],

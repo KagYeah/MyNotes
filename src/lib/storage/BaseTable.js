@@ -90,8 +90,8 @@ export default class BaseTable {
     return this.db.constructor.datetime(date);
   }
 
-  datetime2string(datetime) {
-    return this.db.constructor.datetime2string(datetime);
+  datetime2date(datetime) {
+    return this.db.constructor.datetime2date(datetime);
   }
 
   hasColumn(columnName) {

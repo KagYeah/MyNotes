@@ -5,6 +5,7 @@ import {
 } from 'react-native';
 
 import Button from '../components/Button';
+import Loading from '../components/Loading';
 import NoteBodyInput from '../components/NoteBodyInput';
 import NoteTitleInput from '../components/NoteTitleInput';
 import SaveButton from '../components/SaveButton';
@@ -20,6 +21,7 @@ export default function MemoCreateScreen(props) {
   const [body, setBody] = useState('');
   const [showKeyboardHidingButton, setShowKeyboardHidingButton] = useState(false);
   const [showTypeList, setShowTypeList] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const typeListTranslateY = useRef(new Animated.Value(0)).current;
   const memosTable = new MemosTable();
 
@@ -99,6 +101,8 @@ export default function MemoCreateScreen(props) {
       title,
       body,
     };
+
+    setIsLoading(true);
     memosTable.insert(values)
       .then(() => {
         console.log('Saved!');
@@ -106,6 +110,9 @@ export default function MemoCreateScreen(props) {
       })
       .catch((error) => {
         console.log(error);
+      })
+      .finally(() => {
+        setIsLoading(false);
       });
   }
 
@@ -115,6 +122,8 @@ export default function MemoCreateScreen(props) {
       behavior={appStyles.keyboardAvoidingView.behavior}
       keyboardVerticalOffset={appStyles.keyboardAvoidingView.verticalOffset}
     >
+      <Loading isLoading={isLoading} />
+
       <View style={styles.container}>
         <StatusBar barStyle={appStyles.statusbar.barStyle} />
 

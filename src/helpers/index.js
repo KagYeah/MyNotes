@@ -12,22 +12,24 @@ export function capitalize(string) {
   return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
 }
 
-export function date2string(date, withDay = false) {
+export function date2string(date, mode, withDay = false) {
   if (!(date instanceof Date)) {
     return '';
   }
 
   const dayStr = withDay ? ` (${DAY_OF_WEEK[date.getDay()]})` : '';
 
-  return format(date, `yyyy${DATE_SEPARATOR}MM${DATE_SEPARATOR}dd`) + dayStr;
-}
-
-export function time2string(date) {
-  if (!(date instanceof Date)) {
-    return '';
+  switch (mode) {
+    case 'datetime':
+      return format(date, `yyyy${DATE_SEPARATOR}MM${DATE_SEPARATOR}dd`) + dayStr + format(date, ` HH${TIME_SEPARATOR}mm`);
+    case 'date':
+      return format(date, `yyyy${DATE_SEPARATOR}MM${DATE_SEPARATOR}dd`) + dayStr;
+    case 'time':
+      return format(date, `HH${TIME_SEPARATOR}mm`);
+    default:
   }
 
-  return format(date, `HH${TIME_SEPARATOR}mm`);
+  return '';
 }
 
 export function empty(value) {

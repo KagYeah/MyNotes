@@ -2,9 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { Alert, View } from 'react-native';
 
 import ListScreen from './ListScreen';
+import Loading from '../components/Loading';
+import { date2string } from '../helpers';
 
 import { MemosTable } from '../classes/storage';
-import Loading from '../components/Loading';
 
 export default function MemoListScreen(props) {
   const { navigation } = props;
@@ -26,11 +27,14 @@ export default function MemoListScreen(props) {
       [{ column: 'updated_at', order: 'DESC' }],
     ).then((result) => {
       console.log('fetched!', result._array);
-      const memosArr = result._array.map((memo) => ({
-        id: memo.id,
-        title: memo.title,
-        subtitle: `保存 ${MemosTable.datetime2string(memo.updated_at)}`,
-      }));
+      const memosArr = result._array.map((memo) => {
+        const updatedAt = MemosTable.datetime2date(memo.updated_at);
+        return {
+          id: memo.id,
+          title: memo.title,
+          subtitle: `保存 ${date2string(updatedAt, 'datetime')}`,
+        };
+      });
       setMemos(memosArr);
     }).catch((error) => {
       console.log(error);

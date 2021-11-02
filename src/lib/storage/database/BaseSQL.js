@@ -5,8 +5,8 @@ export default class BaseSQL {
     throw new Error('datetime() not implemented.');
   }
 
-  static datetime2string(datetime) {
-    throw new Error('datetime2string() not implemented.');
+  static datetime2date(datetime) {
+    throw new Error('datetime2date() not implemented.');
   }
 
   static escape(value) {

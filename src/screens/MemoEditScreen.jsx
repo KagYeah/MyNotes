@@ -71,9 +71,7 @@ export default function MemoEditScreen(props) {
             [
               {
                 title: 'OK',
-                onPress: () => {
-                  navigation.goBack();
-                },
+                onPress: navigation.goBack,
               },
             ],
           );
@@ -92,6 +90,7 @@ export default function MemoEditScreen(props) {
       updated_at: MemosTable.datetime(new Date()),
     };
 
+    setIsLoading(true);
     memosTable.updateById(id, values)
       .then(() => {
         console.log('Updated!');
@@ -99,10 +98,14 @@ export default function MemoEditScreen(props) {
       })
       .catch(() => {
         Alert.alert('データの保存に失敗しました。');
+      })
+      .catch(() => {
+        setIsLoading(false);
       });
   }
 
   function deleteMemo() {
+    setIsLoading(true);
     memosTable.deleteById(id)
       .then(() => {
         console.log('Deleted!');
@@ -110,6 +113,9 @@ export default function MemoEditScreen(props) {
       })
       .catch(() => {
         Alert.alert('データの削除に失敗しました。');
+      })
+      .finally(() => {
+        setIsLoading(false);
       });
   }
 

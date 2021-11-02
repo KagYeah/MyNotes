@@ -10,13 +10,12 @@ import {
 
 import Button from './Button';
 import { appStyles } from '../style';
-import { date2string, time2string } from '../helpers';
+import { date2string } from '../helpers';
 
 export default function DateTimeInput(props) {
   const {
     label, mode, onChange, value,
   } = props;
-  const [_value, setValue] = useState(value);
   const [showPicker, setShowPicker] = useState(false);
 
   return (
@@ -35,13 +34,13 @@ export default function DateTimeInput(props) {
               height={styles.container.height - styles.container.paddingVertical}
             />
           ) : (
-            <Text style={styles.text}>{mode === 'date' ? date2string(_value, true) : time2string(_value)}</Text>
+            <Text style={styles.text}>{date2string(value, mode, true)}</Text>
           )}
       </TouchableOpacity>
 
       {showPicker ? (
         <RNDateTimePicker
-          value={_value}
+          value={value}
           mode={mode}
           is24Hour
           display={mode === 'date' && Platform.OS === 'android' ? 'calendar' : 'spinner'}
@@ -49,7 +48,6 @@ export default function DateTimeInput(props) {
           style={styles.picker}
           onChange={(event, selectedValue) => {
             setShowPicker(Platform.OS === 'ios');
-            setValue(selectedValue || _value);
             onChange(selectedValue);
           }}
         />
