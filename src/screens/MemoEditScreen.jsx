@@ -87,7 +87,7 @@ export default function MemoEditScreen(props) {
     const values = {
       title,
       body,
-      updated_at: MemosTable.datetime(new Date()),
+      updated_at: memosTable.datetime(new Date()),
     };
 
     setIsLoading(true);

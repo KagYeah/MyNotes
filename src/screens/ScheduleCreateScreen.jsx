@@ -1,16 +1,26 @@
 import React, { useEffect, useState, useRef } from 'react';
 import {
-  Animated, Keyboard, KeyboardAvoidingView, ScrollView,
-  StatusBar, StyleSheet, TouchableOpacity, View,
+  Alert,
+  Animated,
+  Keyboard,
+  KeyboardAvoidingView,
+  ScrollView,
+  StatusBar,
+  StyleSheet,
+  TouchableOpacity,
+  View,
 } from 'react-native';
 
 import Button from '../components/Button';
 import DateTimeInput from '../components/DateTimeInput';
+import Loading from '../components/Loading';
 import NoteTitleInput from '../components/NoteTitleInput';
 import SaveButton from '../components/SaveButton';
 import TypeList from '../components/TypeList';
 import { appStyles } from '../style';
 import { sleep } from '../helpers';
+
+import { SchedulesTable } from '../classes/storage';
 
 export default function ScheduleCreateScreen(props) {
   const { navigation } = props;
@@ -20,7 +30,9 @@ export default function ScheduleCreateScreen(props) {
   const [title, setTitle] = useState('');
   const [showKeyboardHidingButton, setShowKeyboardHidingButton] = useState(false);
   const [showTypeList, setShowTypeList] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const typeListTranslateY = useRef(new Animated.Value(0)).current;
+  const schedulesTable = new SchedulesTable();
 
   useEffect(() => {
     navigation.setOptions({
@@ -93,12 +105,48 @@ export default function ScheduleCreateScreen(props) {
     setShowTypeList(!showTypeList);
   }
 
+  function saveSchedule() {
+    const values = {
+      title,
+      start_time: schedulesTable.datetime(new Date(
+        date.getFullYear(),
+        date.getMonth(),
+        date.getDate(),
+        startTime.getHours(),
+        startTime.getMinutes(),
+      )),
+      end_time: schedulesTable.datetime(new Date(
+        date.getFullYear(),
+        date.getMonth(),
+        date.getDate(),
+        endTime.getHours(),
+        endTime.getMinutes(),
+      )),
+    };
+
+    setIsLoading(true);
+    schedulesTable.insert(values)
+      .then(() => {
+        console.log('Saved!');
+        navigation.navigate('Root', { screen: 'ScheduleList' });
+      })
+      .catch((error) => {
+        console.log(error);
+        Alert.alert('データの保存に失敗しました。');
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  }
+
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}
       behavior={appStyles.keyboardAvoidingView.behavior}
       keyboardVerticalOffset={appStyles.keyboardAvoidingView.verticalOffset}
     >
+      <Loading isLoading={isLoading} />
+
       <View style={styles.container}>
         <StatusBar barStyle={appStyles.statusbar.barStyle} />
 
@@ -153,9 +201,7 @@ export default function ScheduleCreateScreen(props) {
         </ScrollView>
 
         <SaveButton
-          onPress={() => {
-            navigation.navigate('Root', { screen: 'ScheduleList' });
-          }}
+          onPress={saveSchedule}
         />
       </View>
     </KeyboardAvoidingView>
