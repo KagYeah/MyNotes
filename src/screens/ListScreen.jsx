@@ -23,8 +23,8 @@ export default function ListScreen(props) {
   const navigation = useNavigation();
   const { data, type, reload } = props;
   const [showCheckBox, setShowCheckBox] = useState(false);
-  const listTranslateY = useRef(new Animated.Value(0)).current;
   const [checkedIds, setCheckedIds] = useState([]);
+  const listTranslateY = useRef(new Animated.Value(0));
 
   let table = new MyNotesTable();
   switch (type) {
@@ -41,7 +41,20 @@ export default function ListScreen(props) {
   }
 
   useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      setShowCheckBox(false);
+    });
+
+    return unsubscribe;
+  }, []);
+
+  useEffect(() => {
     setCheckedIds([]);
+
+    if (!showCheckBox) {
+      listTranslateY.current = new Animated.Value(0);
+    }
+
     navigation.setOptions({
       headerRight: (
         <Button
@@ -59,7 +72,7 @@ export default function ListScreen(props) {
 
   async function toggleListHeader() {
     if (!showCheckBox) {
-      Animated.timing(listTranslateY, {
+      Animated.timing(listTranslateY.current, {
         toValue: appStyles.listHeader.height,
         duration: 500,
         useNativeDriver: true,
@@ -68,7 +81,7 @@ export default function ListScreen(props) {
       return sleep(0);
     }
 
-    Animated.timing(listTranslateY, {
+    Animated.timing(listTranslateY.current, {
       toValue: 0,
       duration: 500,
       useNativeDriver: true,
@@ -104,7 +117,7 @@ export default function ListScreen(props) {
         <Animated.View
           style={[
             styles.listHeader,
-            { transform: [{ translateY: listTranslateY }] },
+            { transform: [{ translateY: listTranslateY.current }] },
           ]}
         >
           <ListHeader
@@ -166,7 +179,7 @@ export default function ListScreen(props) {
       <Animated.View
         style={[
           styles.listWrapper,
-          { transform: [{ translateY: listTranslateY }] },
+          { transform: [{ translateY: listTranslateY.current }] },
         ]}
       >
         <FlatList
