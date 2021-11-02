@@ -1,4 +1,7 @@
 import BaseTable from './BaseTable';
+import MigrationsTable from './MigrationsTable';
 
-// eslint-disable-next-line import/prefer-default-export
-export { BaseTable };
+export {
+  BaseTable,
+  MigrationsTable,
+};

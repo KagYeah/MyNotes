@@ -28,6 +28,9 @@ import AppBar from './src/components/AppBar';
 import Button from './src/components/Button';
 import { appStyles } from './src/style';
 
+import { MigrationController } from './src/lib/storage/migration';
+import { CreateMemosTable, CreateSchedulesTable, CreateTasksTable } from './src/classes/migration';
+
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
 
@@ -35,22 +38,30 @@ import * as FileSystem from 'expo-file-system';
 export default function App() {
   console.log(FileSystem.documentDirectory);
   useEffect(() => {
-    // memosTable.createMemosTable()
-    //   .then(() => {
-    //     console.log('Created memos table!');
-    //   })
-    //   .catch((error) => {
-    //     console.log('Failed to create memos table!');
-    //     console.log(error);
-    //   });
+    const migration = new MigrationController();
+    const migrate = async () => {
+      try {
+        await migration.init();
+        console.log('Initialized Migration!');
+        await migration.migrate([
+          CreateMemosTable,
+          CreateTasksTable,
+          CreateSchedulesTable,
+        ]);
+        console.log('Migrated!');
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    migrate();
   }, []);
+
   return (
     <NavigationContainer>
       <Stack.Navigator
         // initialRouteName="Root"
         initialRouteName="InitialStarting"
         screenOptions={{
-          // cardStyleInterpolator: forFade,
           cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
           header: ({ navigation, options, back }) => (
             <AppBar

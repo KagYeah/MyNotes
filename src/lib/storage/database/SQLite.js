@@ -5,7 +5,10 @@ import { format } from 'date-fns';
 import { DATE_SEPARATOR, TIME_SEPARATOR, empty } from '../../../helpers';
 import { DB_CONFIG } from '../../../config/database';
 
-export default class SQLite {
+import BaseSQL from './BaseSQL';
+import RawSQL from './type/RawSQL';
+
+export default class SQLite extends BaseSQL {
   #db;
 
   #config = {
@@ -13,6 +16,8 @@ export default class SQLite {
   };
 
   constructor(config = null) {
+    super();
+
     this.#config = { ...this.#config, ...DB_CONFIG, ...config };
 
     if (Platform.OS === 'web') {
@@ -46,16 +51,21 @@ export default class SQLite {
     return '';
   }
 
-  insert(table, valueObj) {
-    const { values, columns, placeholders } = this.#getInsertValues(valueObj);
+  static escape(value) {
+    if (typeof value === 'string') {
+      return `'${value}'`;
+    }
+
+    return value;
+  }
+
+  createTable(tableName, columns) {
+    const { sqlStmt } = this.#getSqlStmt('createTable', tableName, columns);
 
     return new Promise((resolve, reject) => {
       this.#db.transaction(
         (tx) => {
-          tx.executeSql(
-            `INSERT INTO ${table.name} (${columns.join(', ')}) VALUES (${placeholders.join(', ')})`,
-            values,
-          );
+          tx.executeSql(sqlStmt);
         },
         reject,
         resolve,
@@ -63,35 +73,93 @@ export default class SQLite {
     });
   }
 
-  select(table, columns = ['*'], condition = null, orderBy = null, limit = null, offset = null) {
-    const { wherePhrase, whereArgs } = this.#createWherePhrase(condition);
-    const orderByPhrase = this.#createOrderByPhrase(orderBy);
-    const { limitPhrase, limitArgs } = this.#createLimitPhrase(limit, offset);
+  renameTable(oldName, newName) {
+    const { sqlStmt } = this.#getSqlStmt('reanameTable', oldName, newName);
 
-    const sqlStmt = `SELECT ${columns.join(', ')} FROM ${table.name} ${wherePhrase} ${orderByPhrase} ${limitPhrase};`;
-    const args = whereArgs.concat(limitArgs);
+    return new Promise((resolve, reject) => {
+      this.#db.transaction(
+        (tx) => {
+          tx.executeSql(sqlStmt);
+        },
+        reject,
+        resolve,
+      );
+    });
+  }
 
-    let result = [];
+  dropTable(tableName) {
+    const { sqlStmt } = this.#getSqlStmt('dropTable', tableName);
+
+    return new Promise((resolve, reject) => {
+      this.#db.transaction(
+        (tx) => {
+          tx.executeSql(sqlStmt);
+        },
+        reject,
+        resolve,
+      );
+    });
+  }
+
+  addColumn(tableName, column) {
+    const { sqlStmt } = this.#getSqlStmt('addColumn', tableName, column);
+
+    return new Promise((resolve, reject) => {
+      this.#db.transaction(
+        (tx) => {
+          tx.executeSql(sqlStmt);
+        },
+        reject,
+        resolve,
+      );
+    });
+  }
+
+  dropColumn(tableName, column) {
+    const { sqlStmt } = this.#getSqlStmt('dropColumn', tableName, column);
+
+    return new Promise((resolve, reject) => {
+      this.#db.transaction(
+        (tx) => {
+          tx.executeSql(sqlStmt);
+        },
+        reject,
+        resolve,
+      );
+    });
+  }
+
+  insert(tableName, valueObj) {
+    const { sqlStmt, args } = this.#getSqlStmt('insert', tableName, valueObj);
+
+    return new Promise((resolve, reject) => {
+      this.#db.transaction(
+        (tx) => {
+          tx.executeSql(sqlStmt, args);
+        },
+        reject,
+        resolve,
+      );
+    });
+  }
+
+  select(tableName, columns = ['*'], condition = null, orderBy = null, limit = null, offset = null) {
+    const { sqlStmt, args } = this.#getSqlStmt('select', tableName, columns, condition, orderBy, limit, offset);
 
     return new Promise((resolve, reject) => {
       this.#db.transaction(
         (tx) => {
           tx.executeSql(sqlStmt, args, (_, { rows }) => {
-            result = rows;
+            resolve(rows);
           });
         },
         reject,
-        () => { resolve(result); },
       );
     });
   }
 
-  update(table, values, condition) {
-    const { setPhrase, setArgs } = this.#createSetPhrase(values);
-    const { wherePhrase, whereArgs } = this.#createWherePhrase(condition);
-
-    const sqlStmt = `UPDATE ${table.name} ${setPhrase} ${wherePhrase};`;
-    const args = setArgs.concat(whereArgs);
+  update(tableName, values, condition) {
+    const { sqlStmt, args } = this.#getSqlStmt('update', tableName, values, condition);
 
     return new Promise((resolve, reject) => {
       this.#db.transaction(
@@ -104,16 +172,53 @@ export default class SQLite {
     });
   }
 
-  delete(table, condition) {
-    const { wherePhrase, whereArgs } = this.#createWherePhrase(condition);
-
-    const sqlStmt = `DELETE FROM ${table.name} ${wherePhrase};`;
-    const args = whereArgs;
+  delete(tableName, condition) {
+    const { sqlStmt, args } = this.#getSqlStmt('delete', tableName, condition);
 
     return new Promise((resolve, reject) => {
       this.#db.transaction(
         (tx) => {
           tx.executeSql(sqlStmt, args);
+        },
+        reject,
+        resolve,
+      );
+    });
+  }
+
+  hasColumn(tableName, columnName) {
+    return new Promise((resolve, reject) => {
+      this.execute(`PRAGMA table_info(${tableName})`)
+        .then((result) => {
+          resolve(result._array.some((column) => column.name === columnName));
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
+  }
+
+  execute(sqlStmt, args = []) {
+    return new Promise((resolve, reject) => {
+      this.#db.transaction(
+        (tx) => {
+          tx.executeSql(sqlStmt, args, (_, { rows }) => {
+            resolve(rows);
+          });
+        },
+        reject,
+      );
+    });
+  }
+
+  transaction(sqlStmts) {
+    return new Promise((resolve, reject) => {
+      this.#db.transaction(
+        (tx) => {
+          sqlStmts.forEach((sqlStmtObj) => {
+            const { sqlStmt, args } = this.#getSqlStmt(sqlStmtObj.method, ...sqlStmtObj.args);
+            tx.executeSql(sqlStmt, args);
+          });
         },
         reject,
         resolve,
@@ -122,7 +227,7 @@ export default class SQLite {
   }
 
   // private methods
-  #createConditionStr = (condition, args) => {
+  #createConditionStr = (condition, args = null) => {
     if (empty(condition)) {
       return '';
     }
@@ -137,33 +242,93 @@ export default class SQLite {
       return ` NOT ${this.#createConditionStr(condition.value, args)} `;
     }
 
-    if (['IS_NULL', 'IS_NOT_NULL'].includes(operator)) {
+    if (['IS NULL', 'IS NOT NULL'].includes(operator)) {
       return ` ${condition.column} ${operator} `;
     }
 
-    args.push(condition.value);
+    if (Array.isArray(args)) {
+      args.push(condition.value);
 
-    return ` ${condition.column} ${operator} ? `;
+      return ` ${condition.column} ${operator} ? `;
+    }
+
+    return ` ${condition.column} ${operator} ${this.escape(condition.value)} `;
   }
 
-  #createLimitPhrase = (limit, offset) => {
-    let limitPhrase = '';
+  #createColumnDefinitionArr = (columns) => {
+    const definitionArr = columns.map((column) => {
+      if (empty(column.name)) {
+        throw new Error('Column in definitions is not specified.');
+      }
+
+      return ` ${column.name} ${this.#getColumnType(column.type)} ${this.#createConstraintClause(column.constraints)} `;
+    });
+
+    return definitionArr;
+  };
+
+  #createConstraintClause = (constraints) => {
+    if (empty(constraints)) {
+      return '';
+    }
+
+    let constraintClause = '';
+    Object.keys(constraints).forEach((constraint) => {
+      const value = constraints[constraint];
+      if (value) {
+        switch (constraint) {
+          case 'required':
+            constraintClause += ' NOT NULL ';
+            break;
+          case 'unique':
+            constraintClause += ' UNIQUE ';
+            break;
+          case 'primary_key':
+            constraintClause += ' PRIMARY KEY ';
+            break;
+          case 'auto_increment':
+            if (constraints.primary_key) {
+              constraintClause += ' AUTOINCREMENT ';
+            }
+            break;
+          case 'default':
+            if (value instanceof RawSQL) {
+              constraintClause += ` DEFAULT (${value.rawSQL}) `;
+            } else if (value === 'CURRENT_TIMESTAMP') {
+              constraintClause += " DEFAULT (datetime(CURRENT_TIMESTAMP, 'localtime')) ";
+            } else if (typeof value === 'string' || typeof value === 'number') {
+              constraintClause += ` DEFAULT ${this.escape(value)} `;
+            }
+            break;
+          case 'check':
+            constraintClause += ` CHECK (${this.#createConditionStr(value)}) `;
+            break;
+          default:
+        }
+      }
+    });
+
+    return constraintClause;
+  };
+
+  #createLimitClause = (limit, offset) => {
+    let limitClause = '';
     const limitArgs = [];
 
     if (!empty(limit)) {
-      limitPhrase += ' LIMIT ? ';
+      limitClause += ' LIMIT ? ';
       limitArgs.push(limit);
 
       if (!empty(offset)) {
-        limitPhrase += ' OFFSET ? ';
+        limitClause += ' OFFSET ? ';
         limitArgs.push(offset);
       }
     }
 
-    return { limitPhrase, limitArgs };
+    return { limitClause, limitArgs };
   };
 
-  #createOrderByPhrase = (orderBy) => {
+  #createOrderByClause = (orderBy) => {
     if (empty(orderBy)) {
       return '';
     }
@@ -179,49 +344,30 @@ export default class SQLite {
     return ` ORDER BY ${orderByArr.join(', ')} `;
   };
 
-  #createSetPhrase = (values) => {
-    const setPhraseArr = [];
+  #createSetClause = (values) => {
+    const setClauseArr = [];
     const setArgs = [];
 
     Object.keys(values).forEach((column) => {
-      setPhraseArr.push(` ${column} = ? `);
+      setClauseArr.push(` ${column} = ? `);
       setArgs.push(values[column]);
     });
 
     return {
-      setPhrase: ` SET ${setPhraseArr.join(',')} `,
+      setClause: ` SET ${setClauseArr.join(',')} `,
       setArgs,
     };
   };
 
-  #createWherePhrase = (condition) => {
+  #createWhereClause = (condition) => {
     const whereArgs = [];
-    const conditionStr = this.#createConditionStr(condition, whereArgs).trim();
-    const wherePhrase = empty(conditionStr) ? '' : ` WHERE ${conditionStr} `;
+    const conditionStr = this.#createConditionStr(condition, whereArgs);
+    const whereClause = empty(conditionStr) ? '' : ` WHERE ${conditionStr} `;
 
-    return { wherePhrase, whereArgs };
+    return { whereClause, whereArgs };
   };
 
-  #getType = (value) => {
-    if (value === null) {
-      return 'NULL';
-    }
-
-    if (typeof value === 'number') {
-      if (String(value).match(/^\d+$/g)) {
-        return 'INTEGER';
-      }
-      return 'REAL';
-    }
-
-    if (typeof value === 'string') {
-      return 'TEXT';
-    }
-
-    return 'BLOB';
-  };
-
-  #getInsertValues = (valueObj) => {
+  #createValuesClause = (valueObj) => {
     const columns = [];
     const values = [];
 
@@ -235,6 +381,111 @@ export default class SQLite {
     return { columns, values, placeholders };
   }
 
+  #getColumnType = (type) => {
+    if (typeof type !== 'string') {
+      return '';
+    }
+
+    switch (type.toUpperCase()) {
+      case 'NULL':
+        return 'NULL';
+      case 'INT':
+      case 'INTEGER':
+        return 'INTEGER';
+      case 'FLOAT':
+      case 'DOUBLE':
+      case 'REAL':
+        return 'REAL';
+      case 'CAHR':
+      case 'VARCHAR':
+      case 'STRING':
+      case 'TEXT':
+      case 'DATETIME':
+      case 'TIMESTAMP':
+        return 'TEXT';
+      case 'BLOB':
+        return 'BLOB';
+      default:
+    }
+
+    return '';
+  };
+
+  #getSqlStmt = (method, ...methodArgs) => {
+    switch (method) {
+      case 'createTable': {
+        const [tableName, columns] = methodArgs;
+        const definitionArr = this.#createColumnDefinitionArr(columns);
+        const sqlStmt = `CREATE TABLE IF NOT EXISTS ${tableName} (${definitionArr.join(',')})`;
+
+        return { sqlStmt, args: [] };
+      }
+      case 'renameTable': {
+        const [oldName, newName] = methodArgs;
+        const sqlStmt = `ALTER TABLE ${oldName} RENAME TO ${newName}`;
+
+        return { sqlStmt, args: [] };
+      }
+      case 'dropTable': {
+        const [tableName] = methodArgs;
+        const sqlStmt = `DROP TABLE IF EXISTS ${tableName}`;
+
+        return { sqlStmt, args: [] };
+      }
+      case 'addColumn': {
+        const [tableName, column] = methodArgs;
+        const definitionArr = this.#createColumnDefinitionArr([column]);
+        const sqlStmt = `ALTER TABLE ${tableName} ADD COLUMN ${definitionArr[0]}`;
+
+        return { sqlStmt, args: [] };
+      }
+      case 'dropColumn': {
+        const [tableName, column] = methodArgs;
+        const sqlStmt = `ALTER TABLE ${tableName} DROP COLUMN ${column}`;
+
+        return { sqlStmt, args: [] };
+      }
+      case 'insert': {
+        const [tableName, valueObj] = methodArgs;
+        const { values, columns, placeholders } = this.#createValuesClause(valueObj);
+        const sqlStmt = `INSERT INTO ${tableName} (${columns.join(', ')}) VALUES (${placeholders.join(', ')})`;
+
+        return { sqlStmt, args: values };
+      }
+      case 'select': {
+        const [tableName, columns, condition, orderBy, limit, offset] = methodArgs;
+        const { whereClause, whereArgs } = this.#createWhereClause(condition);
+        const orderByClause = this.#createOrderByClause(orderBy);
+        const { limitClause, limitArgs } = this.#createLimitClause(limit, offset);
+
+        const sqlStmt = `SELECT ${columns.join(', ')} FROM ${tableName} ${whereClause} ${orderByClause} ${limitClause};`;
+        const args = whereArgs.concat(limitArgs);
+
+        return { sqlStmt, args };
+      }
+      case 'update': {
+        const [tableName, values, condition] = methodArgs;
+        const { setClause, setArgs } = this.#createSetClause(values);
+        const { whereClause, whereArgs } = this.#createWhereClause(condition);
+        const sqlStmt = `UPDATE ${tableName} ${setClause} ${whereClause};`;
+        const args = setArgs.concat(whereArgs);
+
+        return { sqlStmt, args };
+      }
+      case 'delete': {
+        const [tableName, condition] = methodArgs;
+        const { whereClause, whereArgs } = this.#createWhereClause(condition);
+        const sqlStmt = `DELETE FROM ${tableName} ${whereClause};`;
+        const args = whereArgs;
+
+        return { sqlStmt, args };
+      }
+      default:
+    }
+
+    return { sqlStmt: '', args: [] };
+  };
+
   #normalizeOperator = (operator) => {
     let op = '=';
     if (typeof operator === 'string') {
@@ -247,6 +498,14 @@ export default class SQLite {
 
     if (['!=', '!=='].includes(op)) {
       return '<>';
+    }
+
+    if (['IS_NULL', 'ISNULL', 'NULL'].includes(op)) {
+      return 'IS NULL';
+    }
+
+    if (['IS_NOT_NULL', 'NOT_NULL', 'ISNOTNULL', 'NOTNULL'].includes(op)) {
+      return 'IS NOT NULL';
     }
 
     return op;

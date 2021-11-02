@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View } from 'react-native';
+import { Alert, View } from 'react-native';
 
 import ListScreen from './ListScreen';
 
@@ -34,6 +34,7 @@ export default function MemoListScreen(props) {
       setMemos(memosArr);
     }).catch((error) => {
       console.log(error);
+      Alert.alert(error);
     }).finally(() => {
       setIsLoading(false);
     });
