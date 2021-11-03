@@ -91,6 +91,8 @@ export const appStyles = {
   },
   calendarHeader: {
     color: black,
+    fontSize: 18,
+    fontWeight: 'bold',
     gradientColors: subGradientColors,
     height: 48,
     marginBottom: 48,

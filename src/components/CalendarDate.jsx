@@ -1,16 +1,28 @@
-import React from 'react';
-import { StyleSheet, Text, TouchableOpacity } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import {
+  Alert, StyleSheet, Text, TouchableOpacity,
+} from 'react-native';
 import { bool, instanceOf } from 'prop-types';
 import { useNavigation } from '@react-navigation/native';
 import HolidayJP from '@holiday-jp/holiday_jp';
 import { isToday } from 'date-fns';
 
 import { appStyles } from '../style';
-import { date2string } from '../helpers';
+
+import { SchedulesTable, TasksTable } from '../classes/storage';
 
 export default function CalendarDate(props) {
   const navigation = useNavigation();
   const { date, isCurrentMonth } = props;
+  const dateObj = {
+    year: date.getFullYear(),
+    month: date.getMonth(),
+    date: date.getDate(),
+  };
+  const [hasNotes, setHasNotes] = useState(false);
+  const tasksTable = new TasksTable();
+  const schedulesTable = new SchedulesTable();
+
   let backgroundColor = appStyles.calendar.defaultBackgroundColor;
 
   if (date.getDay() === 6) {
@@ -21,18 +33,91 @@ export default function CalendarDate(props) {
     backgroundColor = appStyles.calendar.holidayBackgroundColor;
   }
 
-  function hasNotes() {
-    if (date2string(date, 'date') === '2021/10/05') {
-      return true;
-    }
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', async () => {
+      let tasksResult = { _array: [] };
+      let schedulesResult = { _array: [] };
 
-    return false;
-  }
+      try {
+        tasksResult = await tasksTable.select(
+          ['id', 'title', 'deadline'],
+          {
+            operator: 'AND',
+            value: [
+              {
+                column: 'deadline',
+                operator: '>=',
+                value: tasksTable.datetime(new Date(
+                  date.getFullYear(),
+                  date.getMonth(),
+                  date.getDate(),
+                )),
+              },
+              {
+                column: 'deadline',
+                operator: '<',
+                value: tasksTable.datetime(new Date(
+                  date.getFullYear(),
+                  date.getMonth(),
+                  date.getDate() + 1,
+                )),
+              },
+            ],
+          },
+          [{ column: 'deadline', order: 'ASC' }],
+        );
+
+        schedulesResult = await schedulesTable.select(
+          ['id', 'title', 'start_time', 'end_time'],
+          {
+            operator: 'AND',
+            value: [
+              {
+                column: 'start_time',
+                operator: '>=',
+                value: schedulesTable.datetime(new Date(
+                  date.getFullYear(),
+                  date.getMonth(),
+                  date.getDate(),
+                )),
+              },
+              {
+                column: 'start_time',
+                operator: '<',
+                value: schedulesTable.datetime(new Date(
+                  date.getFullYear(),
+                  date.getMonth(),
+                  date.getDate() + 1,
+                )),
+              },
+            ],
+          },
+          [
+            { column: 'start_time', order: 'ASC' },
+            { column: 'end_time', order: 'ASC' },
+          ],
+        );
+
+        console.log('fetched!', schedulesResult._array, tasksResult._array);
+      } catch (error) {
+        console.log(error);
+        Alert.alert('データの取得に失敗しました。');
+      }
+
+      if (tasksResult._array.length === 0 && schedulesResult._array.length === 0) {
+        setHasNotes(false);
+      } else {
+        setHasNotes(true);
+      }
+    });
+
+    return unsubscribe;
+  }, []);
 
   return (
     <TouchableOpacity
       onPress={() => {
-        navigation.navigate('CalendarDetail');
+        navigation.navigate('CalendarDetail', { date: dateObj });
       }}
       style={[
         styles.container,
@@ -57,7 +142,7 @@ export default function CalendarDate(props) {
       >
         {date.getDate()}
       </Text>
-      {hasNotes(date) ? <Text style={styles.dot}>・</Text> : null}
+      {hasNotes ? <Text style={styles.dot}>・</Text> : null}
     </TouchableOpacity>
   );
 }

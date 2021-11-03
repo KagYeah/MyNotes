@@ -75,8 +75,8 @@ export default function CalendarScreen() {
               refPicker.current.show();
             }}
             backgroundColor={appStyles.calendarHeaderButton.backgroundColor}
-            fontSize={18}
-            fontWeight="bold"
+            fontSize={appStyles.calendarHeader.fontSize}
+            fontWeight={appStyles.calendarHeader.fontWeight}
             height={appStyles.calendarHeader.height - appStyles.calendarHeader.paddingVertical * 2}
             width={200}
           />

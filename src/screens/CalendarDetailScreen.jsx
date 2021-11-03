@@ -1,38 +1,26 @@
 import React from 'react';
+import { number, shape } from 'prop-types';
+import { isToday } from 'date-fns';
 
 import DailyNoteListScreen from './DailyNoteListScreen';
+import { date2string } from '../helpers';
 
-export default function CalendarDetailScreen() {
-  const schedules = [];
-  for (let i = 0; i < 10; i += 1) {
-    schedules.push({
-      id: i,
-      title: 'ミーディング',
-      subtitle: '10:00~12:00',
-    });
-  }
+export default function CalendarDetailScreen(props) {
+  const { route } = props;
+  let { date } = route.params;
+  date = new Date(date.year, date.month, date.date);
 
-  const tasks = [];
-  for (let i = 0; i < 10; i += 1) {
-    tasks.push({
-      id: i,
-      title: '宿題',
-      subtitle: '期限 12:00',
-    });
-  }
-
-  const listData = [
-    {
-      type: 'schedule',
-      title: '2021/10/05の予定',
-      data: schedules,
-    },
-    {
-      type: 'task',
-      title: '2021/10/05のタスク',
-      data: tasks,
-    },
-  ];
-
-  return <DailyNoteListScreen data={listData} appbarTitle="2021/10/05" />;
+  return <DailyNoteListScreen date={date} appbarTitle={isToday(date) ? '今日' : date2string(date, 'date')} />;
 }
+
+CalendarDetailScreen.propTypes = {
+  route: shape({
+    params: shape({
+      date: shape({
+        year: number,
+        month: number,
+        date: number,
+      }),
+    }),
+  }).isRequired,
+};

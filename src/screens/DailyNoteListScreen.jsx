@@ -159,7 +159,7 @@ export default function DailyNoteListScreen(props) {
     const tasks = tasksResult._array.map((row) => ({
       id: row.id,
       title: row.title,
-      subtitle: `期限 ${date2string(row.deadline, 'time')}`,
+      subtitle: `期限 ${date2string(tasksTable.datetime2date(row.deadline), 'time')}`,
     }));
 
     notes.push({
@@ -243,7 +243,7 @@ export default function DailyNoteListScreen(props) {
                 toggleCheckedId(type, item.id);
               }}
               onPressWithoutCheckBox={() => {
-                navigation.navigate(`${capitalize(type)}Edit`);
+                navigation.navigate(`${capitalize(type)}Edit`, { id: item.id });
               }}
             />
           );
