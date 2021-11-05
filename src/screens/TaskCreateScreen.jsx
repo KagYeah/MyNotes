@@ -10,6 +10,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import * as Notifications from 'expo-notifications';
 
 import Button from '../components/Button';
 import DateTimeInput from '../components/DateTimeInput';
@@ -18,7 +19,7 @@ import NoteTitleInput from '../components/NoteTitleInput';
 import SaveButton from '../components/SaveButton';
 import TypeList from '../components/TypeList';
 import { appStyles } from '../style';
-import { sleep } from '../helpers';
+import { date2string, sleep } from '../helpers';
 
 import { TasksTable } from '../classes/storage';
 
@@ -104,16 +105,35 @@ export default function TaskCreateScreen(props) {
     setShowTypeList(!showTypeList);
   }
 
-  function saveTask() {
+  async function saveTask() {
+    const deadlineDate = new Date(
+      date.getFullYear(),
+      date.getMonth(),
+      date.getDate(),
+      time.getHours(),
+      time.getMinutes(),
+    );
+
+    let notificationId = null;
+
+    try {
+      notificationId = await Notifications.scheduleNotificationAsync({
+        content: {
+          title,
+          body: `期限 ${date2string(deadlineDate, 'datetime')}`,
+        },
+        trigger: deadlineDate,
+      });
+    } catch (error) {
+      console.log(error);
+      Alert.alert('データの保存に失敗しました。');
+      return;
+    }
+
     const values = {
       title,
-      deadline: tasksTable.datetime(new Date(
-        date.getFullYear(),
-        date.getMonth(),
-        date.getDate(),
-        time.getHours(),
-        time.getMinutes(),
-      )),
+      deadline: tasksTable.datetime(deadlineDate),
+      notification_id: notificationId,
     };
 
     setIsLoading(true);
@@ -122,8 +142,9 @@ export default function TaskCreateScreen(props) {
         console.log('Saved!');
         navigation.navigate('Root', { screen: 'TaskList' });
       })
-      .catch((error) => {
+      .catch(async (error) => {
         console.log(error);
+        await Notifications.cancelScheduledNotificationAsync(notificationId);
         Alert.alert('データの保存に失敗しました。');
       })
       .finally(() => {

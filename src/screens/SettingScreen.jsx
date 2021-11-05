@@ -1,24 +1,67 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
-  FlatList, StatusBar, StyleSheet, Switch, Text, View,
+  Alert,
+  FlatList,
+  StatusBar,
+  StyleSheet,
+  Switch,
+  Text,
+  View,
 } from 'react-native';
+import * as Notifications from 'expo-notifications';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import ListItem from '../components/ListItem';
 import { appStyles } from '../style';
 
 export default function SettingScreen(props) {
   const { navigation } = props;
-  const [enableNotification, setEnableNotification] = useState(false);
+  const [notificationEnabled, setNotificationEnabled] = useState(false);
+
+  useEffect(() => {
+    initNotificationEnabled();
+  }, []);
+
+  async function initNotificationEnabled() {
+    try {
+      const enabled = (await AsyncStorage.getItem('@notification_enabled')) === 'true';
+      setNotificationEnabled(enabled);
+    } catch (error) {
+      console.log(error);
+      Alert.alert('データの取得に失敗しました。');
+      navigation.goBack();
+    }
+  }
+
+  async function toggleNotificationEnabled() {
+    const enabled = !notificationEnabled;
+    try {
+      await AsyncStorage.setItem('@notification_enabled', String(enabled));
+    } catch (error) {
+      console.log(error);
+      Alert.alert('設定に失敗しました。');
+      return;
+    }
+
+    setNotificationEnabled(enabled);
+    Notifications.setNotificationHandler({
+      handleNotification: async () => ({
+        shouldShowAlert: enabled,
+        shouldPlaySound: false,
+        shouldSetBadge: false,
+      }),
+    });
+  }
 
   const settings = [
     {
       id: 0,
       label: '通知',
-      onPress: () => setEnableNotification(!enableNotification),
+      onPress: toggleNotificationEnabled,
       with: (
         <Switch
-          onValueChange={() => setEnableNotification(!enableNotification)}
-          value={enableNotification}
+          onValueChange={toggleNotificationEnabled}
+          value={notificationEnabled}
         />
       ),
     },

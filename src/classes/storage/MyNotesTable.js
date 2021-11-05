@@ -7,6 +7,26 @@ export default class MyNotesTable extends BaseTable {
     return this.select(columns, { column: 'id', value: id });
   }
 
+  selectByIds(ids = [], columns = ['*']) {
+    if (empty(ids)) {
+      return new Promise((resolve) => { resolve(); });
+    }
+
+    const condition = {
+      operator: 'OR',
+      value: [],
+    };
+
+    ids.forEach((id) => {
+      condition.value.push({
+        column: 'id',
+        value: id,
+      });
+    });
+
+    return this.select(columns, condition);
+  }
+
   updateById(id, values) {
     return this.update(values, { column: 'id', value: id });
   }
@@ -17,7 +37,7 @@ export default class MyNotesTable extends BaseTable {
 
   deleteByIds(ids = []) {
     if (empty(ids)) {
-      return new Promise(() => {});
+      return new Promise((resolve) => { resolve(); });
     }
 
     const condition = {

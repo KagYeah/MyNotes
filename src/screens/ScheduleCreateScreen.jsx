@@ -10,6 +10,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import * as Notifications from 'expo-notifications';
 
 import Button from '../components/Button';
 import DateTimeInput from '../components/DateTimeInput';
@@ -18,7 +19,7 @@ import NoteTitleInput from '../components/NoteTitleInput';
 import SaveButton from '../components/SaveButton';
 import TypeList from '../components/TypeList';
 import { appStyles } from '../style';
-import { sleep } from '../helpers';
+import { date2string, sleep } from '../helpers';
 
 import { SchedulesTable } from '../classes/storage';
 
@@ -105,23 +106,44 @@ export default function ScheduleCreateScreen(props) {
     setShowTypeList(!showTypeList);
   }
 
-  function saveSchedule() {
+  async function saveSchedule() {
+    const startTimeDate = new Date(
+      date.getFullYear(),
+      date.getMonth(),
+      date.getDate(),
+      startTime.getHours(),
+      startTime.getMinutes(),
+    );
+
+    const endTimeDate = new Date(
+      date.getFullYear(),
+      date.getMonth(),
+      date.getDate(),
+      endTime.getHours(),
+      endTime.getMinutes(),
+    );
+
+    let notificationId = null;
+
+    try {
+      notificationId = await Notifications.scheduleNotificationAsync({
+        content: {
+          title,
+          body: `${date2string(startTimeDate, 'datetime')} ~ ${date2string(endTimeDate, 'time')}`,
+        },
+        trigger: startTimeDate,
+      });
+    } catch (error) {
+      console.log(error);
+      Alert.alert('データの保存に失敗しました。');
+      return;
+    }
+
     const values = {
       title,
-      start_time: schedulesTable.datetime(new Date(
-        date.getFullYear(),
-        date.getMonth(),
-        date.getDate(),
-        startTime.getHours(),
-        startTime.getMinutes(),
-      )),
-      end_time: schedulesTable.datetime(new Date(
-        date.getFullYear(),
-        date.getMonth(),
-        date.getDate(),
-        endTime.getHours(),
-        endTime.getMinutes(),
-      )),
+      start_time: schedulesTable.datetime(startTimeDate),
+      end_time: schedulesTable.datetime(endTimeDate),
+      notification_id: notificationId,
     };
 
     setIsLoading(true);
@@ -130,8 +152,9 @@ export default function ScheduleCreateScreen(props) {
         console.log('Saved!');
         navigation.navigate('Root', { screen: 'ScheduleList' });
       })
-      .catch((error) => {
+      .catch(async (error) => {
         console.log(error);
+        await Notifications.cancelScheduledNotificationAsync(notificationId);
         Alert.alert('データの保存に失敗しました。');
       })
       .finally(() => {

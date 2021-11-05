@@ -29,7 +29,13 @@ import Button from './src/components/Button';
 import { appStyles } from './src/style';
 
 import { MigrationController } from './src/lib/storage/migration';
-import { CreateMemosTable, CreateSchedulesTable, CreateTasksTable } from './src/classes/migration';
+import {
+  AddNotificationIdToSchedulesTable,
+  AddNotificationIdToTasksTable,
+  CreateMemosTable,
+  CreateSchedulesTable,
+  CreateTasksTable,
+} from './src/classes/migration';
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -47,6 +53,8 @@ export default function App() {
           CreateMemosTable,
           CreateTasksTable,
           CreateSchedulesTable,
+          AddNotificationIdToTasksTable,
+          AddNotificationIdToSchedulesTable,
         ]);
         console.log('Migrated!');
       } catch (error) {

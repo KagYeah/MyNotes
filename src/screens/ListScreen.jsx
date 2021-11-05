@@ -6,6 +6,7 @@ import {
   arrayOf, func, number, oneOf, oneOfType, shape, string,
 } from 'prop-types';
 import { useNavigation } from '@react-navigation/native';
+import * as Notifications from 'expo-notifications';
 
 import Button from '../components/Button';
 import CreateButton from '../components/CreateButton';
@@ -98,7 +99,21 @@ export default function ListScreen(props) {
     }
   }
 
-  function deleteNotes() {
+  async function deleteNotes() {
+    if (type === 'task' || type === 'schedule') {
+      try {
+        const result = await table.selectByIds(checkedIds, ['notification_id']);
+        const promiseAll = result._array.map((row) => (
+          Notifications.cancelScheduledNotificationAsync(row.notification_id)
+        ));
+        await Promise.all(promiseAll);
+      } catch (error) {
+        console.log(error);
+        Alert.alert('データの削除に失敗しました。');
+        return;
+      }
+    }
+
     table.deleteByIds(checkedIds)
       .then(() => {
         console.log('Deleted!');

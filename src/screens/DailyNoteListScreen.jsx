@@ -5,6 +5,7 @@ import {
 import { instanceOf, string } from 'prop-types';
 import { useNavigation } from '@react-navigation/native';
 import { isToday } from 'date-fns';
+import * as Notifications from 'expo-notifications';
 
 import Button from '../components/Button';
 import CreateButton from '../components/CreateButton';
@@ -183,7 +184,7 @@ export default function DailyNoteListScreen(props) {
     setData(notes);
   }
 
-  function deleteNotes(type) {
+  async function deleteNotes(type) {
     let table = new MyNotesTable();
     let ids = [];
 
@@ -199,9 +200,21 @@ export default function DailyNoteListScreen(props) {
       default:
     }
 
+    try {
+      const result = await table.selectByIds(ids, ['notification_id']);
+      const promiseAll = result._array.map((row) => (
+        Notifications.cancelScheduledNotificationAsync(row.notification_id)
+      ));
+      await Promise.all(promiseAll);
+    } catch (error) {
+      console.log(error);
+      Alert.alert('データの削除に失敗しました。');
+      return;
+    }
+
     table.deleteByIds(ids)
       .then(() => {
-        console.log('Saved!');
+        console.log('Deleted!');
         fetch();
       })
       .catch((error) => {

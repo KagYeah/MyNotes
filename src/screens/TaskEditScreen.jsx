@@ -3,6 +3,7 @@ import {
   Alert, Keyboard, KeyboardAvoidingView, ScrollView, StatusBar, StyleSheet, View,
 } from 'react-native';
 import { number, shape } from 'prop-types';
+import * as Notifications from 'expo-notifications';
 
 import Button from '../components/Button';
 import DateTimeInput from '../components/DateTimeInput';
@@ -11,6 +12,7 @@ import Loading from '../components/Loading';
 import NoteTitleInput from '../components/NoteTitleInput';
 import SaveButton from '../components/SaveButton';
 import { appStyles } from '../style';
+import { date2string } from '../helpers';
 
 import { TasksTable } from '../classes/storage';
 
@@ -22,6 +24,7 @@ export default function TaskEditScreen(props) {
   const [title, setTitle] = useState('');
   const [showKeyboardHidingButton, setShowKeyboardHidingButton] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [notificationId, setNotificationId] = useState(null);
   const tasksTable = new TasksTable();
 
   useEffect(() => {
@@ -54,13 +57,14 @@ export default function TaskEditScreen(props) {
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
       setIsLoading(true);
-      tasksTable.selectById(id, ['title', 'deadline'])
+      tasksTable.selectById(id, ['title', 'deadline', 'notification_id'])
         .then((result) => {
           console.log('fetched!', result._array);
           const row = result._array[0];
           setDate(tasksTable.datetime2date(row.deadline));
           setTime(tasksTable.datetime2date(row.deadline));
           setTitle(row.title);
+          setNotificationId(row.notification_id);
         })
         .catch(() => {
           Alert.alert(
@@ -82,26 +86,49 @@ export default function TaskEditScreen(props) {
     return unsubscribe;
   }, []);
 
-  function saveTask() {
-    const values = {
-      title,
-      deadline: tasksTable.datetime(new Date(
-        date.getFullYear(),
-        date.getMonth(),
-        date.getDate(),
-        time.getHours(),
-        time.getMinutes(),
-      )),
-    };
+  async function saveTask() {
+    const deadlineDate = new Date(
+      date.getFullYear(),
+      date.getMonth(),
+      date.getDate(),
+      time.getHours(),
+      time.getMinutes(),
+    );
+
+    let newNotificationId = null;
 
     setIsLoading(true);
+
+    try {
+      await Notifications.cancelScheduledNotificationAsync(notificationId);
+      newNotificationId = await Notifications.scheduleNotificationAsync({
+        content: {
+          title,
+          body: `期限 ${date2string(deadlineDate, 'datetime')}`,
+        },
+        trigger: deadlineDate,
+      });
+      setNotificationId(newNotificationId);
+    } catch (error) {
+      console.log(error);
+      Alert.alert('データの保存に失敗しました。');
+      return;
+    }
+
+    const values = {
+      title,
+      deadline: tasksTable.datetime(deadlineDate),
+      notification_id: newNotificationId,
+    };
+
     tasksTable.updateById(id, values)
       .then(() => {
         console.log('Saved!');
         navigation.goBack();
       })
-      .catch((error) => {
+      .catch(async (error) => {
         console.log(error);
+        await Notifications.cancelScheduledNotificationAsync(newNotificationId);
         Alert.alert('データの保存に失敗しました。');
       })
       .finally(() => {
@@ -109,8 +136,17 @@ export default function TaskEditScreen(props) {
       });
   }
 
-  function deleteTask() {
+  async function deleteTask() {
     setIsLoading(true);
+
+    try {
+      await Notifications.cancelScheduledNotificationAsync(notificationId);
+    } catch (error) {
+      console.log(error);
+      Alert.alert('データの削除に失敗しました。');
+      return;
+    }
+
     tasksTable.deleteById(id)
       .then(() => {
         console.log('Deleted!');
