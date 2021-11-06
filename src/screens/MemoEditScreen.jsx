@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import {
   Alert,
   Keyboard,
@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import { number, shape } from 'prop-types';
 
+import { ThemeContext } from '../contexts';
 import Button from '../components/Button';
 import DeleteButton from '../components/DeleteButton';
 import Loading from '../components/Loading';
@@ -17,10 +18,10 @@ import NoteBodyInput from '../components/NoteBodyInput';
 import NoteTitleInput from '../components/NoteTitleInput';
 import SaveButton from '../components/SaveButton';
 import { appStyles } from '../style';
-
 import { MemosTable } from '../classes/storage';
 
 export default function MemoEditScreen(props) {
+  const { theme } = useContext(ThemeContext);
   const { navigation, route } = props;
   const { id } = route.params;
   const [title, setTitle] = useState('');
@@ -35,8 +36,8 @@ export default function MemoEditScreen(props) {
         <Button
           label="完了"
           onPress={() => Keyboard.dismiss()}
-          backgroundColor={appStyles.appbarButton.backgroundColor}
-          color={appStyles.appbarButton.color}
+          backgroundColor={appStyles(theme).appbarButton.backgroundColor}
+          color={appStyles(theme).appbarButton.color}
         />
       ) : null,
     });
@@ -122,12 +123,12 @@ export default function MemoEditScreen(props) {
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}
-      behavior={appStyles.keyboardAvoidingView.behavior}
-      keyboardVerticalOffset={appStyles.keyboardAvoidingView.verticalOffset}
+      behavior={appStyles(theme).keyboardAvoidingView.behavior}
+      keyboardVerticalOffset={appStyles(theme).keyboardAvoidingView.verticalOffset}
     >
       <Loading isLoading={isLoading} />
-      <View style={styles.container}>
-        <StatusBar barStyle={appStyles.statusbar.barStyle} />
+      <View style={styles(theme).container}>
+        <StatusBar barStyle={appStyles(theme).statusbar.barStyle} />
 
         <ScrollView>
           <NoteTitleInput
@@ -161,8 +162,8 @@ export default function MemoEditScreen(props) {
               );
             }}
             style={{ alignSelf: 'center' }}
-            height={appStyles.deleteButton.height}
-            width={appStyles.deleteButton.width}
+            height={appStyles(theme).deleteButton.height}
+            width={appStyles(theme).deleteButton.width}
           />
 
         </ScrollView>
@@ -181,9 +182,9 @@ MemoEditScreen.propTypes = {
   }).isRequired,
 };
 
-const styles = StyleSheet.create({
+const styles = (theme) => StyleSheet.create({
   container: {
-    backgroundColor: appStyles.app.backgroundColor,
+    backgroundColor: appStyles(theme).app.backgroundColor,
     flex: 1,
   },
 });

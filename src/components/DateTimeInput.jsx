@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import {
   Platform,
   StyleSheet, Text, TouchableOpacity,
@@ -8,11 +8,13 @@ import {
   func, instanceOf, oneOf, string,
 } from 'prop-types';
 
+import { ThemeContext } from '../contexts';
 import Button from './Button';
 import { appStyles } from '../style';
 import { date2string } from '../helpers';
 
 export default function DateTimeInput(props) {
+  const { theme } = useContext(ThemeContext);
   const {
     label, mode, onChange, value,
   } = props;
@@ -22,19 +24,19 @@ export default function DateTimeInput(props) {
     <>
       <TouchableOpacity
         onPress={() => setShowPicker(true)}
-        style={styles.container}
+        style={styles(theme).container}
       >
-        <Text style={styles.text}>{label}</Text>
+        <Text style={styles(theme).text}>{label}</Text>
         {showPicker && Platform.OS === 'ios'
           ? (
             <Button
               label="OK"
               onPress={() => setShowPicker(false)}
-              backgroundColor={styles.container.backgroundColor}
-              height={styles.container.height - styles.container.paddingVertical}
+              backgroundColor={styles(theme).container.backgroundColor}
+              height={styles(theme).container.height - styles(theme).container.paddingVertical}
             />
           ) : (
-            <Text style={styles.text}>{date2string(value, mode, true)}</Text>
+            <Text style={styles(theme).text}>{date2string(value, mode, true)}</Text>
           )}
       </TouchableOpacity>
 
@@ -45,7 +47,7 @@ export default function DateTimeInput(props) {
           is24Hour
           display={mode === 'date' && Platform.OS === 'android' ? 'calendar' : 'spinner'}
           locale="ja-JP"
-          style={styles.picker}
+          style={styles(theme).picker}
           onChange={(event, selectedValue) => {
             setShowPicker(Platform.OS === 'ios');
             onChange(selectedValue);
@@ -67,24 +69,24 @@ DateTimeInput.defaultProps = {
   onChange: () => {},
 };
 
-const styles = StyleSheet.create({
+const styles = (theme) => StyleSheet.create({
   container: {
     alignItems: 'center',
-    backgroundColor: appStyles.datetimeInput.backgroundColor,
-    borderBottomColor: appStyles.datetimeInput.borderBottomColor,
-    borderBottomWidth: appStyles.datetimeInput.borderBottomWidth,
+    backgroundColor: appStyles(theme).datetimeInput.backgroundColor,
+    borderBottomColor: appStyles(theme).datetimeInput.borderBottomColor,
+    borderBottomWidth: appStyles(theme).datetimeInput.borderBottomWidth,
     flexDirection: 'row',
-    height: appStyles.datetimeInput.height,
+    height: appStyles(theme).datetimeInput.height,
     justifyContent: 'space-between',
-    paddingHorizontal: appStyles.datetimeInput.paddingHorizontal,
-    paddingVertical: appStyles.datetimeInput.paddingVertical,
+    paddingHorizontal: appStyles(theme).datetimeInput.paddingHorizontal,
+    paddingVertical: appStyles(theme).datetimeInput.paddingVertical,
     width: '100%',
   },
   text: {
-    color: appStyles.datetimeInput.color,
-    fontSize: appStyles.datetimeInput.fontSize,
+    color: appStyles(theme).datetimeInput.color,
+    fontSize: appStyles(theme).datetimeInput.fontSize,
   },
   picker: {
-    backgroundColor: appStyles.datetimePicker.backgroundColor,
+    backgroundColor: appStyles(theme).datetimePicker.backgroundColor,
   },
 });

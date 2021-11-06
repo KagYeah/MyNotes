@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { ActivityIndicator, StyleSheet, View } from 'react-native';
 import { bool } from 'prop-types';
 
+import { ThemeContext } from '../contexts';
 import { appStyles } from '../style';
 
 export default function Loading(props) {
+  const { theme } = useContext(ThemeContext);
   const { isLoading } = props;
 
   if (!isLoading) {
@@ -12,9 +14,9 @@ export default function Loading(props) {
   }
 
   return (
-    <View style={styles.container}>
-      <View style={styles.inner}>
-        <ActivityIndicator size="large" color={appStyles.loading.color} />
+    <View style={styles(theme).container}>
+      <View style={styles(theme).inner}>
+        <ActivityIndicator size="large" color={appStyles(theme).loading.color} />
       </View>
     </View>
   );
@@ -28,10 +30,10 @@ Loading.defaultProps = {
   isLoading: false,
 };
 
-const styles = StyleSheet.create({
+const styles = (theme) => StyleSheet.create({
   container: {
     alignItems: 'center',
-    backgroundColor: appStyles.loading.backgroundColor,
+    backgroundColor: appStyles(theme).loading.backgroundColor,
     bottom: 0,
     height: '100%',
     justifyContent: 'center',
@@ -40,9 +42,9 @@ const styles = StyleSheet.create({
     right: 0,
     top: 0,
     width: '100%',
-    zIndex: appStyles.loading.zIndex,
+    zIndex: appStyles(theme).loading.zIndex,
   },
   inner: {
-    marginBottom: appStyles.appbar.height / 2,
+    marginBottom: appStyles(theme).appbar.height / 2,
   },
 });

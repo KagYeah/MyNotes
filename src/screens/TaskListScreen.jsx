@@ -4,7 +4,6 @@ import { Alert, View } from 'react-native';
 import ListScreen from './ListScreen';
 import Loading from '../components/Loading';
 import { date2string } from '../helpers';
-
 import { TasksTable } from '../classes/storage';
 
 export default function TaskListScreen(props) {

@@ -1,23 +1,25 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { StyleSheet, View, Text } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { element, oneOfType, string } from 'prop-types';
 
+import { ThemeContext } from '../contexts';
 import { appStyles } from '../style';
 
 export default function AppBar(props) {
+  const { theme } = useContext(ThemeContext);
   const { title, left, right } = props;
   let titleComponent = title;
 
   if (typeof title === 'string') {
-    titleComponent = <Text style={styles.title}>{title}</Text>;
+    titleComponent = <Text style={styles(theme).title}>{title}</Text>;
   }
 
   return (
-    <LinearGradient colors={appStyles.appbar.gradientColors} style={styles.container}>
-      <View style={styles.inner}>{titleComponent}</View>
-      <View style={styles.left}>{left}</View>
-      <View style={styles.right}>{right}</View>
+    <LinearGradient colors={appStyles(theme).appbar.gradientColors} style={styles(theme).container}>
+      <View style={styles(theme).inner}>{titleComponent}</View>
+      <View style={styles(theme).left}>{left}</View>
+      <View style={styles(theme).right}>{right}</View>
     </LinearGradient>
   );
 }
@@ -33,30 +35,30 @@ AppBar.defaultProps = {
   right: null,
 };
 
-const styles = StyleSheet.create({
+const styles = (theme) => StyleSheet.create({
   container: {
-    height: appStyles.appbar.height,
+    height: appStyles(theme).appbar.height,
     justifyContent: 'flex-end',
     width: '100%',
-    zIndex: appStyles.appbar.zIndex,
+    zIndex: appStyles(theme).appbar.zIndex,
   },
   inner: {
     alignItems: 'center',
-    marginBottom: appStyles.appbar.paddingBottom,
+    marginBottom: appStyles(theme).appbar.paddingBottom,
   },
   title: {
-    color: appStyles.appbarTitle.color,
-    fontSize: appStyles.appbarTitle.fontSize,
+    color: appStyles(theme).appbarTitle.color,
+    fontSize: appStyles(theme).appbarTitle.fontSize,
     fontWeight: 'bold',
   },
   left: {
     bottom: 0,
-    left: appStyles.appbar.paddingHorizontal,
+    left: appStyles(theme).appbar.paddingHorizontal,
     position: 'absolute',
   },
   right: {
     bottom: 0,
     position: 'absolute',
-    right: appStyles.appbar.paddingHorizontal,
+    right: appStyles(theme).appbar.paddingHorizontal,
   },
 });

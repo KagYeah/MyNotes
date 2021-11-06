@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import {
   Alert, StyleSheet, Text, TouchableOpacity,
 } from 'react-native';
@@ -7,11 +7,12 @@ import { useNavigation } from '@react-navigation/native';
 import HolidayJP from '@holiday-jp/holiday_jp';
 import { isToday } from 'date-fns';
 
+import { ThemeContext } from '../contexts';
 import { appStyles } from '../style';
-
 import { SchedulesTable, TasksTable } from '../classes/storage';
 
 export default function CalendarDate(props) {
+  const { theme } = useContext(ThemeContext);
   const navigation = useNavigation();
   const { date, isCurrentMonth } = props;
   const dateObj = {
@@ -23,14 +24,14 @@ export default function CalendarDate(props) {
   const tasksTable = new TasksTable();
   const schedulesTable = new SchedulesTable();
 
-  let backgroundColor = appStyles.calendar.defaultBackgroundColor;
+  let backgroundColor = appStyles(theme).calendar.defaultBackgroundColor;
 
   if (date.getDay() === 6) {
-    backgroundColor = appStyles.calendar.saturdayBackgroundColor;
+    backgroundColor = appStyles(theme).calendar.saturdayBackgroundColor;
   }
 
   if (date.getDay() === 0 || HolidayJP.between(date, date).length > 0) {
-    backgroundColor = appStyles.calendar.holidayBackgroundColor;
+    backgroundColor = appStyles(theme).calendar.holidayBackgroundColor;
   }
 
   useEffect(() => {
@@ -120,29 +121,29 @@ export default function CalendarDate(props) {
         navigation.navigate('CalendarDetail', { date: dateObj });
       }}
       style={[
-        styles.container,
+        styles(theme).container,
         {
           backgroundColor,
           borderColor: isToday(date)
-            ? appStyles.calendar.todayBorderColor
-            : appStyles.calendar.dateBorderColor,
+            ? appStyles(theme).calendar.todayBorderColor
+            : appStyles(theme).calendar.dateBorderColor,
           borderWidth: isToday(date) ? 2 : 1,
         },
       ]}
     >
       <Text
         style={[
-          styles.number,
+          styles(theme).number,
           {
             color: isCurrentMonth
-              ? appStyles.calendar.currenMonthNumberColor
-              : appStyles.calendar.notCurrentMonthNumberColor,
+              ? appStyles(theme).calendar.currenMonthNumberColor
+              : appStyles(theme).calendar.notCurrentMonthNumberColor,
           },
         ]}
       >
         {date.getDate()}
       </Text>
-      {hasNotes ? <Text style={styles.dot}>・</Text> : null}
+      {hasNotes ? <Text style={styles(theme).dot}>・</Text> : null}
     </TouchableOpacity>
   );
 }
@@ -152,21 +153,21 @@ CalendarDate.propTypes = {
   isCurrentMonth: bool.isRequired,
 };
 
-const styles = StyleSheet.create({
+const styles = (theme) => StyleSheet.create({
   container: {
     alignItems: 'center',
-    borderColor: appStyles.calendar.dateBorderColor,
+    borderColor: appStyles(theme).calendar.dateBorderColor,
     borderWidth: 1,
-    height: appStyles.calendar.dateHeight,
-    width: appStyles.calendar.dateWidth,
+    height: appStyles(theme).calendar.dateHeight,
+    width: appStyles(theme).calendar.dateWidth,
   },
   number: {
-    fontSize: appStyles.calendar.fontSize,
+    fontSize: appStyles(theme).calendar.fontSize,
     fontWeight: 'bold',
-    lineHeight: appStyles.calendar.dateHeight / 2,
+    lineHeight: appStyles(theme).calendar.dateHeight / 2,
   },
   dot: {
-    color: appStyles.calendar.dotColor,
-    lineHeight: appStyles.calendar.dateHeight / 2,
+    color: appStyles(theme).calendar.dotColor,
+    lineHeight: appStyles(theme).calendar.dateHeight / 2,
   },
 });

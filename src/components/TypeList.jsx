@@ -1,44 +1,46 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { ScrollView, StyleSheet, Text } from 'react-native';
 import { shape } from 'prop-types';
 import { StackActions, useNavigation } from '@react-navigation/native';
 
+import { ThemeContext } from '../contexts';
 import ListItem from './ListItem';
 import { appStyles } from '../style';
 
-// if you change the number of ListItem, edit appStyles.typeListItem.count
+// if you change the number of ListItem, edit appStyles(theme).typeListItem.count
 export default function TypeList(props) {
+  const { theme } = useContext(ThemeContext);
   const navigation = useNavigation();
   const { style } = props;
 
   return (
-    <ScrollView style={[styles.container, style]}>
+    <ScrollView style={[styles(theme).container, style]}>
       <ListItem
-        title={<Text style={styles.text}>メモ</Text>}
+        title={<Text style={styles(theme).text}>メモ</Text>}
         onPress={() => {
           navigation.dispatch(StackActions.replace('MemoCreate'));
         }}
-        style={{ opacity: appStyles.typeListItem.opacity, height: appStyles.typeListItem.height }}
+        style={styles(theme).listItem}
         linearGradient
-        options={{ colors: appStyles.typeListItem.gradientColors }}
+        options={{ colors: appStyles(theme).typeListItem.gradientColors }}
       />
       <ListItem
-        title={<Text style={styles.text}>タスク</Text>}
+        title={<Text style={styles(theme).text}>タスク</Text>}
         onPress={() => {
           navigation.dispatch(StackActions.replace('TaskCreate'));
         }}
-        style={{ opacity: appStyles.typeListItem.opacity, height: appStyles.typeListItem.height }}
+        style={styles(theme).listItem}
         linearGradient
-        options={{ colors: appStyles.typeListItem.gradientColors }}
+        options={{ colors: appStyles(theme).typeListItem.gradientColors }}
       />
       <ListItem
-        title={<Text style={styles.text}>予定</Text>}
+        title={<Text style={styles(theme).text}>予定</Text>}
         onPress={() => {
           navigation.dispatch(StackActions.replace('ScheduleCreate'));
         }}
-        style={{ opacity: appStyles.typeListItem.opacity, height: appStyles.typeListItem.height }}
+        style={styles(theme).listItem}
         linearGradient
-        options={{ colors: appStyles.typeListItem.gradientColors }}
+        options={{ colors: appStyles(theme).typeListItem.gradientColors }}
       />
     </ScrollView>
   );
@@ -52,12 +54,16 @@ TypeList.defaultProps = {
   style: null,
 };
 
-const styles = StyleSheet.create({
+const styles = (theme) => StyleSheet.create({
   container: {
   },
   text: {
     alignSelf: 'center',
-    color: appStyles.typeListItem.color,
-    fontSize: appStyles.typeListItem.fontSize,
+    color: appStyles(theme).typeListItem.color,
+    fontSize: appStyles(theme).typeListItem.fontSize,
+  },
+  listItem: {
+    opacity: appStyles(theme).typeListItem.opacity,
+    height: appStyles(theme).typeListItem.height,
   },
 });

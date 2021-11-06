@@ -1,4 +1,6 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, {
+  useContext, useEffect, useRef, useState,
+} from 'react';
 import {
   Alert,
   Animated,
@@ -12,6 +14,7 @@ import {
 } from 'react-native';
 import * as Notifications from 'expo-notifications';
 
+import { ThemeContext } from '../contexts';
 import Button from '../components/Button';
 import DateTimeInput from '../components/DateTimeInput';
 import Loading from '../components/Loading';
@@ -20,10 +23,10 @@ import SaveButton from '../components/SaveButton';
 import TypeList from '../components/TypeList';
 import { appStyles } from '../style';
 import { date2string, sleep } from '../helpers';
-
 import { SchedulesTable } from '../classes/storage';
 
 export default function ScheduleCreateScreen(props) {
+  const { theme } = useContext(ThemeContext);
   const { navigation } = props;
   const [date, setDate] = useState(new Date());
   const [startTime, setStartTime] = useState(new Date());
@@ -44,10 +47,10 @@ export default function ScheduleCreateScreen(props) {
             toggleTypeList();
             Keyboard.dismiss();
           }}
-          backgroundColor={appStyles.appbarButton.backgroundColor}
-          color={appStyles.appbarButton.color}
-          fontSize={appStyles.appbarTitle.fontSize}
-          height={appStyles.appbarTitle.fontSize}
+          backgroundColor={appStyles(theme).appbarButton.backgroundColor}
+          color={appStyles(theme).appbarButton.color}
+          fontSize={appStyles(theme).appbarTitle.fontSize}
+          height={appStyles(theme).appbarTitle.fontSize}
           width={200}
         />
       ),
@@ -60,8 +63,8 @@ export default function ScheduleCreateScreen(props) {
         <Button
           label="完了"
           onPress={() => Keyboard.dismiss()}
-          backgroundColor={appStyles.appbarButton.backgroundColor}
-          color={appStyles.appbarButton.color}
+          backgroundColor={appStyles(theme).appbarButton.backgroundColor}
+          color={appStyles(theme).appbarButton.color}
         />
       ) : null,
     });
@@ -84,7 +87,7 @@ export default function ScheduleCreateScreen(props) {
   async function animateTypeList() {
     if (!showTypeList) {
       Animated.timing(typeListTranslateY, {
-        toValue: appStyles.listItem.height * appStyles.typeListItem.count,
+        toValue: appStyles(theme).listItem.height * appStyles(theme).typeListItem.count,
         duration: 500,
         useNativeDriver: true,
       }).start();
@@ -165,27 +168,27 @@ export default function ScheduleCreateScreen(props) {
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}
-      behavior={appStyles.keyboardAvoidingView.behavior}
-      keyboardVerticalOffset={appStyles.keyboardAvoidingView.verticalOffset}
+      behavior={appStyles(theme).keyboardAvoidingView.behavior}
+      keyboardVerticalOffset={appStyles(theme).keyboardAvoidingView.verticalOffset}
     >
       <Loading isLoading={isLoading} />
 
-      <View style={styles.container}>
-        <StatusBar barStyle={appStyles.statusbar.barStyle} />
+      <View style={styles(theme).container}>
+        <StatusBar barStyle={appStyles(theme).statusbar.barStyle} />
 
         {showTypeList ? (
           <>
             <TouchableOpacity
-              activeOpacity={appStyles.typeListBackground.opacity}
+              activeOpacity={appStyles(theme).typeListBackground.opacity}
               onPress={toggleTypeList}
-              style={styles.typeListBackground}
+              style={styles(theme).typeListBackground}
             />
             <Animated.View
               style={[
-                styles.typeList,
+                styles(theme).typeList,
                 {
                   transform: [{ translateY: typeListTranslateY }],
-                  zIndex: appStyles.appbar.zIndex - 1,
+                  zIndex: appStyles(theme).appbar.zIndex - 1,
                 },
               ]}
             >
@@ -231,23 +234,23 @@ export default function ScheduleCreateScreen(props) {
   );
 }
 
-const styles = StyleSheet.create({
+const styles = (theme) => StyleSheet.create({
   container: {
-    backgroundColor: appStyles.app.backgroundColor,
+    backgroundColor: appStyles(theme).app.backgroundColor,
     flex: 1,
   },
   typeList: {
     position: 'absolute',
-    top: (-1) * appStyles.listItem.height * appStyles.typeListItem.count,
+    top: (-1) * appStyles(theme).listItem.height * appStyles(theme).typeListItem.count,
     width: '100%',
   },
   typeListBackground: {
-    backgroundColor: appStyles.typeListBackground.backgroundColor,
+    backgroundColor: appStyles(theme).typeListBackground.backgroundColor,
     height: '100%',
-    opacity: appStyles.typeListBackground.opacity,
+    opacity: appStyles(theme).typeListBackground.opacity,
     position: 'absolute',
     top: 0,
     width: '100%',
-    zIndex: appStyles.appbar.zIndex - 1,
+    zIndex: appStyles(theme).appbar.zIndex - 1,
   },
 });

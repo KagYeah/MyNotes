@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import {
   Alert,
   StatusBar, StyleSheet, View,
@@ -6,10 +6,12 @@ import {
 import * as Notifications from 'expo-notifications';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+import { ThemeContext } from '../contexts';
 import Button from '../components/Button';
 import { appStyles } from '../style';
 
 export default function InitialStartingScreen(props) {
+  const { theme } = useContext(ThemeContext);
   const { navigation } = props;
   const [isInitialized, setIsInitialized] = useState(false);
 
@@ -38,6 +40,7 @@ export default function InitialStartingScreen(props) {
   async function setConfig() {
     await AsyncStorage.multiSet([
       ['@notification_enabled', 'true'],
+      ['@theme', 'navy'],
     ]);
   }
 
@@ -63,10 +66,10 @@ export default function InitialStartingScreen(props) {
   }
 
   return (
-    <View style={styles.container}>
-      <StatusBar barStyle={appStyles.statusbar.barStyle} />
+    <View style={styles(theme).container}>
+      <StatusBar barStyle={appStyles(theme).statusbar.barStyle} />
 
-      <View style={styles.centeredView}>
+      <View style={styles(theme).centeredView}>
         <Button
           label="はじめる"
           onPress={() => {
@@ -75,11 +78,11 @@ export default function InitialStartingScreen(props) {
               routes: [{ name: 'Root', params: { screen: 'Home' } }],
             });
           }}
-          color={appStyles.buttonLarge.color}
-          height={appStyles.buttonLarge.height}
-          width={appStyles.buttonLarge.width}
+          color={appStyles(theme).buttonLarge.color}
+          height={appStyles(theme).buttonLarge.height}
+          width={appStyles(theme).buttonLarge.width}
           linearGradient
-          options={{ colors: appStyles.buttonLarge.gradientColors }}
+          options={{ colors: appStyles(theme).buttonLarge.gradientColors }}
         />
 
         <Button
@@ -87,27 +90,27 @@ export default function InitialStartingScreen(props) {
           onPress={() => {
             navigation.navigate('InitialSetting');
           }}
-          color={appStyles.buttonLarge.color}
-          style={{ marginTop: appStyles.buttonLarge.margin }}
-          height={appStyles.buttonLarge.height}
-          width={appStyles.buttonLarge.width}
+          color={appStyles(theme).buttonLarge.color}
+          style={{ marginTop: appStyles(theme).buttonLarge.margin }}
+          height={appStyles(theme).buttonLarge.height}
+          width={appStyles(theme).buttonLarge.width}
           linearGradient
-          options={{ colors: appStyles.buttonLarge.gradientColors }}
+          options={{ colors: appStyles(theme).buttonLarge.gradientColors }}
         />
       </View>
     </View>
   );
 }
 
-const styles = StyleSheet.create({
+const styles = (theme) => StyleSheet.create({
   container: {
-    backgroundColor: appStyles.app.backgroundColor,
+    backgroundColor: appStyles(theme).app.backgroundColor,
     flex: 1,
   },
   centeredView: {
     alignItems: 'center',
     flex: 1,
     justifyContent: 'center',
-    paddingHorizontal: appStyles.app.paddingHorizontal,
+    paddingHorizontal: appStyles(theme).app.paddingHorizontal,
   },
 });

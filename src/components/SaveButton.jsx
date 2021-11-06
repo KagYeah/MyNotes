@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { func } from 'prop-types';
 
+import { ThemeContext } from '../contexts';
 import CircleButton from './CircleButton';
 import { appStyles } from '../style';
 
 export default function CreateButton(props) {
+  const { theme } = useContext(ThemeContext);
   const { onPress } = props;
 
   return (
@@ -12,12 +14,12 @@ export default function CreateButton(props) {
       label="/"
       onPress={onPress}
       style={{
-        bottom: appStyles.saveButton.bottom,
+        bottom: appStyles(theme).saveButton.bottom,
         position: 'absolute',
-        right: appStyles.saveButton.right,
+        right: appStyles(theme).saveButton.right,
       }}
-      size={appStyles.circleButton.size}
-      fontSize={appStyles.saveButton.fontSize}
+      size={appStyles(theme).circleButton.size}
+      fontSize={appStyles(theme).saveButton.fontSize}
     />
   );
 }

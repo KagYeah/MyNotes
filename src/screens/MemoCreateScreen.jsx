@@ -1,9 +1,12 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, {
+  useContext, useEffect, useState, useRef,
+} from 'react';
 import {
   Animated, Keyboard, KeyboardAvoidingView, ScrollView,
   TouchableOpacity, StatusBar, StyleSheet, View,
 } from 'react-native';
 
+import { ThemeContext } from '../contexts';
 import Button from '../components/Button';
 import Loading from '../components/Loading';
 import NoteBodyInput from '../components/NoteBodyInput';
@@ -12,10 +15,10 @@ import SaveButton from '../components/SaveButton';
 import TypeList from '../components/TypeList';
 import { appStyles } from '../style';
 import { sleep } from '../helpers';
-
 import { MemosTable } from '../classes/storage';
 
 export default function MemoCreateScreen(props) {
+  const { theme } = useContext(ThemeContext);
   const { navigation } = props;
   const [title, setTitle] = useState('');
   const [body, setBody] = useState('');
@@ -34,10 +37,10 @@ export default function MemoCreateScreen(props) {
             toggleTypeList();
             Keyboard.dismiss();
           }}
-          backgroundColor={appStyles.appbarButton.backgroundColor}
-          color={appStyles.appbarButton.color}
-          fontSize={appStyles.appbarTitle.fontSize}
-          height={appStyles.appbarTitle.fontSize}
+          backgroundColor={appStyles(theme).appbarButton.backgroundColor}
+          color={appStyles(theme).appbarButton.color}
+          fontSize={appStyles(theme).appbarTitle.fontSize}
+          height={appStyles(theme).appbarTitle.fontSize}
           width={200}
         />
       ),
@@ -50,8 +53,8 @@ export default function MemoCreateScreen(props) {
         <Button
           label="完了"
           onPress={() => Keyboard.dismiss()}
-          backgroundColor={appStyles.appbarButton.backgroundColor}
-          color={appStyles.appbarButton.color}
+          backgroundColor={appStyles(theme).appbarButton.backgroundColor}
+          color={appStyles(theme).appbarButton.color}
         />
       ) : null,
     });
@@ -74,7 +77,7 @@ export default function MemoCreateScreen(props) {
   async function animateTypeList() {
     if (!showTypeList) {
       Animated.timing(typeListTranslateY, {
-        toValue: appStyles.listItem.height * appStyles.typeListItem.count,
+        toValue: appStyles(theme).listItem.height * appStyles(theme).typeListItem.count,
         duration: 500,
         useNativeDriver: true,
       }).start();
@@ -119,27 +122,27 @@ export default function MemoCreateScreen(props) {
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}
-      behavior={appStyles.keyboardAvoidingView.behavior}
-      keyboardVerticalOffset={appStyles.keyboardAvoidingView.verticalOffset}
+      behavior={appStyles(theme).keyboardAvoidingView.behavior}
+      keyboardVerticalOffset={appStyles(theme).keyboardAvoidingView.verticalOffset}
     >
       <Loading isLoading={isLoading} />
 
-      <View style={styles.container}>
-        <StatusBar barStyle={appStyles.statusbar.barStyle} />
+      <View style={styles(theme).container}>
+        <StatusBar barStyle={appStyles(theme).statusbar.barStyle} />
 
         {showTypeList ? (
           <>
             <TouchableOpacity
-              activeOpacity={appStyles.typeListBackground.opacity}
+              activeOpacity={appStyles(theme).typeListBackground.opacity}
               onPress={toggleTypeList}
-              style={styles.typeListBackground}
+              style={styles(theme).typeListBackground}
             />
             <Animated.View
               style={[
-                styles.typeList,
+                styles(theme).typeList,
                 {
                   transform: [{ translateY: typeListTranslateY }],
-                  zIndex: appStyles.appbar.zIndex - 1,
+                  zIndex: appStyles(theme).appbar.zIndex - 1,
                 },
               ]}
             >
@@ -171,23 +174,23 @@ export default function MemoCreateScreen(props) {
   );
 }
 
-const styles = StyleSheet.create({
+const styles = (theme) => StyleSheet.create({
   container: {
-    backgroundColor: appStyles.app.backgroundColor,
+    backgroundColor: appStyles(theme).app.backgroundColor,
     flex: 1,
   },
   typeList: {
     position: 'absolute',
-    top: (-1) * appStyles.listItem.height * appStyles.typeListItem.count,
+    top: (-1) * appStyles(theme).listItem.height * appStyles(theme).typeListItem.count,
     width: '100%',
   },
   typeListBackground: {
-    backgroundColor: appStyles.typeListBackground.backgroundColor,
+    backgroundColor: appStyles(theme).typeListBackground.backgroundColor,
     height: '100%',
-    opacity: appStyles.typeListBackground.opacity,
+    opacity: appStyles(theme).typeListBackground.opacity,
     position: 'absolute',
     top: 0,
     width: '100%',
-    zIndex: appStyles.appbar.zIndex - 1,
+    zIndex: appStyles(theme).appbar.zIndex - 1,
   },
 });

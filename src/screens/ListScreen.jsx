@@ -1,4 +1,6 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, {
+  useContext, useEffect, useRef, useState,
+} from 'react';
 import {
   Alert, Animated, FlatList, StatusBar, StyleSheet, View,
 } from 'react-native';
@@ -8,6 +10,7 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import * as Notifications from 'expo-notifications';
 
+import { ThemeContext } from '../contexts';
 import Button from '../components/Button';
 import CreateButton from '../components/CreateButton';
 import DeleteButton from '../components/DeleteButton';
@@ -15,12 +18,12 @@ import ListHeader from '../components/ListHeader';
 import ListItemWithCheckBox from '../components/ListItemWithCheckBox';
 import { appStyles } from '../style';
 import { capitalize, sleep } from '../helpers';
-
 import {
   MemosTable, MyNotesTable, TasksTable, SchedulesTable,
 } from '../classes/storage';
 
 export default function ListScreen(props) {
+  const { theme } = useContext(ThemeContext);
   const navigation = useNavigation();
   const { data, type, reload } = props;
   const [showCheckBox, setShowCheckBox] = useState(false);
@@ -64,17 +67,17 @@ export default function ListScreen(props) {
             await toggleListHeader();
             setShowCheckBox(!showCheckBox);
           }}
-          backgroundColor={appStyles.appbarButton.backgroundColor}
-          color={appStyles.appbarButton.color}
+          backgroundColor={appStyles(theme).appbarButton.backgroundColor}
+          color={appStyles(theme).appbarButton.color}
         />
       ),
     });
-  }, [showCheckBox]);
+  }, [showCheckBox, theme]);
 
   async function toggleListHeader() {
     if (!showCheckBox) {
       Animated.timing(listTranslateY.current, {
-        toValue: appStyles.listHeader.height,
+        toValue: appStyles(theme).listHeader.height,
         duration: 500,
         useNativeDriver: true,
       }).start();
@@ -125,19 +128,19 @@ export default function ListScreen(props) {
   }
 
   return (
-    <View style={styles.container}>
-      <StatusBar barStyle={appStyles.statusbar.barStyle} />
+    <View style={styles(theme).container}>
+      <StatusBar barStyle={appStyles(theme).statusbar.barStyle} />
 
       {showCheckBox ? (
         <Animated.View
           style={[
-            styles.listHeader,
+            styles(theme).listHeader,
             { transform: [{ translateY: listTranslateY.current }] },
           ]}
         >
           <ListHeader
             left={(
-              <View style={styles.listHeaderLeft}>
+              <View style={styles(theme).listHeaderLeft}>
                 <Button
                   label="全て選択"
                   onPress={() => {
@@ -147,20 +150,24 @@ export default function ListScreen(props) {
                     });
                     setCheckedIds(dataIds);
                   }}
-                  backgroundColor={appStyles.allCheckButton.backgroundColor}
-                  color={appStyles.allCheckButton.color}
-                  height={appStyles.listHeader.height - appStyles.listHeader.paddingVertical}
-                  width={appStyles.allCheckButton.width}
+                  backgroundColor={appStyles(theme).allCheckButton.backgroundColor}
+                  color={appStyles(theme).allCheckButton.color}
+                  height={
+                    appStyles(theme).listHeader.height - appStyles(theme).listHeader.paddingVertical
+                  }
+                  width={appStyles(theme).allCheckButton.width}
                 />
                 <Button
                   label="全て解除"
                   onPress={() => {
                     setCheckedIds([]);
                   }}
-                  backgroundColor={appStyles.allCheckButton.backgroundColor}
-                  color={appStyles.allCheckButton.color}
-                  height={appStyles.listHeader.height - appStyles.listHeader.paddingVertical}
-                  width={appStyles.allCheckButton.width}
+                  backgroundColor={appStyles(theme).allCheckButton.backgroundColor}
+                  color={appStyles(theme).allCheckButton.color}
+                  height={
+                    appStyles(theme).listHeader.height - appStyles(theme).listHeader.paddingVertical
+                  }
+                  width={appStyles(theme).allCheckButton.width}
                 />
               </View>
             )}
@@ -183,8 +190,8 @@ export default function ListScreen(props) {
                     ],
                   );
                 }}
-                height={appStyles.deleteButtonInListHeader.height}
-                width={appStyles.deleteButtonInListHeader.width}
+                height={appStyles(theme).deleteButtonInListHeader.height}
+                width={appStyles(theme).deleteButtonInListHeader.width}
               />
             )}
           />
@@ -193,7 +200,7 @@ export default function ListScreen(props) {
 
       <Animated.View
         style={[
-          styles.listWrapper,
+          styles(theme).listWrapper,
           { transform: [{ translateY: listTranslateY.current }] },
         ]}
       >
@@ -236,16 +243,16 @@ ListScreen.propTypes = {
   reload: func.isRequired,
 };
 
-const styles = StyleSheet.create({
+const styles = (theme) => StyleSheet.create({
   container: {
-    backgroundColor: appStyles.app.backgroundColor,
+    backgroundColor: appStyles(theme).app.backgroundColor,
     flex: 1,
   },
   listWrapper: {
     flex: 1,
   },
   listHeader: {
-    top: (-1) * appStyles.listHeader.height,
+    top: (-1) * appStyles(theme).listHeader.height,
     position: 'absolute',
     width: '100%',
   },

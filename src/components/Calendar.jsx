@@ -1,12 +1,14 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { number } from 'prop-types';
 
+import { ThemeContext } from '../contexts';
 import CalendarDate from './CalendarDate';
 import CalendarDayLabel from './CalendarDayLabel';
 import { appStyles } from '../style';
 
 export default function Calendar(props) {
+  const { theme } = useContext(ThemeContext);
   const { year, month } = props;
 
   const firstDayOfCurrentMonth = new Date(year, month, 1).getDay();
@@ -59,11 +61,11 @@ export default function Calendar(props) {
   key += 1;
 
   calendarArray.forEach((week) => {
-    calendar.push(<View key={key} style={styles.weekContainer}>{week}</View>);
+    calendar.push(<View key={key} style={styles(theme).weekContainer}>{week}</View>);
     key += 1;
   });
 
-  return <View style={styles.container}>{calendar}</View>;
+  return <View style={styles(theme).container}>{calendar}</View>;
 }
 
 Calendar.propTypes = {
@@ -71,14 +73,14 @@ Calendar.propTypes = {
   month: number.isRequired,
 };
 
-const styles = StyleSheet.create({
+const styles = (theme) => StyleSheet.create({
   container: {
     alignItems: 'center',
     alignSelf: 'center',
     justifyContent: 'center',
-    borderColor: appStyles.calendar.borderColor,
+    borderColor: appStyles(theme).calendar.borderColor,
     borderWidth: 1,
-    width: appStyles.calendar.dateWidth * 7 + 2,
+    width: appStyles(theme).calendar.dateWidth * 7 + 2,
   },
   weekContainer: {
     flexDirection: 'row',

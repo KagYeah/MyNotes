@@ -4,7 +4,6 @@ import { Alert, View } from 'react-native';
 import ListScreen from './ListScreen';
 import Loading from '../components/Loading';
 import { date2string } from '../helpers';
-
 import { MemosTable } from '../classes/storage';
 
 export default function MemoListScreen(props) {
@@ -28,7 +27,7 @@ export default function MemoListScreen(props) {
     ).then((result) => {
       console.log('fetched!', result._array);
       const memosArr = result._array.map((memo) => {
-        const updatedAt = MemosTable.datetime2date(memo.updated_at);
+        const updatedAt = memosTable.datetime2date(memo.updated_at);
         return {
           id: memo.id,
           title: memo.title,

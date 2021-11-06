@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import {
   StyleSheet, View, Text, TouchableOpacity,
 } from 'react-native';
@@ -7,10 +7,12 @@ import {
 } from 'prop-types';
 import { LinearGradient } from 'expo-linear-gradient';
 
+import { ThemeContext } from '../contexts';
 import { appStyles } from '../style';
 import { normalizeObj } from '../helpers';
 
 export default function ListItem(props) {
+  const { theme } = useContext(ThemeContext);
   const {
     title, onPress, style, linearGradient, options,
   } = props;
@@ -38,7 +40,7 @@ export default function ListItem(props) {
     component = (
       <LinearGradient
         {...properties}
-        style={[styles.container, style]}
+        style={[styles(theme).container, style]}
       >
         {component}
       </LinearGradient>
@@ -54,7 +56,7 @@ export default function ListItem(props) {
     component = (
       <TouchableOpacity
         {...properties}
-        style={!linearGradient ? [styles.container, style] : style}
+        style={!linearGradient ? [styles(theme).container, style] : style}
       >
         {component}
       </TouchableOpacity>
@@ -62,7 +64,7 @@ export default function ListItem(props) {
   }
 
   if (!linearGradient && !onPress) {
-    component = <View style={[styles.container, style]}>{component}</View>;
+    component = <View style={[styles(theme).container, style]}>{component}</View>;
   }
 
   return component;
@@ -83,16 +85,16 @@ ListItem.defaultProps = {
   options: {},
 };
 
-const styles = StyleSheet.create({
+const styles = (theme) => StyleSheet.create({
   container: {
-    backgroundColor: appStyles.listItem.backgroundColor,
-    borderBottomColor: appStyles.listItem.borderBottomColor,
+    backgroundColor: appStyles(theme).listItem.backgroundColor,
+    borderBottomColor: appStyles(theme).listItem.borderBottomColor,
     borderBottomWidth: 1,
-    height: appStyles.listItem.height,
+    height: appStyles(theme).listItem.height,
     justifyContent: 'center',
-    opacity: appStyles.listItem.opacity,
-    paddingHorizontal: appStyles.listItem.paddingHorizontal,
-    paddingVertical: appStyles.listItem.paddingVertical,
+    opacity: appStyles(theme).listItem.opacity,
+    paddingHorizontal: appStyles(theme).listItem.paddingHorizontal,
+    paddingVertical: appStyles(theme).listItem.paddingVertical,
     width: '100%',
   },
 });

@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import {
   Alert, Keyboard, KeyboardAvoidingView, ScrollView, StatusBar, StyleSheet, View,
 } from 'react-native';
 import { number, shape } from 'prop-types';
 import * as Notifications from 'expo-notifications';
 
+import { ThemeContext } from '../contexts';
 import Button from '../components/Button';
 import DateTimeInput from '../components/DateTimeInput';
 import DeleteButton from '../components/DeleteButton';
@@ -13,10 +14,10 @@ import NoteTitleInput from '../components/NoteTitleInput';
 import SaveButton from '../components/SaveButton';
 import { appStyles } from '../style';
 import { date2string } from '../helpers';
-
 import { SchedulesTable } from '../classes/storage';
 
 export default function ScheduleEditScreen(props) {
+  const { theme } = useContext(ThemeContext);
   const { navigation, route } = props;
   const { id } = route.params;
   const [date, setDate] = useState(new Date());
@@ -34,8 +35,8 @@ export default function ScheduleEditScreen(props) {
         <Button
           label="完了"
           onPress={() => Keyboard.dismiss()}
-          backgroundColor={appStyles.appbarButton.backgroundColor}
-          color={appStyles.appbarButton.color}
+          backgroundColor={appStyles(theme).appbarButton.backgroundColor}
+          color={appStyles(theme).appbarButton.color}
         />
       ) : null,
     });
@@ -193,13 +194,13 @@ export default function ScheduleEditScreen(props) {
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}
-      behavior={appStyles.keyboardAvoidingView.behavior}
-      keyboardVerticalOffset={appStyles.keyboardAvoidingView.verticalOffset}
+      behavior={appStyles(theme).keyboardAvoidingView.behavior}
+      keyboardVerticalOffset={appStyles(theme).keyboardAvoidingView.verticalOffset}
     >
       <Loading isLoading={isLoading} />
 
-      <View style={styles.container}>
-        <StatusBar barStyle={appStyles.statusbar.barStyle} />
+      <View style={styles(theme).container}>
+        <StatusBar barStyle={appStyles(theme).statusbar.barStyle} />
 
         <ScrollView>
           <DateTimeInput
@@ -248,8 +249,8 @@ export default function ScheduleEditScreen(props) {
               );
             }}
             style={{ alignSelf: 'center' }}
-            height={appStyles.deleteButton.height}
-            width={appStyles.deleteButton.width}
+            height={appStyles(theme).deleteButton.height}
+            width={appStyles(theme).deleteButton.width}
           />
         </ScrollView>
 
@@ -267,9 +268,9 @@ ScheduleEditScreen.propTypes = {
   }).isRequired,
 };
 
-const styles = StyleSheet.create({
+const styles = (theme) => StyleSheet.create({
   container: {
-    backgroundColor: appStyles.app.backgroundColor,
+    backgroundColor: appStyles(theme).app.backgroundColor,
     flex: 1,
   },
 });

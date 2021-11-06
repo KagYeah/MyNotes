@@ -1,12 +1,14 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import {
   ScrollView, StatusBar, StyleSheet, Text, TextInput, View,
 } from 'react-native';
 
+import { ThemeContext } from '../contexts';
 import Button from '../components/Button';
 import { appStyles } from '../style';
 
 export default function SettingBackgroundImageScreen(props) {
+  const { theme } = useContext(ThemeContext);
   const { navigation } = props;
   const message = `あなたのIDは「abc123」です。以下でパスワードを設定し、ID・パスワードを大事に保管してください。
 
@@ -15,16 +17,16 @@ export default function SettingBackgroundImageScreen(props) {
   const [password, setPassword] = useState('');
 
   return (
-    <View style={styles.container}>
-      <StatusBar barStyle={appStyles.statusbar.barStyle} />
+    <View style={styles(theme).container}>
+      <StatusBar barStyle={appStyles(theme).statusbar.barStyle} />
 
-      <ScrollView style={styles.scroll}>
-        <Text style={styles.description}>{message}</Text>
+      <ScrollView style={styles(theme).scroll}>
+        <Text style={styles(theme).description}>{message}</Text>
 
         <TextInput
           onChangeText={(text) => setPassword(text)}
           placeholder="パスワード"
-          style={styles.input}
+          style={styles(theme).input}
           value={password}
         />
 
@@ -33,41 +35,41 @@ export default function SettingBackgroundImageScreen(props) {
           onPress={() => {
             navigation.goBack();
           }}
-          color={appStyles.buttonMedium.color}
-          style={styles.submit}
-          height={appStyles.buttonMedium.height}
-          width={appStyles.buttonMedium.width}
+          color={appStyles(theme).buttonMedium.color}
+          style={styles(theme).submit}
+          height={appStyles(theme).buttonMedium.height}
+          width={appStyles(theme).buttonMedium.width}
           linearGradient
-          options={{ colors: appStyles.buttonMedium.gradientColors }}
+          options={{ colors: appStyles(theme).buttonMedium.gradientColors }}
         />
       </ScrollView>
     </View>
   );
 }
 
-const styles = StyleSheet.create({
+const styles = (theme) => StyleSheet.create({
   container: {
-    backgroundColor: appStyles.app.backgroundColor,
+    backgroundColor: appStyles(theme).app.backgroundColor,
     flex: 1,
   },
   scroll: {
-    paddingHorizontal: appStyles.app.paddingHorizontal,
-    paddingVertical: appStyles.app.paddingVertical,
+    paddingHorizontal: appStyles(theme).app.paddingHorizontal,
+    paddingVertical: appStyles(theme).app.paddingVertical,
   },
   description: {
-    fontSize: appStyles.body.fontSize,
-    lineHeight: appStyles.body.lineHeight,
+    fontSize: appStyles(theme).body.fontSize,
+    lineHeight: appStyles(theme).body.lineHeight,
   },
   input: {
-    borderColor: appStyles.idPasswordInput.borderColor,
-    borderWidth: appStyles.idPasswordInput.borderWidth,
-    fontSize: appStyles.idPasswordInput.fontSize,
-    height: appStyles.idPasswordInput.height,
-    padding: appStyles.idPasswordInput.padding,
-    marginTop: appStyles.idPasswordInput.margin,
+    borderColor: appStyles(theme).idPasswordInput.borderColor,
+    borderWidth: appStyles(theme).idPasswordInput.borderWidth,
+    fontSize: appStyles(theme).idPasswordInput.fontSize,
+    height: appStyles(theme).idPasswordInput.height,
+    padding: appStyles(theme).idPasswordInput.padding,
+    marginTop: appStyles(theme).idPasswordInput.margin,
   },
   submit: {
     alignSelf: 'center',
-    marginTop: appStyles.buttonMedium.margin,
+    marginTop: appStyles(theme).buttonMedium.margin,
   },
 });

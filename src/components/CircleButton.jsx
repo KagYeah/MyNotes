@@ -1,12 +1,14 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import {
   element, func, number, oneOfType, shape, string,
 } from 'prop-types';
 
+import { ThemeContext } from '../contexts';
 import Button from './Button';
 import { appStyles } from '../style';
 
 export default function CircleButton(props) {
+  const { theme } = useContext(ThemeContext);
   const {
     label, onPress, style, size, fontSize, fontWeight,
   } = props;
@@ -19,11 +21,11 @@ export default function CircleButton(props) {
       borderRadius={size / 2}
       height={size}
       width={size}
-      color={appStyles.circleButton.color}
+      color={appStyles(theme).circleButton.color}
       fontSize={fontSize}
       fontWeight={fontWeight}
       linearGradient
-      options={{ colors: appStyles.circleButton.gradientColors }}
+      options={{ colors: appStyles(theme).circleButton.gradientColors }}
     />
   );
 }

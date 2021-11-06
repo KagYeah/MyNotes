@@ -1,11 +1,13 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { StyleSheet, View, Text } from 'react-native';
 import { bool, func, string } from 'prop-types';
 
+import { ThemeContext } from '../contexts';
 import ListItem from './ListItem';
 import { appStyles } from '../style';
 
 export default function ListItemWithCheckBox(props) {
+  const { theme } = useContext(ThemeContext);
   const {
     title, subtitle, checked, showCheckBox, onPressWithCheckBox, onPressWithoutCheckBox,
   } = props;
@@ -13,16 +15,16 @@ export default function ListItemWithCheckBox(props) {
   return (
     <ListItem
       title={(
-        <View style={styles.container}>
-          <View style={styles.left}>
-            <Text style={styles.title}>{title}</Text>
-            {subtitle && <Text style={styles.subtitle}>{subtitle}</Text>}
+        <View style={styles(theme).container}>
+          <View style={styles(theme).left}>
+            <Text style={styles(theme).title}>{title}</Text>
+            {subtitle && <Text style={styles(theme).subtitle}>{subtitle}</Text>}
           </View>
           {showCheckBox ? (
-            <View style={styles.right}>
+            <View style={styles(theme).right}>
               {checked
-                ? <Text style={styles.checked}>[*]</Text>
-                : <Text style={styles.unchecked}>[  ]</Text>}
+                ? <Text style={styles(theme).checked}>[*]</Text>
+                : <Text style={styles(theme).unchecked}>[  ]</Text>}
             </View>
           ) : null}
         </View>
@@ -30,7 +32,7 @@ export default function ListItemWithCheckBox(props) {
       onPress={showCheckBox ? onPressWithCheckBox : onPressWithoutCheckBox}
       linearGradient
       options={{
-        colors: appStyles.listItemWithCheckBox.gradientColors,
+        colors: appStyles(theme).listItemWithCheckBox.gradientColors,
       }}
     />
   );
@@ -53,7 +55,7 @@ ListItemWithCheckBox.defaultProps = {
   onPressWithoutCheckBox: () => {},
 };
 
-const styles = StyleSheet.create({
+const styles = (theme) => StyleSheet.create({
   container: {
     flexDirection: 'row',
   },
@@ -64,23 +66,23 @@ const styles = StyleSheet.create({
   right: {
     alignItems: 'center',
     justifyContent: 'center',
-    width: appStyles.listItemRight.width,
+    width: appStyles(theme).listItemRight.width,
   },
   title: {
-    fontSize: appStyles.listItemTitle.fontSize,
-    lineHeight: appStyles.listItemTitle.lineHeight,
+    fontSize: appStyles(theme).listItemTitle.fontSize,
+    lineHeight: appStyles(theme).listItemTitle.lineHeight,
   },
   subtitle: {
-    fontSize: appStyles.listItemSubTitle.fontSize,
-    lineHeight: appStyles.listItemSubTitle.lineHeight,
-    paddingStart: appStyles.listItemSubTitle.paddingStart,
+    fontSize: appStyles(theme).listItemSubTitle.fontSize,
+    lineHeight: appStyles(theme).listItemSubTitle.lineHeight,
+    paddingStart: appStyles(theme).listItemSubTitle.paddingStart,
   },
   checked: {
-    color: appStyles.checkbox.checkedColor,
-    fontSize: appStyles.checkbox.fontSize,
+    color: appStyles(theme).checkbox.checkedColor,
+    fontSize: appStyles(theme).checkbox.fontSize,
   },
   unchecked: {
-    color: appStyles.checkbox.ucheckedColor,
-    fontSize: appStyles.checkbox.fontSize,
+    color: appStyles(theme).checkbox.ucheckedColor,
+    fontSize: appStyles(theme).checkbox.fontSize,
   },
 });

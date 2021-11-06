@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import {
   StyleSheet, View, StatusBar, SectionList, Alert,
 } from 'react-native';
@@ -7,6 +7,7 @@ import { useNavigation } from '@react-navigation/native';
 import { isToday } from 'date-fns';
 import * as Notifications from 'expo-notifications';
 
+import { ThemeContext } from '../contexts';
 import Button from '../components/Button';
 import CreateButton from '../components/CreateButton';
 import DeleteButton from '../components/DeleteButton';
@@ -18,6 +19,7 @@ import { capitalize, date2string } from '../helpers';
 import { MyNotesTable, SchedulesTable, TasksTable } from '../classes/storage';
 
 export default function DailyNoteListScreen(props) {
+  const { theme } = useContext(ThemeContext);
   const navigation = useNavigation();
   const { date, appbarTitle } = props;
   const [showCheckBox, setShowCheckBox] = useState(false);
@@ -46,12 +48,12 @@ export default function DailyNoteListScreen(props) {
         <Button
           label={showCheckBox ? '完了' : '編集'}
           onPress={() => setShowCheckBox(!showCheckBox)}
-          backgroundColor={appStyles.appbarButton.backgroundColor}
-          color={appStyles.appbarButton.color}
+          backgroundColor={appStyles(theme).appbarButton.backgroundColor}
+          color={appStyles(theme).appbarButton.color}
         />
       ),
     });
-  }, [showCheckBox]);
+  }, [showCheckBox, theme]);
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', fetch);
@@ -224,7 +226,7 @@ export default function DailyNoteListScreen(props) {
   }
 
   return (
-    <View style={styles.container}>
+    <View style={styles(theme).container}>
       <StatusBar barStyle="light-content" />
 
       <Loading isLoading={isLoading} />
@@ -285,8 +287,8 @@ export default function DailyNoteListScreen(props) {
                     ],
                   );
                 }}
-                height={appStyles.deleteButtonInListHeader.height}
-                width={appStyles.deleteButtonInListHeader.width}
+                height={appStyles(theme).deleteButtonInListHeader.height}
+                width={appStyles(theme).deleteButtonInListHeader.width}
               />
             )}
           />
@@ -307,9 +309,9 @@ DailyNoteListScreen.propTypes = {
   appbarTitle: string.isRequired,
 };
 
-const styles = StyleSheet.create({
+const styles = (theme) => StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: appStyles.app.backgroundColor,
+    backgroundColor: appStyles(theme).app.backgroundColor,
   },
 });

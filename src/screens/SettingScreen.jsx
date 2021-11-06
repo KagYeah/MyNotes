@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import {
   Alert,
   FlatList,
@@ -11,10 +11,12 @@ import {
 import * as Notifications from 'expo-notifications';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+import { ThemeContext } from '../contexts';
 import ListItem from '../components/ListItem';
 import { appStyles } from '../style';
 
 export default function SettingScreen(props) {
+  const { theme } = useContext(ThemeContext);
   const { navigation } = props;
   const [notificationEnabled, setNotificationEnabled] = useState(false);
 
@@ -93,8 +95,8 @@ export default function SettingScreen(props) {
   ];
 
   return (
-    <View style={styles.container}>
-      <StatusBar barStyle={appStyles.statusbar.barStyle} />
+    <View style={styles(theme).container}>
+      <StatusBar barStyle={appStyles(theme).statusbar.barStyle} />
 
       <FlatList
         data={settings}
@@ -102,17 +104,17 @@ export default function SettingScreen(props) {
         renderItem={({ item }) => (
           <ListItem
             title={(
-              <View style={styles.titleContainer}>
-                <View style={styles.titleLeft}>
-                  <Text style={styles.label}>{item.label}</Text>
+              <View style={styles(theme).titleContainer}>
+                <View style={styles(theme).titleLeft}>
+                  <Text style={styles(theme).label}>{item.label}</Text>
                 </View>
-                {item.with ? <View style={styles.titleRight}>{item.with}</View> : null}
+                {item.with ? <View style={styles(theme).titleRight}>{item.with}</View> : null}
               </View>
             )}
             onPress={item.onPress}
-            style={{ height: appStyles.settingListItem.height }}
+            style={{ height: appStyles(theme).settingListItem.height }}
             linearGradient
-            options={{ colors: appStyles.settingListItem.gradientColors }}
+            options={{ colors: appStyles(theme).settingListItem.gradientColors }}
           />
         )}
       />
@@ -120,15 +122,15 @@ export default function SettingScreen(props) {
   );
 }
 
-const styles = StyleSheet.create({
+const styles = (theme) => StyleSheet.create({
   container: {
-    backgroundColor: appStyles.app.backgroundColor,
+    backgroundColor: appStyles(theme).app.backgroundColor,
     flex: 1,
   },
   titleContainer: {
     alignItems: 'center',
     flexDirection: 'row',
-    height: appStyles.settingListItem.height,
+    height: appStyles(theme).settingListItem.height,
     justifyContent: 'space-between',
   },
   titleLeft: {
@@ -139,6 +141,6 @@ const styles = StyleSheet.create({
     width: '20%',
   },
   label: {
-    fontSize: appStyles.settingListItem.fontSize,
+    fontSize: appStyles(theme).settingListItem.fontSize,
   },
 });

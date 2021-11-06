@@ -1,4 +1,5 @@
 import { Platform } from 'react-native';
+import theme from './theme';
 
 // color
 const black = '#000';
@@ -10,23 +11,13 @@ const white = '#fff';
 
 const transparent = '#0000';
 
-const colorOnMainGradientColors = white;
-const colorOnSubMainBackgroundColor = black;
-const mainBackgraoundColor = '#003';
-const subMainBackgorundColor = '#e3e3ed';
-
-// colors for LinearGradient
-const subGradientColors = ['rgba(238, 238, 255, 0.9)', 'rgba(227, 227, 237, 0.9)'];
-const mainGradientColors = ['#393960', '#000033'];
-const whiteGradientColors = ['rgba(255, 255, 255, 0.9)', 'rgba(238, 238, 255, 0.9)'];
-
 // opacity
 const appOpacity = 0.9;
 
 // eslint-disable-next-line import/prefer-default-export
-export const appStyles = {
+export const appStyles = (themeName) => ({
   statusbar: {
-    barStyle: 'light-content',
+    barStyle: theme[themeName].statusbarStyle,
   },
   allCheckButton: {
     backgroundColor: transparent,
@@ -34,12 +25,12 @@ export const appStyles = {
     width: 80,
   },
   app: {
-    backgroundColor: '#eef',
+    backgroundColor: theme[themeName].appBackgroundColor,
     paddingHorizontal: 24,
     paddingVertical: 24,
   },
   appbar: {
-    gradientColors: mainGradientColors,
+    gradientColors: theme[themeName].mainGradientColors,
     height: 104,
     paddingBottom: 16,
     paddingHorizontal: 16,
@@ -47,13 +38,13 @@ export const appStyles = {
   },
   appbarButton: {
     backgroundColor: transparent,
-    color: colorOnMainGradientColors,
+    color: theme[themeName].colorOnMainGradientColors,
     height: 50,
     padding: 0,
     width: 68,
   },
   appbarTitle: {
-    color: colorOnMainGradientColors,
+    color: theme[themeName].colorOnMainGradientColors,
     fontSize: 32,
   },
   body: {
@@ -61,15 +52,15 @@ export const appStyles = {
     lineHeight: 24,
   },
   buttonLarge: {
-    color: colorOnMainGradientColors,
-    gradientColors: mainGradientColors,
+    color: theme[themeName].colorOnMainGradientColors,
+    gradientColors: theme[themeName].mainGradientColors,
     height: 40,
     margin: 40,
     width: 200,
   },
   buttonMedium: {
-    color: colorOnMainGradientColors,
-    gradientColors: mainGradientColors,
+    color: theme[themeName].colorOnMainGradientColors,
+    gradientColors: theme[themeName].mainGradientColors,
     height: 40,
     margin: 24,
     width: 80,
@@ -93,7 +84,7 @@ export const appStyles = {
     color: black,
     fontSize: 18,
     fontWeight: 'bold',
-    gradientColors: subGradientColors,
+    gradientColors: theme[themeName].subGradientColors,
     height: 48,
     marginBottom: 48,
     paddingHorizontal: 24,
@@ -108,8 +99,8 @@ export const appStyles = {
     uncheckedColor: black,
   },
   circleButton: {
-    color: colorOnMainGradientColors,
-    gradientColors: mainGradientColors,
+    color: theme[themeName].colorOnMainGradientColors,
+    gradientColors: theme[themeName].mainGradientColors,
     size: 48,
   },
   colorPod: {
@@ -123,17 +114,17 @@ export const appStyles = {
     right: 24,
   },
   datetimeInput: {
-    backgroundColor: subMainBackgorundColor,
+    backgroundColor: theme[themeName].subMainBackgroundColor,
     borderBottomColor: 'rgba(0, 0, 0, 0.25)',
     borderBottomWidth: 1,
-    color: colorOnSubMainBackgroundColor,
+    color: theme[themeName].colorOnSubMainBackgroundColor,
     fontSize: 18,
     height: 48,
     paddingHorizontal: 24,
     paddingVertical: 8,
   },
   datetimePicker: {
-    backgroundColor: subMainBackgorundColor,
+    backgroundColor: theme[themeName].subMainBackgroundColor,
   },
   deleteButton: {
     backgroundColor: transparent,
@@ -149,8 +140,8 @@ export const appStyles = {
   },
   drawer: {
     activeBackgroundColor: white,
-    activeTintColor: mainBackgraoundColor,
-    backgroundColor: mainBackgraoundColor,
+    activeTintColor: theme[themeName].mainBackgroundColor,
+    backgroundColor: theme[themeName].mainBackgroundColor,
     inactiveTintColor: white,
     fontSize: 18,
     paddingLeft: 24,
@@ -170,7 +161,7 @@ export const appStyles = {
   listHeader: {
     fontSize: 18,
     fontWeight: 'bold',
-    gradientColors: subGradientColors,
+    gradientColors: theme[themeName].subGradientColors,
     height: 48,
     paddingHorizontal: 24,
     paddingVertical: 8,
@@ -200,7 +191,7 @@ export const appStyles = {
     paddingStart: 8,
   },
   listItemWithCheckBox: {
-    gradientColors: whiteGradientColors,
+    gradientColors: theme[themeName].whiteGradientColors,
   },
   loading: {
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
@@ -238,14 +229,14 @@ export const appStyles = {
   },
   settingListItem: {
     fontSize: 18,
-    gradientColors: whiteGradientColors,
+    gradientColors: theme[themeName].whiteGradientColors,
     height: 48,
   },
   typeListItem: {
-    color: colorOnMainGradientColors,
+    color: theme[themeName].colorOnMainGradientColors,
     count: 3,
     fontSize: 18,
-    gradientColors: mainGradientColors,
+    gradientColors: theme[themeName].mainGradientColors,
     height: 48,
     opacity: 1,
   },
@@ -258,4 +249,4 @@ export const appStyles = {
     fontSize: 18,
     height: 48,
   },
-};
+});
