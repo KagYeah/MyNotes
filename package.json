@@ -31,7 +31,8 @@
     "react-native-safe-area-context": "3.2.0",
     "react-native-screens": "~3.4.0",
     "react-native-segmented-picker": "^2.0.2",
-    "react-native-web": "~0.13.12"
+    "react-native-web": "~0.13.12",
+    "expo-image-picker": "~10.2.2"
   },
   "devDependencies": {
     "@babel/core": "^7.15.8",

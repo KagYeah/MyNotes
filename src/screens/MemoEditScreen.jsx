@@ -3,14 +3,14 @@ import {
   Alert,
   Keyboard,
   KeyboardAvoidingView,
+  ImageBackground,
   ScrollView,
-  StatusBar,
   StyleSheet,
   View,
 } from 'react-native';
 import { number, shape } from 'prop-types';
 
-import { ThemeContext } from '../contexts';
+import { BackgroundImageContext, ThemeContext } from '../contexts';
 import Button from '../components/Button';
 import DeleteButton from '../components/DeleteButton';
 import Loading from '../components/Loading';
@@ -21,13 +21,16 @@ import { appStyles } from '../style';
 import { MemosTable } from '../classes/storage';
 
 export default function MemoEditScreen(props) {
+  const { backgroundImage } = useContext(BackgroundImageContext);
   const { theme } = useContext(ThemeContext);
+
   const { navigation, route } = props;
   const { id } = route.params;
   const [title, setTitle] = useState('');
   const [body, setBody] = useState('');
   const [showKeyboardHidingButton, setShowKeyboardHidingButton] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+
   const memosTable = new MemosTable();
 
   useEffect(() => {
@@ -126,52 +129,54 @@ export default function MemoEditScreen(props) {
       behavior={appStyles(theme).keyboardAvoidingView.behavior}
       keyboardVerticalOffset={appStyles(theme).keyboardAvoidingView.verticalOffset}
     >
-      <Loading isLoading={isLoading} />
-      <View style={styles(theme).container}>
-        <StatusBar barStyle={appStyles(theme).statusbar.barStyle} />
+      <ImageBackground source={{ uri: backgroundImage }} resizeMode="cover" style={{ flex: 1 }}>
 
-        <ScrollView>
-          <NoteTitleInput
-            onChangeText={(text) => setTitle(text)}
-            placeholder="タイトル"
-            value={title}
+        <Loading isLoading={isLoading} />
+        <View style={styles(theme).container}>
+
+          <ScrollView>
+            <NoteTitleInput
+              onChangeText={(text) => setTitle(text)}
+              placeholder="タイトル"
+              value={title}
+            />
+
+            <NoteBodyInput
+              onChangeText={(text) => setBody(text)}
+              placeholder="メモ"
+              value={body}
+            />
+
+            <DeleteButton
+              onPress={() => {
+                Alert.alert(
+                  'メモを削除します',
+                  '本当によろしいですか？',
+                  [
+                    {
+                      text: 'キャンセル',
+                      style: 'cancel',
+                    },
+                    {
+                      text: '削除',
+                      onPress: deleteMemo,
+                      style: 'destructive',
+                    },
+                  ],
+                );
+              }}
+              style={{ alignSelf: 'center' }}
+              height={appStyles(theme).deleteButton.height}
+              width={appStyles(theme).deleteButton.width}
+            />
+
+          </ScrollView>
+
+          <SaveButton
+            onPress={saveMemo}
           />
-
-          <NoteBodyInput
-            onChangeText={(text) => setBody(text)}
-            placeholder="メモ"
-            value={body}
-          />
-
-          <DeleteButton
-            onPress={() => {
-              Alert.alert(
-                'メモを削除します',
-                '本当によろしいですか？',
-                [
-                  {
-                    text: 'キャンセル',
-                    style: 'cancel',
-                  },
-                  {
-                    text: '削除',
-                    onPress: deleteMemo,
-                    style: 'destructive',
-                  },
-                ],
-              );
-            }}
-            style={{ alignSelf: 'center' }}
-            height={appStyles(theme).deleteButton.height}
-            width={appStyles(theme).deleteButton.width}
-          />
-
-        </ScrollView>
-
-        <SaveButton
-          onPress={saveMemo}
-        />
-      </View>
+        </View>
+      </ImageBackground>
     </KeyboardAvoidingView>
   );
 }

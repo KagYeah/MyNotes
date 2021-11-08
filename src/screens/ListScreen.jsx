@@ -2,7 +2,7 @@ import React, {
   useContext, useEffect, useRef, useState,
 } from 'react';
 import {
-  Alert, Animated, FlatList, StatusBar, StyleSheet, View,
+  Alert, Animated, FlatList, ImageBackground, StyleSheet, View,
 } from 'react-native';
 import {
   arrayOf, func, number, oneOf, oneOfType, shape, string,
@@ -10,7 +10,7 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import * as Notifications from 'expo-notifications';
 
-import { ThemeContext } from '../contexts';
+import { BackgroundImageContext, ThemeContext } from '../contexts';
 import Button from '../components/Button';
 import CreateButton from '../components/CreateButton';
 import DeleteButton from '../components/DeleteButton';
@@ -23,7 +23,9 @@ import {
 } from '../classes/storage';
 
 export default function ListScreen(props) {
+  const { backgroundImage } = useContext(BackgroundImageContext);
   const { theme } = useContext(ThemeContext);
+
   const navigation = useNavigation();
   const { data, type, reload } = props;
   const [showCheckBox, setShowCheckBox] = useState(false);
@@ -129,106 +131,108 @@ export default function ListScreen(props) {
 
   return (
     <View style={styles(theme).container}>
-      <StatusBar barStyle={appStyles(theme).statusbar.barStyle} />
+      <ImageBackground source={{ uri: backgroundImage }} resizeMode="cover" style={{ flex: 1 }}>
+        {showCheckBox ? (
+          <Animated.View
+            style={[
+              styles(theme).listHeader,
+              { transform: [{ translateY: listTranslateY.current }] },
+            ]}
+          >
+            <ListHeader
+              left={(
+                <View style={styles(theme).listHeaderLeft}>
+                  <Button
+                    label="全て選択"
+                    onPress={() => {
+                      const dataIds = [];
+                      data.forEach((item) => {
+                        dataIds.push(item.id);
+                      });
+                      setCheckedIds(dataIds);
+                    }}
+                    backgroundColor={appStyles(theme).allCheckButton.backgroundColor}
+                    color={appStyles(theme).allCheckButton.color}
+                    height={
+                      appStyles(theme).listHeader.height
+                      - appStyles(theme).listHeader.paddingVertical
+                    }
+                    width={appStyles(theme).allCheckButton.width}
+                  />
+                  <Button
+                    label="全て解除"
+                    onPress={() => {
+                      setCheckedIds([]);
+                    }}
+                    backgroundColor={appStyles(theme).allCheckButton.backgroundColor}
+                    color={appStyles(theme).allCheckButton.color}
+                    height={
+                      appStyles(theme).listHeader.height
+                      - appStyles(theme).listHeader.paddingVertical
+                    }
+                    width={appStyles(theme).allCheckButton.width}
+                  />
+                </View>
+              )}
+              right={(
+                <DeleteButton
+                  onPress={() => {
+                    Alert.alert(
+                      '選択した項目を削除します',
+                      '本当によろしいですか？',
+                      [
+                        {
+                          text: 'キャンセル',
+                          style: 'cancel',
+                        },
+                        {
+                          text: '削除',
+                          onPress: deleteNotes,
+                          style: 'destructive',
+                        },
+                      ],
+                    );
+                  }}
+                  height={appStyles(theme).deleteButtonInListHeader.height}
+                  width={appStyles(theme).deleteButtonInListHeader.width}
+                />
+              )}
+            />
+          </Animated.View>
+        ) : null}
 
-      {showCheckBox ? (
         <Animated.View
           style={[
-            styles(theme).listHeader,
+            styles(theme).listWrapper,
             { transform: [{ translateY: listTranslateY.current }] },
           ]}
         >
-          <ListHeader
-            left={(
-              <View style={styles(theme).listHeaderLeft}>
-                <Button
-                  label="全て選択"
-                  onPress={() => {
-                    const dataIds = [];
-                    data.forEach((item) => {
-                      dataIds.push(item.id);
-                    });
-                    setCheckedIds(dataIds);
-                  }}
-                  backgroundColor={appStyles(theme).allCheckButton.backgroundColor}
-                  color={appStyles(theme).allCheckButton.color}
-                  height={
-                    appStyles(theme).listHeader.height - appStyles(theme).listHeader.paddingVertical
-                  }
-                  width={appStyles(theme).allCheckButton.width}
-                />
-                <Button
-                  label="全て解除"
-                  onPress={() => {
-                    setCheckedIds([]);
-                  }}
-                  backgroundColor={appStyles(theme).allCheckButton.backgroundColor}
-                  color={appStyles(theme).allCheckButton.color}
-                  height={
-                    appStyles(theme).listHeader.height - appStyles(theme).listHeader.paddingVertical
-                  }
-                  width={appStyles(theme).allCheckButton.width}
-                />
-              </View>
-            )}
-            right={(
-              <DeleteButton
-                onPress={() => {
-                  Alert.alert(
-                    '選択した項目を削除します',
-                    '本当によろしいですか？',
-                    [
-                      {
-                        text: 'キャンセル',
-                        style: 'cancel',
-                      },
-                      {
-                        text: '削除',
-                        onPress: deleteNotes,
-                        style: 'destructive',
-                      },
-                    ],
-                  );
+          <FlatList
+            data={data}
+            keyExtractor={(item) => `${item.id}`}
+            renderItem={({ item }) => (
+              <ListItemWithCheckBox
+                title={item.title}
+                subtitle={item.subtitle}
+                showCheckBox={showCheckBox}
+                checked={checkedIds.includes(item.id)}
+                onPressWithCheckBox={() => {
+                  toggleCheckedId(item.id);
                 }}
-                height={appStyles(theme).deleteButtonInListHeader.height}
-                width={appStyles(theme).deleteButtonInListHeader.width}
+                onPressWithoutCheckBox={() => {
+                  navigation.navigate(`${capitalize(type)}Edit`, { id: item.id });
+                }}
               />
             )}
           />
         </Animated.View>
-      ) : null}
 
-      <Animated.View
-        style={[
-          styles(theme).listWrapper,
-          { transform: [{ translateY: listTranslateY.current }] },
-        ]}
-      >
-        <FlatList
-          data={data}
-          keyExtractor={(item) => `${item.id}`}
-          renderItem={({ item }) => (
-            <ListItemWithCheckBox
-              title={item.title}
-              subtitle={item.subtitle}
-              showCheckBox={showCheckBox}
-              checked={checkedIds.includes(item.id)}
-              onPressWithCheckBox={() => {
-                toggleCheckedId(item.id);
-              }}
-              onPressWithoutCheckBox={() => {
-                navigation.navigate(`${capitalize(type)}Edit`, { id: item.id });
-              }}
-            />
-          )}
+        <CreateButton
+          onPress={() => {
+            navigation.navigate(`${capitalize(type)}Create`);
+          }}
         />
-      </Animated.View>
-
-      <CreateButton
-        onPress={() => {
-          navigation.navigate(`${capitalize(type)}Create`);
-        }}
-      />
+      </ImageBackground>
     </View>
   );
 }

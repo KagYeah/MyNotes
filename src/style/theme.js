@@ -1,7 +1,8 @@
-const appOpacity = 0.9;
+const appOpacity = 0.8;
+const backgroundOpacity = 0.5;
 const theme = {
   pink: {
-    appBackgroundColor: '#fff4fb',
+    appBackgroundColor: `rgba(255, 244, 251, ${backgroundOpacity})`,
     statusbarStyle: 'light-content',
     mainBackgroundColor: '#fe0098',
     colorOnMainBackgroundColor: '#fff',
@@ -14,7 +15,7 @@ const theme = {
     whiteGradientColors: [`rgba(255, 255, 255, ${appOpacity})`, `rgba(255, 248, 252, ${appOpacity})`],
   },
   red: {
-    appBackgroundColor: '#fff6f6',
+    appBackgroundColor: `rgba(255, 246, 246, ${backgroundOpacity})`,
     statusbarStyle: 'light-content',
     mainBackgroundColor: '#ea0000',
     colorOnMainBackgroundColor: '#fff',
@@ -27,7 +28,7 @@ const theme = {
     whiteGradientColors: [`rgba(255, 255, 255, ${appOpacity})`, `rgba(255, 251, 251, ${appOpacity})`],
   },
   orange: {
-    appBackgroundColor: '#fff7ea',
+    appBackgroundColor: `rgba(255, 247, 234, ${backgroundOpacity})`,
     statusbarStyle: 'light-content',
     mainBackgroundColor: '#f90',
     colorOnMainBackgroundColor: '#fff',
@@ -40,7 +41,7 @@ const theme = {
     whiteGradientColors: [`rgba(255, 255, 255, ${appOpacity})`, `rgba(255, 252, 248, ${appOpacity})`],
   },
   yellow: {
-    appBackgroundColor: '#fffee7',
+    appBackgroundColor: `rgba(255, 254, 231, ${backgroundOpacity})`,
     statusbarStyle: 'dark-content',
     mainBackgroundColor: '#f5ec00',
     colorOnMainBackgroundColor: '#000',
@@ -53,7 +54,7 @@ const theme = {
     whiteGradientColors: [`rgba(255, 255, 255, ${appOpacity})`, `rgba(255, 254, 222, ${appOpacity})`],
   },
   green: {
-    appBackgroundColor: '#e7ffe7',
+    appBackgroundColor: `rgba(231, 255, 231, ${backgroundOpacity})`,
     statusbarStyle: 'dark-content',
     mainBackgroundColor: '#00b000',
     colorOnMainBackgroundColor: '#fff',
@@ -66,7 +67,7 @@ const theme = {
     whiteGradientColors: [`rgba(255, 255, 255, ${appOpacity})`, `rgba(228, 255, 228, ${appOpacity})`],
   },
   lightBlue: {
-    appBackgroundColor: '#f8ffff',
+    appBackgroundColor: `rgba(248, 255, 255, ${backgroundOpacity})`,
     statusbarStyle: 'dark-content',
     mainBackgroundColor: '#00d8d8',
     colorOnMainBackgroundColor: '#fff',
@@ -79,7 +80,7 @@ const theme = {
     whiteGradientColors: [`rgba(255, 255, 255, ${appOpacity})`, `rgba(238, 255, 255, ${appOpacity})`],
   },
   blue: {
-    appBackgroundColor: '#eaeaff',
+    appBackgroundColor: `rgba(234, 234, 255, ${backgroundOpacity})`,
     statusbarStyle: 'light-content',
     mainBackgroundColor: '#00c',
     colorOnMainBackgroundColor: '#fff',
@@ -92,7 +93,7 @@ const theme = {
     whiteGradientColors: [`rgba(255, 255, 255, ${appOpacity})`, `rgba(238, 238, 255, ${appOpacity})`],
   },
   purple: {
-    appBackgroundColor: '#ecc5ff',
+    appBackgroundColor: `rgba(236, 197, 255, ${backgroundOpacity})`,
     statusbarStyle: 'light-content',
     mainBackgroundColor: '#8200c2',
     colorOnMainBackgroundColor: '#fff',
@@ -105,7 +106,7 @@ const theme = {
     whiteGradientColors: [`rgba(255, 255, 255, ${appOpacity})`, `rgba(245, 226, 255, ${appOpacity})`],
   },
   navy: {
-    appBackgroundColor: '#e2e2ff',
+    appBackgroundColor: `rgba(226, 226, 255, ${backgroundOpacity})`,
     statusbarStyle: 'light-content',
     mainBackgroundColor: '#003',
     colorOnMainBackgroundColor: '#fff',

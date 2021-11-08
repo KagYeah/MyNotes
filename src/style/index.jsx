@@ -12,7 +12,7 @@ const white = '#fff';
 const transparent = '#0000';
 
 // opacity
-const appOpacity = 0.9;
+const appOpacity = 0.8;
 
 // eslint-disable-next-line import/prefer-default-export
 export const appStyles = (themeName) => ({

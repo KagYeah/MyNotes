@@ -2,11 +2,17 @@ import React, {
   useContext, useEffect, useState, useRef,
 } from 'react';
 import {
-  Animated, Keyboard, KeyboardAvoidingView, ScrollView,
-  TouchableOpacity, StatusBar, StyleSheet, View,
+  Animated,
+  Keyboard,
+  KeyboardAvoidingView,
+  ImageBackground,
+  ScrollView,
+  TouchableOpacity,
+  StyleSheet,
+  View,
 } from 'react-native';
 
-import { ThemeContext } from '../contexts';
+import { BackgroundImageContext, ThemeContext } from '../contexts';
 import Button from '../components/Button';
 import Loading from '../components/Loading';
 import NoteBodyInput from '../components/NoteBodyInput';
@@ -18,13 +24,16 @@ import { sleep } from '../helpers';
 import { MemosTable } from '../classes/storage';
 
 export default function MemoCreateScreen(props) {
+  const { backgroundImage } = useContext(BackgroundImageContext);
   const { theme } = useContext(ThemeContext);
+
   const { navigation } = props;
   const [title, setTitle] = useState('');
   const [body, setBody] = useState('');
   const [showKeyboardHidingButton, setShowKeyboardHidingButton] = useState(false);
   const [showTypeList, setShowTypeList] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+
   const typeListTranslateY = useRef(new Animated.Value(0)).current;
   const memosTable = new MemosTable();
 
@@ -125,51 +134,52 @@ export default function MemoCreateScreen(props) {
       behavior={appStyles(theme).keyboardAvoidingView.behavior}
       keyboardVerticalOffset={appStyles(theme).keyboardAvoidingView.verticalOffset}
     >
-      <Loading isLoading={isLoading} />
+      <ImageBackground source={{ uri: backgroundImage }} resizeMode="cover" style={{ flex: 1 }}>
 
-      <View style={styles(theme).container}>
-        <StatusBar barStyle={appStyles(theme).statusbar.barStyle} />
+        <Loading isLoading={isLoading} />
 
-        {showTypeList ? (
-          <>
-            <TouchableOpacity
-              activeOpacity={appStyles(theme).typeListBackground.opacity}
-              onPress={toggleTypeList}
-              style={styles(theme).typeListBackground}
+        <View style={styles(theme).container}>
+          {showTypeList ? (
+            <>
+              <TouchableOpacity
+                activeOpacity={appStyles(theme).typeListBackground.opacity}
+                onPress={toggleTypeList}
+                style={styles(theme).typeListBackground}
+              />
+              <Animated.View
+                style={[
+                  styles(theme).typeList,
+                  {
+                    transform: [{ translateY: typeListTranslateY }],
+                    zIndex: appStyles(theme).appbar.zIndex - 1,
+                  },
+                ]}
+              >
+                <TypeList />
+              </Animated.View>
+            </>
+          ) : null}
+
+          <ScrollView>
+            <NoteTitleInput
+              autoFocus
+              onChangeText={(text) => setTitle(text)}
+              placeholder="タイトル"
+              value={title}
             />
-            <Animated.View
-              style={[
-                styles(theme).typeList,
-                {
-                  transform: [{ translateY: typeListTranslateY }],
-                  zIndex: appStyles(theme).appbar.zIndex - 1,
-                },
-              ]}
-            >
-              <TypeList />
-            </Animated.View>
-          </>
-        ) : null}
 
-        <ScrollView>
-          <NoteTitleInput
-            autoFocus
-            onChangeText={(text) => setTitle(text)}
-            placeholder="タイトル"
-            value={title}
+            <NoteBodyInput
+              onChangeText={(text) => setBody(text)}
+              placeholder="メモ"
+              value={body}
+            />
+          </ScrollView>
+
+          <SaveButton
+            onPress={saveMemo}
           />
-
-          <NoteBodyInput
-            onChangeText={(text) => setBody(text)}
-            placeholder="メモ"
-            value={body}
-          />
-        </ScrollView>
-
-        <SaveButton
-          onPress={saveMemo}
-        />
-      </View>
+        </View>
+      </ImageBackground>
     </KeyboardAvoidingView>
   );
 }

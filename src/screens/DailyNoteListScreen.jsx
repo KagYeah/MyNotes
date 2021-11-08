@@ -1,13 +1,13 @@
 import React, { useContext, useEffect, useState } from 'react';
 import {
-  StyleSheet, View, StatusBar, SectionList, Alert,
+  ImageBackground, StyleSheet, View, SectionList, Alert,
 } from 'react-native';
 import { instanceOf, string } from 'prop-types';
 import { useNavigation } from '@react-navigation/native';
 import { isToday } from 'date-fns';
 import * as Notifications from 'expo-notifications';
 
-import { ThemeContext } from '../contexts';
+import { BackgroundImageContext, ThemeContext } from '../contexts';
 import Button from '../components/Button';
 import CreateButton from '../components/CreateButton';
 import DeleteButton from '../components/DeleteButton';
@@ -19,7 +19,9 @@ import { capitalize, date2string } from '../helpers';
 import { MyNotesTable, SchedulesTable, TasksTable } from '../classes/storage';
 
 export default function DailyNoteListScreen(props) {
+  const { backgroundImage } = useContext(BackgroundImageContext);
   const { theme } = useContext(ThemeContext);
+
   const navigation = useNavigation();
   const { date, appbarTitle } = props;
   const [showCheckBox, setShowCheckBox] = useState(false);
@@ -27,6 +29,7 @@ export default function DailyNoteListScreen(props) {
   const [data, setData] = useState([]);
   const [checkedTaskIds, setCheckedTaskIds] = useState([]);
   const [checkedScheduleIds, setCheckedScheduleIds] = useState([]);
+
   const tasksTable = new TasksTable();
   const schedulesTable = new SchedulesTable();
 
@@ -227,79 +230,80 @@ export default function DailyNoteListScreen(props) {
 
   return (
     <View style={styles(theme).container}>
-      <StatusBar barStyle="light-content" />
+      <ImageBackground source={{ uri: backgroundImage }} resizeMode="cover" style={{ flex: 1 }}>
 
-      <Loading isLoading={isLoading} />
+        <Loading isLoading={isLoading} />
 
-      <SectionList
-        sections={data}
-        keyExtractor={(item) => item.id}
-        stickySectionHeadersEnabled={false}
-        renderItem={({ item, section: { type } }) => {
-          let checkedIds = [];
+        <SectionList
+          sections={data}
+          keyExtractor={(item) => item.id}
+          stickySectionHeadersEnabled={false}
+          renderItem={({ item, section: { type } }) => {
+            let checkedIds = [];
 
-          switch (type) {
-            case 'task':
-              checkedIds = checkedTaskIds;
-              break;
-            case 'schedule':
-              checkedIds = checkedScheduleIds;
-              break;
-            default:
-          }
+            switch (type) {
+              case 'task':
+                checkedIds = checkedTaskIds;
+                break;
+              case 'schedule':
+                checkedIds = checkedScheduleIds;
+                break;
+              default:
+            }
 
-          return (
-            <ListItemWithCheckBox
-              title={item.title}
-              subtitle={item.subtitle}
-              showCheckBox={showCheckBox}
-              checked={checkedIds.includes(item.id)}
-              onPressWithCheckBox={() => {
-                toggleCheckedId(type, item.id);
-              }}
-              onPressWithoutCheckBox={() => {
-                navigation.navigate(`${capitalize(type)}Edit`, { id: item.id });
-              }}
-            />
-          );
-        }}
-        renderSectionHeader={({ section: { title, type } }) => (
-          <ListHeader
-            left={title}
-            right={!showCheckBox ? null : (
-              <DeleteButton
-                onPress={() => {
-                  Alert.alert(
-                    '選択した項目を削除します',
-                    '本当によろしいですか？',
-                    [
-                      {
-                        text: 'キャンセル',
-                        style: 'cancel',
-                      },
-                      {
-                        text: '削除',
-                        onPress: () => {
-                          deleteNotes(type);
-                        },
-                        style: 'destructive',
-                      },
-                    ],
-                  );
+            return (
+              <ListItemWithCheckBox
+                title={item.title}
+                subtitle={item.subtitle}
+                showCheckBox={showCheckBox}
+                checked={checkedIds.includes(item.id)}
+                onPressWithCheckBox={() => {
+                  toggleCheckedId(type, item.id);
                 }}
-                height={appStyles(theme).deleteButtonInListHeader.height}
-                width={appStyles(theme).deleteButtonInListHeader.width}
+                onPressWithoutCheckBox={() => {
+                  navigation.navigate(`${capitalize(type)}Edit`, { id: item.id });
+                }}
               />
-            )}
-          />
-        )}
-      />
+            );
+          }}
+          renderSectionHeader={({ section: { title, type } }) => (
+            <ListHeader
+              left={title}
+              right={!showCheckBox ? null : (
+                <DeleteButton
+                  onPress={() => {
+                    Alert.alert(
+                      '選択した項目を削除します',
+                      '本当によろしいですか？',
+                      [
+                        {
+                          text: 'キャンセル',
+                          style: 'cancel',
+                        },
+                        {
+                          text: '削除',
+                          onPress: () => {
+                            deleteNotes(type);
+                          },
+                          style: 'destructive',
+                        },
+                      ],
+                    );
+                  }}
+                  height={appStyles(theme).deleteButtonInListHeader.height}
+                  width={appStyles(theme).deleteButtonInListHeader.width}
+                />
+              )}
+            />
+          )}
+        />
 
-      <CreateButton
-        onPress={() => {
-          navigation.navigate('MemoCreate');
-        }}
-      />
+        <CreateButton
+          onPress={() => {
+            navigation.navigate('MemoCreate');
+          }}
+        />
+      </ImageBackground>
     </View>
   );
 }

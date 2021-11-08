@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import {
   Alert,
   FlatList,
-  StatusBar,
+  ImageBackground,
   StyleSheet,
   Switch,
   Text,
@@ -11,12 +11,14 @@ import {
 import * as Notifications from 'expo-notifications';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import { ThemeContext } from '../contexts';
+import { BackgroundImageContext, ThemeContext } from '../contexts';
 import ListItem from '../components/ListItem';
 import { appStyles } from '../style';
 
 export default function SettingScreen(props) {
+  const { backgroundImage } = useContext(BackgroundImageContext);
   const { theme } = useContext(ThemeContext);
+
   const { navigation } = props;
   const [notificationEnabled, setNotificationEnabled] = useState(false);
 
@@ -96,28 +98,28 @@ export default function SettingScreen(props) {
 
   return (
     <View style={styles(theme).container}>
-      <StatusBar barStyle={appStyles(theme).statusbar.barStyle} />
-
-      <FlatList
-        data={settings}
-        keyExtractor={(item) => `${item.id}`}
-        renderItem={({ item }) => (
-          <ListItem
-            title={(
-              <View style={styles(theme).titleContainer}>
-                <View style={styles(theme).titleLeft}>
-                  <Text style={styles(theme).label}>{item.label}</Text>
+      <ImageBackground source={{ uri: backgroundImage }} resizeMode="cover" style={{ flex: 1 }}>
+        <FlatList
+          data={settings}
+          keyExtractor={(item) => `${item.id}`}
+          renderItem={({ item }) => (
+            <ListItem
+              title={(
+                <View style={styles(theme).titleContainer}>
+                  <View style={styles(theme).titleLeft}>
+                    <Text style={styles(theme).label}>{item.label}</Text>
+                  </View>
+                  {item.with ? <View style={styles(theme).titleRight}>{item.with}</View> : null}
                 </View>
-                {item.with ? <View style={styles(theme).titleRight}>{item.with}</View> : null}
-              </View>
-            )}
-            onPress={item.onPress}
-            style={{ height: appStyles(theme).settingListItem.height }}
-            linearGradient
-            options={{ colors: appStyles(theme).settingListItem.gradientColors }}
-          />
-        )}
-      />
+              )}
+              onPress={item.onPress}
+              style={{ height: appStyles(theme).settingListItem.height }}
+              linearGradient
+              options={{ colors: appStyles(theme).settingListItem.gradientColors }}
+            />
+          )}
+        />
+      </ImageBackground>
     </View>
   );
 }

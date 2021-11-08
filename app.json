@@ -27,6 +27,14 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "plugins": [
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "写真ライブラリへのアクセスを許可します。"
+        }
+      ]
+    ]
   }
 }

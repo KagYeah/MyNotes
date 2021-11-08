@@ -1,14 +1,16 @@
 import React, { useContext, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import { ThemeContext } from '../contexts';
+import { BackgroundImageContext, ThemeContext } from '../contexts';
 import DailyNoteListScreen from './DailyNoteListScreen';
 
 export default function HomeScreen() {
   const { setTheme } = useContext(ThemeContext);
+  const { setBackgroundImage } = useContext(BackgroundImageContext);
 
   useEffect(() => {
     setThemeConfig();
+    setBackgroundImageConfig();
   }, []);
 
   async function setThemeConfig() {
@@ -20,6 +22,21 @@ export default function HomeScreen() {
     }
 
     setTheme(themeName);
+  }
+
+  async function setBackgroundImageConfig() {
+    let imageUri = null;
+    try {
+      imageUri = await AsyncStorage.getItem('@background_image');
+    } catch (error) {
+      console.log(error);
+    }
+
+    if (imageUri === 'null') {
+      imageUri = null;
+    }
+
+    setBackgroundImage(imageUri);
   }
 
   return (

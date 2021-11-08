@@ -1,4 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
+import { StatusBar } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator, CardStyleInterpolators } from '@react-navigation/stack';
 import { createDrawerNavigator } from '@react-navigation/drawer';
@@ -27,7 +28,7 @@ import SettingModelChangeDoneScreen from './src/screens/SettingModelChangeDoneSc
 import AppBar from './src/components/AppBar';
 import Button from './src/components/Button';
 import { appStyles } from './src/style';
-import { ThemeContext } from './src/contexts';
+import { BackgroundImageContext, ThemeContext } from './src/contexts';
 
 import { MigrationController } from './src/lib/storage/migration';
 import {
@@ -44,6 +45,7 @@ const Drawer = createDrawerNavigator();
 import * as FileSystem from 'expo-file-system';
 export default function App() {
   const [theme, setTheme] = useState('navy');
+  const [backgroundImage, setBackgroundImage] = useState(null);
 
   console.log(FileSystem.documentDirectory);
   useEffect(() => {
@@ -69,113 +71,116 @@ export default function App() {
 
   return (
     <ThemeContext.Provider value={{ theme, setTheme }}>
-      <NavigationContainer>
-        <Stack.Navigator
-          // initialRouteName="Root"
-          initialRouteName="InitialStarting"
-          screenOptions={{
-            cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
-            header: ({ navigation, options, back }) => (
-              <AppBar
-                title={options.title}
-                left={
-                  back ? (
-                    <Button
-                      label="<"
-                      onPress={navigation.goBack}
-                      backgroundColor={appStyles(theme).appbarButton.backgroundColor}
-                      color={appStyles(theme).appbarButton.color}
-                      height={appStyles(theme).appbarButton.height}
-                      width={appStyles(theme).appbarButton.width}
-                    />
-                  ) : null
-                }
-                right={options.headerRight}
-              />
-            ),
-          }}
-        >
-          <Stack.Screen
-            name="InitialStarting"
-            component={InitialStartingScreen}
-            options={{ title: 'My Notes' }}
-          />
-          <Stack.Screen
-            name="InitialSetting"
-            component={InitialSettingScreen}
-            options={{ title: 'My Notes' }}
-          />
-          <Stack.Screen
-            name="Root"
-            component={Root}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="MemoEdit"
-            component={MemoEditScreen}
-            options={{ title: 'メモ' }}
-          />
-          <Stack.Screen
-            name="TaskEdit"
-            component={TaskEditScreen}
-            options={{ title: 'タスク' }}
-          />
-          <Stack.Screen
-            name="ScheduleEdit"
-            component={ScheduleEditScreen}
-            options={{ title: '予定' }}
-          />
-          <Stack.Screen
-            name="CalendarDetail"
-            component={CalendarDetailScreen}
-            options={{ title: '' }}
-          />
-          <Stack.Screen
-            name="Setting"
-            component={SettingScreen}
-            options={{ title: '設定' }}
-          />
-          <Stack.Screen
-            name="SettingMainColor"
-            component={SettingMainColorScreen}
-            options={{ title: 'メインカラー' }}
-          />
-          <Stack.Screen
-            name="SettingBackgroundImage"
-            component={SettingBackgroundImageScreen}
-            options={{ title: '背景' }}
-          />
-          <Stack.Screen
-            name="SettingModelChange"
-            component={SettingModelChangeScreen}
-            options={{ title: '機種変更' }}
-          />
-          <Stack.Screen
-            name="SettingModelChangeDone"
-            component={SettingModelChangeDoneScreen}
-            options={{ title: '機種変更' }}
-          />
-          <Stack.Group
-            screenOptions={{ cardStyleInterpolator: CardStyleInterpolators.forVerticalIOS }}
+      <BackgroundImageContext.Provider value={{ backgroundImage, setBackgroundImage }}>
+        <StatusBar barStyle={appStyles(theme).statusbar.barStyle} />
+        <NavigationContainer>
+          <Stack.Navigator
+            // initialRouteName="Root"
+            initialRouteName="InitialStarting"
+            screenOptions={{
+              cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+              header: ({ navigation, options, back }) => (
+                <AppBar
+                  title={options.title}
+                  left={
+                    back ? (
+                      <Button
+                        label="<"
+                        onPress={navigation.goBack}
+                        backgroundColor={appStyles(theme).appbarButton.backgroundColor}
+                        color={appStyles(theme).appbarButton.color}
+                        height={appStyles(theme).appbarButton.height}
+                        width={appStyles(theme).appbarButton.width}
+                      />
+                    ) : null
+                  }
+                  right={options.headerRight}
+                />
+              ),
+            }}
           >
             <Stack.Screen
-              name="MemoCreate"
-              component={MemoCreateScreen}
+              name="InitialStarting"
+              component={InitialStartingScreen}
+              options={{ title: 'My Notes' }}
+            />
+            <Stack.Screen
+              name="InitialSetting"
+              component={InitialSettingScreen}
+              options={{ title: 'My Notes' }}
+            />
+            <Stack.Screen
+              name="Root"
+              component={Root}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="MemoEdit"
+              component={MemoEditScreen}
               options={{ title: 'メモ' }}
             />
             <Stack.Screen
-              name="TaskCreate"
-              component={TaskCreateScreen}
+              name="TaskEdit"
+              component={TaskEditScreen}
               options={{ title: 'タスク' }}
             />
             <Stack.Screen
-              name="ScheduleCreate"
-              component={ScheduleCreateScreen}
+              name="ScheduleEdit"
+              component={ScheduleEditScreen}
               options={{ title: '予定' }}
             />
-          </Stack.Group>
-        </Stack.Navigator>
-      </NavigationContainer>
+            <Stack.Screen
+              name="CalendarDetail"
+              component={CalendarDetailScreen}
+              options={{ title: '' }}
+            />
+            <Stack.Screen
+              name="Setting"
+              component={SettingScreen}
+              options={{ title: '設定' }}
+            />
+            <Stack.Screen
+              name="SettingMainColor"
+              component={SettingMainColorScreen}
+              options={{ title: 'メインカラー' }}
+            />
+            <Stack.Screen
+              name="SettingBackgroundImage"
+              component={SettingBackgroundImageScreen}
+              options={{ title: '背景' }}
+            />
+            <Stack.Screen
+              name="SettingModelChange"
+              component={SettingModelChangeScreen}
+              options={{ title: '機種変更' }}
+            />
+            <Stack.Screen
+              name="SettingModelChangeDone"
+              component={SettingModelChangeDoneScreen}
+              options={{ title: '機種変更' }}
+            />
+            <Stack.Group
+              screenOptions={{ cardStyleInterpolator: CardStyleInterpolators.forVerticalIOS }}
+            >
+              <Stack.Screen
+                name="MemoCreate"
+                component={MemoCreateScreen}
+                options={{ title: 'メモ' }}
+              />
+              <Stack.Screen
+                name="TaskCreate"
+                component={TaskCreateScreen}
+                options={{ title: 'タスク' }}
+              />
+              <Stack.Screen
+                name="ScheduleCreate"
+                component={ScheduleCreateScreen}
+                options={{ title: '予定' }}
+              />
+            </Stack.Group>
+          </Stack.Navigator>
+        </NavigationContainer>
+      </BackgroundImageContext.Provider>
     </ThemeContext.Provider>
   );
 }

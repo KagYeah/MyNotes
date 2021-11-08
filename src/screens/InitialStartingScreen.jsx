@@ -1,17 +1,21 @@
 import React, { useContext, useEffect, useState } from 'react';
 import {
   Alert,
-  StatusBar, StyleSheet, View,
+  ImageBackground,
+  StyleSheet,
+  View,
 } from 'react-native';
 import * as Notifications from 'expo-notifications';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import { ThemeContext } from '../contexts';
+import { BackgroundImageContext, ThemeContext } from '../contexts';
 import Button from '../components/Button';
 import { appStyles } from '../style';
 
 export default function InitialStartingScreen(props) {
+  const { backgroundImage } = useContext(BackgroundImageContext);
   const { theme } = useContext(ThemeContext);
+
   const { navigation } = props;
   const [isInitialized, setIsInitialized] = useState(false);
 
@@ -41,6 +45,7 @@ export default function InitialStartingScreen(props) {
     await AsyncStorage.multiSet([
       ['@notification_enabled', 'true'],
       ['@theme', 'navy'],
+      ['@background_image', 'null'],
     ]);
   }
 
@@ -67,37 +72,37 @@ export default function InitialStartingScreen(props) {
 
   return (
     <View style={styles(theme).container}>
-      <StatusBar barStyle={appStyles(theme).statusbar.barStyle} />
+      <ImageBackground source={{ uri: backgroundImage }} resizeMode="cover" style={{ flex: 1 }}>
+        <View style={styles(theme).centeredView}>
+          <Button
+            label="はじめる"
+            onPress={() => {
+              navigation.reset({
+                index: 0,
+                routes: [{ name: 'Root', params: { screen: 'Home' } }],
+              });
+            }}
+            color={appStyles(theme).buttonLarge.color}
+            height={appStyles(theme).buttonLarge.height}
+            width={appStyles(theme).buttonLarge.width}
+            linearGradient
+            options={{ colors: appStyles(theme).buttonLarge.gradientColors }}
+          />
 
-      <View style={styles(theme).centeredView}>
-        <Button
-          label="はじめる"
-          onPress={() => {
-            navigation.reset({
-              index: 0,
-              routes: [{ name: 'Root', params: { screen: 'Home' } }],
-            });
-          }}
-          color={appStyles(theme).buttonLarge.color}
-          height={appStyles(theme).buttonLarge.height}
-          width={appStyles(theme).buttonLarge.width}
-          linearGradient
-          options={{ colors: appStyles(theme).buttonLarge.gradientColors }}
-        />
-
-        <Button
-          label="機種変更"
-          onPress={() => {
-            navigation.navigate('InitialSetting');
-          }}
-          color={appStyles(theme).buttonLarge.color}
-          style={{ marginTop: appStyles(theme).buttonLarge.margin }}
-          height={appStyles(theme).buttonLarge.height}
-          width={appStyles(theme).buttonLarge.width}
-          linearGradient
-          options={{ colors: appStyles(theme).buttonLarge.gradientColors }}
-        />
-      </View>
+          <Button
+            label="機種変更"
+            onPress={() => {
+              navigation.navigate('InitialSetting');
+            }}
+            color={appStyles(theme).buttonLarge.color}
+            style={{ marginTop: appStyles(theme).buttonLarge.margin }}
+            height={appStyles(theme).buttonLarge.height}
+            width={appStyles(theme).buttonLarge.width}
+            linearGradient
+            options={{ colors: appStyles(theme).buttonLarge.gradientColors }}
+          />
+        </View>
+      </ImageBackground>
     </View>
   );
 }

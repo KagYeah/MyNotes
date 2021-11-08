@@ -6,6 +6,7 @@ import {
   Animated,
   Keyboard,
   KeyboardAvoidingView,
+  ImageBackground,
   ScrollView,
   StatusBar,
   StyleSheet,
@@ -14,7 +15,7 @@ import {
 } from 'react-native';
 import * as Notifications from 'expo-notifications';
 
-import { ThemeContext } from '../contexts';
+import { BackgroundImageContext, ThemeContext } from '../contexts';
 import Button from '../components/Button';
 import DateTimeInput from '../components/DateTimeInput';
 import Loading from '../components/Loading';
@@ -26,7 +27,9 @@ import { date2string, sleep } from '../helpers';
 import { SchedulesTable } from '../classes/storage';
 
 export default function ScheduleCreateScreen(props) {
+  const { backgroundImage } = useContext(BackgroundImageContext);
   const { theme } = useContext(ThemeContext);
+
   const { navigation } = props;
   const [date, setDate] = useState(new Date());
   const [startTime, setStartTime] = useState(new Date());
@@ -35,6 +38,7 @@ export default function ScheduleCreateScreen(props) {
   const [showKeyboardHidingButton, setShowKeyboardHidingButton] = useState(false);
   const [showTypeList, setShowTypeList] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+
   const typeListTranslateY = useRef(new Animated.Value(0)).current;
   const schedulesTable = new SchedulesTable();
 
@@ -171,65 +175,68 @@ export default function ScheduleCreateScreen(props) {
       behavior={appStyles(theme).keyboardAvoidingView.behavior}
       keyboardVerticalOffset={appStyles(theme).keyboardAvoidingView.verticalOffset}
     >
-      <Loading isLoading={isLoading} />
+      <ImageBackground source={{ uri: backgroundImage }} resizeMode="cover" style={{ flex: 1 }}>
 
-      <View style={styles(theme).container}>
-        <StatusBar barStyle={appStyles(theme).statusbar.barStyle} />
+        <Loading isLoading={isLoading} />
 
-        {showTypeList ? (
-          <>
-            <TouchableOpacity
-              activeOpacity={appStyles(theme).typeListBackground.opacity}
-              onPress={toggleTypeList}
-              style={styles(theme).typeListBackground}
+        <View style={styles(theme).container}>
+          <StatusBar barStyle={appStyles(theme).statusbar.barStyle} />
+
+          {showTypeList ? (
+            <>
+              <TouchableOpacity
+                activeOpacity={appStyles(theme).typeListBackground.opacity}
+                onPress={toggleTypeList}
+                style={styles(theme).typeListBackground}
+              />
+              <Animated.View
+                style={[
+                  styles(theme).typeList,
+                  {
+                    transform: [{ translateY: typeListTranslateY }],
+                    zIndex: appStyles(theme).appbar.zIndex - 1,
+                  },
+                ]}
+              >
+                <TypeList />
+              </Animated.View>
+            </>
+          ) : null}
+
+          <ScrollView>
+            <DateTimeInput
+              label="日付"
+              mode="date"
+              onChange={(value) => setDate(value)}
+              value={date}
             />
-            <Animated.View
-              style={[
-                styles(theme).typeList,
-                {
-                  transform: [{ translateY: typeListTranslateY }],
-                  zIndex: appStyles(theme).appbar.zIndex - 1,
-                },
-              ]}
-            >
-              <TypeList />
-            </Animated.View>
-          </>
-        ) : null}
 
-        <ScrollView>
-          <DateTimeInput
-            label="日付"
-            mode="date"
-            onChange={(value) => setDate(value)}
-            value={date}
+            <DateTimeInput
+              label="開始時間"
+              mode="time"
+              onChange={(value) => setStartTime(value)}
+              value={startTime}
+            />
+
+            <DateTimeInput
+              label="終了時間"
+              mode="time"
+              onChange={(value) => setEndTime(value)}
+              value={endTime}
+            />
+
+            <NoteTitleInput
+              onChangeText={(text) => setTitle(text)}
+              placeholder="予定"
+              value={title}
+            />
+          </ScrollView>
+
+          <SaveButton
+            onPress={saveSchedule}
           />
-
-          <DateTimeInput
-            label="開始時間"
-            mode="time"
-            onChange={(value) => setStartTime(value)}
-            value={startTime}
-          />
-
-          <DateTimeInput
-            label="終了時間"
-            mode="time"
-            onChange={(value) => setEndTime(value)}
-            value={endTime}
-          />
-
-          <NoteTitleInput
-            onChangeText={(text) => setTitle(text)}
-            placeholder="予定"
-            value={title}
-          />
-        </ScrollView>
-
-        <SaveButton
-          onPress={saveSchedule}
-        />
-      </View>
+        </View>
+      </ImageBackground>
     </KeyboardAvoidingView>
   );
 }

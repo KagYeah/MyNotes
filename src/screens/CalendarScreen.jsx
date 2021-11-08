@@ -1,17 +1,18 @@
 import React, { useContext, useRef, useState } from 'react';
 import {
-  ScrollView, StatusBar, StyleSheet, View,
+  ImageBackground, ScrollView, StyleSheet, View,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import SegmentedPicker from 'react-native-segmented-picker';
 
-import { ThemeContext } from '../contexts';
+import { BackgroundImageContext, ThemeContext } from '../contexts';
 import Button from '../components/Button';
 import Calendar from '../components/Calendar';
 import { appStyles } from '../style';
 import { DATE_SEPARATOR } from '../helpers';
 
 export default function CalendarScreen() {
+  const { backgroundImage } = useContext(BackgroundImageContext);
   const { theme } = useContext(ThemeContext);
 
   const now = new Date();
@@ -65,70 +66,71 @@ export default function CalendarScreen() {
 
   return (
     <View style={styles(theme).container}>
-      <StatusBar barStyle={appStyles(theme).statusbar.barStyle} />
+      <ImageBackground source={{ uri: backgroundImage }} resizeMode="cover" style={{ flex: 1 }}>
 
-      <LinearGradient
-        colors={appStyles(theme).calendarHeader.gradientColors}
-        style={styles(theme).header}
-      >
-        <View style={styles(theme).monthInput}>
-          <Button
-            label={`${year} ${DATE_SEPARATOR} ${month} _`}
-            onPress={() => {
-              refPicker.current.show();
-            }}
-            backgroundColor={appStyles(theme).calendarHeaderButton.backgroundColor}
-            fontSize={appStyles(theme).calendarHeader.fontSize}
-            fontWeight={appStyles(theme).calendarHeader.fontWeight}
-            height={
-              appStyles(theme).calendarHeader.height
-              - appStyles(theme).calendarHeader.paddingVertical * 2
-            }
-            width={200}
-          />
-
-          <SegmentedPicker
-            ref={refPicker}
-            confirmText="OK"
-            defaultSelections={{ year: year.toString(), month: month.toString() }}
-            onConfirm={(values) => {
-              setYear(Number(values.year));
-              setMonth(Number(values.month));
-            }}
-            options={pickerData}
-          />
-        </View>
-
-        {year === currentYear && month === 1 ? null : (
-          <View style={styles(theme).headerLeft}>
+        <LinearGradient
+          colors={appStyles(theme).calendarHeader.gradientColors}
+          style={styles(theme).header}
+        >
+          <View style={styles(theme).monthInput}>
             <Button
-              label="<"
-              onPress={() => setPreviousMonth()}
+              label={`${year} ${DATE_SEPARATOR} ${month} _`}
+              onPress={() => {
+                refPicker.current.show();
+              }}
               backgroundColor={appStyles(theme).calendarHeaderButton.backgroundColor}
-              color={appStyles(theme).calendarHeader.color}
-              height={appStyles(theme).calendarHeader.height
-                - appStyles(theme).calendarHeader.paddingVertical * 2}
+              fontSize={appStyles(theme).calendarHeader.fontSize}
+              fontWeight={appStyles(theme).calendarHeader.fontWeight}
+              height={
+                appStyles(theme).calendarHeader.height
+                - appStyles(theme).calendarHeader.paddingVertical * 2
+              }
+              width={200}
+            />
+
+            <SegmentedPicker
+              ref={refPicker}
+              confirmText="OK"
+              defaultSelections={{ year: year.toString(), month: month.toString() }}
+              onConfirm={(values) => {
+                setYear(Number(values.year));
+                setMonth(Number(values.month));
+              }}
+              options={pickerData}
             />
           </View>
-        )}
 
-        {year === currentYear + yearPickerDataCount && month === 12 ? null : (
-          <View style={styles(theme).headerRight}>
-            <Button
-              label=">"
-              onPress={() => setNextMonth()}
-              backgroundColor={appStyles(theme).calendarHeaderButton.backgroundColor}
-              color={appStyles(theme).calendarHeader.color}
-              height={appStyles(theme).calendarHeader.height
-                - appStyles(theme).calendarHeader.paddingVertical * 2}
-            />
-          </View>
-        )}
-      </LinearGradient>
+          {year === currentYear && month === 1 ? null : (
+            <View style={styles(theme).headerLeft}>
+              <Button
+                label="<"
+                onPress={() => setPreviousMonth()}
+                backgroundColor={appStyles(theme).calendarHeaderButton.backgroundColor}
+                color={appStyles(theme).calendarHeader.color}
+                height={appStyles(theme).calendarHeader.height
+                  - appStyles(theme).calendarHeader.paddingVertical * 2}
+              />
+            </View>
+          )}
 
-      <ScrollView style={styles(theme).calendar}>
-        <Calendar year={year} month={month - 1} />
-      </ScrollView>
+          {year === currentYear + yearPickerDataCount && month === 12 ? null : (
+            <View style={styles(theme).headerRight}>
+              <Button
+                label=">"
+                onPress={() => setNextMonth()}
+                backgroundColor={appStyles(theme).calendarHeaderButton.backgroundColor}
+                color={appStyles(theme).calendarHeader.color}
+                height={appStyles(theme).calendarHeader.height
+                  - appStyles(theme).calendarHeader.paddingVertical * 2}
+              />
+            </View>
+          )}
+        </LinearGradient>
+
+        <ScrollView style={styles(theme).calendar}>
+          <Calendar year={year} month={month - 1} />
+        </ScrollView>
+      </ImageBackground>
     </View>
   );
 }
