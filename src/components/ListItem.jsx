@@ -40,7 +40,10 @@ export default function ListItem(props) {
     component = (
       <LinearGradient
         {...properties}
-        style={[styles(theme).container, style]}
+        style={{
+          paddingHorizontal: appStyles(theme).listItem.paddingHorizontal,
+          paddingVertical: appStyles(theme).listItem.paddingVertical,
+        }}
       >
         {component}
       </LinearGradient>
@@ -56,18 +59,17 @@ export default function ListItem(props) {
     component = (
       <TouchableOpacity
         {...properties}
-        style={!linearGradient ? [styles(theme).container, style] : style}
+        style={!linearGradient ? {
+          paddingHorizontal: appStyles(theme).listItem.paddingHorizontal,
+          paddingVertical: appStyles(theme).listItem.paddingVertical,
+        } : null}
       >
         {component}
       </TouchableOpacity>
     );
   }
 
-  if (!linearGradient && !onPress) {
-    component = <View style={[styles(theme).container, style]}>{component}</View>;
-  }
-
-  return component;
+  return <View style={[styles(theme).container, style]}>{component}</View>;
 }
 
 ListItem.propTypes = {
@@ -93,8 +95,6 @@ const styles = (theme) => StyleSheet.create({
     height: appStyles(theme).listItem.height,
     justifyContent: 'center',
     opacity: appStyles(theme).listItem.opacity,
-    paddingHorizontal: appStyles(theme).listItem.paddingHorizontal,
-    paddingVertical: appStyles(theme).listItem.paddingVertical,
     width: '100%',
   },
 });
