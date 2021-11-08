@@ -162,10 +162,13 @@ export default function DailyNoteListScreen(props) {
 
     setIsLoading(false);
 
+    const now = new Date();
+
     const tasks = tasksResult._array.map((row) => ({
       id: row.id,
       title: row.title,
       subtitle: `期限 ${date2string(tasksTable.datetime2date(row.deadline), 'time')}`,
+      timeout: row.deadline < tasksTable.datetime(now),
     }));
 
     notes.push({
@@ -178,6 +181,7 @@ export default function DailyNoteListScreen(props) {
       id: row.id,
       title: row.title,
       subtitle: `${date2string(schedulesTable.datetime2date(row.start_time), 'time')} ~ ${date2string(schedulesTable.datetime2date(row.end_time), 'time')}`,
+      timeout: row.end_time < schedulesTable.datetime(now),
     }));
 
     notes.push({
@@ -255,6 +259,7 @@ export default function DailyNoteListScreen(props) {
               <ListItemWithCheckBox
                 title={item.title}
                 subtitle={item.subtitle}
+                destructive={item.timeout}
                 showCheckBox={showCheckBox}
                 checked={checkedIds.includes(item.id)}
                 onPressWithCheckBox={() => {

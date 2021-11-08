@@ -32,6 +32,7 @@ export default function MemoListScreen(props) {
           id: memo.id,
           title: memo.title,
           subtitle: `保存 ${date2string(updatedAt, 'datetime')}`,
+          timeout: false,
         };
       });
       setMemos(memosArr);

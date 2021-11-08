@@ -26,10 +26,12 @@ export default function TaskListScreen(props) {
       [{ column: 'deadline', order: 'ASC' }],
     ).then((result) => {
       console.log('fetched!', result._array);
+      const now = new Date();
       const data = result._array.map((task) => ({
         id: task.id,
         title: task.title,
         subtitle: `期限 ${date2string(tasksTable.datetime2date(task.deadline), 'datetime')}`,
+        timeout: task.deadline < tasksTable.datetime(now),
       }));
       setTasks(data);
     }).catch((error) => {

@@ -30,12 +30,14 @@ export default function ScheduleListScreen(props) {
     ).then((result) => {
       console.log('fetched!');
       const data = result._array.map((schedule) => {
+        const now = new Date();
         const subtitle = `${date2string(schedulesTable.datetime2date(schedule.start_time), 'datetime')} ~ ${date2string(schedulesTable.datetime2date(schedule.end_time), 'time')}`;
 
         return {
           id: schedule.id,
           title: schedule.title,
           subtitle,
+          timeout: schedule.end_time < schedulesTable.datetime(now),
         };
       });
       setSchedules(data);

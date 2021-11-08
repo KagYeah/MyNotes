@@ -113,6 +113,9 @@ export const appStyles = (themeName) => ({
     position: 'absolute',
     right: 24,
   },
+  destructive: {
+    color: red,
+  },
   datetimeInput: {
     backgroundColor: theme[themeName].subMainBackgroundColor,
     borderBottomColor: 'rgba(0, 0, 0, 0.25)',

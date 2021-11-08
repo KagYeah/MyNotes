@@ -9,7 +9,13 @@ import { appStyles } from '../style';
 export default function ListItemWithCheckBox(props) {
   const { theme } = useContext(ThemeContext);
   const {
-    title, subtitle, checked, showCheckBox, onPressWithCheckBox, onPressWithoutCheckBox,
+    title,
+    subtitle,
+    checked,
+    showCheckBox,
+    onPressWithCheckBox,
+    onPressWithoutCheckBox,
+    destructive,
   } = props;
 
   return (
@@ -17,8 +23,24 @@ export default function ListItemWithCheckBox(props) {
       title={(
         <View style={styles(theme).container}>
           <View style={styles(theme).left}>
-            <Text style={styles(theme).title}>{title}</Text>
-            {subtitle && <Text style={styles(theme).subtitle}>{subtitle}</Text>}
+            <Text
+              style={[
+                styles(theme).title,
+                destructive ? styles(theme).destructive : null,
+              ]}
+            >
+              {title}
+            </Text>
+            {subtitle && (
+              <Text
+                style={[
+                  styles(theme).subtitle,
+                  destructive ? styles(theme).destructive : null,
+                ]}
+              >
+                {subtitle}
+              </Text>
+            )}
           </View>
           {showCheckBox ? (
             <View style={styles(theme).right}>
@@ -45,6 +67,7 @@ ListItemWithCheckBox.propTypes = {
   showCheckBox: bool,
   onPressWithCheckBox: func,
   onPressWithoutCheckBox: func,
+  destructive: bool,
 };
 
 ListItemWithCheckBox.defaultProps = {
@@ -53,6 +76,7 @@ ListItemWithCheckBox.defaultProps = {
   showCheckBox: true,
   onPressWithCheckBox: () => {},
   onPressWithoutCheckBox: () => {},
+  destructive: false,
 };
 
 const styles = (theme) => StyleSheet.create({
@@ -82,7 +106,10 @@ const styles = (theme) => StyleSheet.create({
     fontSize: appStyles(theme).checkbox.fontSize,
   },
   unchecked: {
-    color: appStyles(theme).checkbox.ucheckedColor,
+    color: appStyles(theme).checkbox.uncheckedColor,
     fontSize: appStyles(theme).checkbox.fontSize,
+  },
+  destructive: {
+    color: appStyles(theme).destructive.color,
   },
 });

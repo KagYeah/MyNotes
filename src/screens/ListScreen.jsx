@@ -214,6 +214,7 @@ export default function ListScreen(props) {
               <ListItemWithCheckBox
                 title={item.title}
                 subtitle={item.subtitle}
+                destructive={item.timeout}
                 showCheckBox={showCheckBox}
                 checked={checkedIds.includes(item.id)}
                 onPressWithCheckBox={() => {

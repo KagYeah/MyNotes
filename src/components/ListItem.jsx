@@ -40,10 +40,15 @@ export default function ListItem(props) {
     component = (
       <LinearGradient
         {...properties}
-        style={{
-          paddingHorizontal: appStyles(theme).listItem.paddingHorizontal,
-          paddingVertical: appStyles(theme).listItem.paddingVertical,
-        }}
+        style={[
+          {
+            height: appStyles(theme).listItem.height,
+            justifyContent: 'center',
+            paddingHorizontal: appStyles(theme).listItem.paddingHorizontal,
+            paddingVertical: appStyles(theme).listItem.paddingVertical,
+          },
+          style,
+        ]}
       >
         {component}
       </LinearGradient>
@@ -59,10 +64,15 @@ export default function ListItem(props) {
     component = (
       <TouchableOpacity
         {...properties}
-        style={!linearGradient ? {
-          paddingHorizontal: appStyles(theme).listItem.paddingHorizontal,
-          paddingVertical: appStyles(theme).listItem.paddingVertical,
-        } : null}
+        style={!linearGradient ? [
+          {
+            height: appStyles(theme).listItem.height,
+            justifyContent: 'center',
+            paddingHorizontal: appStyles(theme).listItem.paddingHorizontal,
+            paddingVertical: appStyles(theme).listItem.paddingVertical,
+          },
+          style,
+        ] : style}
       >
         {component}
       </TouchableOpacity>
@@ -92,7 +102,6 @@ const styles = (theme) => StyleSheet.create({
     backgroundColor: appStyles(theme).listItem.backgroundColor,
     borderBottomColor: appStyles(theme).listItem.borderBottomColor,
     borderBottomWidth: 1,
-    height: appStyles(theme).listItem.height,
     justifyContent: 'center',
     opacity: appStyles(theme).listItem.opacity,
     width: '100%',
