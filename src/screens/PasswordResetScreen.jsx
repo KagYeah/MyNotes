@@ -1,38 +1,39 @@
 import React, { useContext, useState } from 'react';
 import {
-  ImageBackground, ScrollView, StyleSheet, Text, TextInput, View,
+  ImageBackground, StyleSheet, Text, TextInput, View,
 } from 'react-native';
 
 import { BackgroundImageContext, ThemeContext } from '../contexts';
 import Button from '../components/Button';
 import { appStyles } from '../style';
 
-export default function SettingModelChangeScreen(props) {
+export default function PasswordResetScreen(props) {
   const { backgroundImage } = useContext(BackgroundImageContext);
   const { theme } = useContext(ThemeContext);
+
   const { navigation } = props;
-  const [password, setPassword] = useState('');
-
-  const message = `あなたのIDは「abc123」です。以下でパスワードを設定し、ID・パスワードを大事に保管してください。
-
-設定が完了して24時間以内に、機種変更後の端末にデータを移行してください。データの移行は、本アプリ初回起動時に「機種変更」ボタンを押してから行ってください。`;
+  const [email, setEmail] = useState('');
 
   return (
     <View style={styles(theme).container}>
       <ImageBackground source={{ uri: backgroundImage }} resizeMode="cover" style={{ flex: 1 }}>
-
-        <ScrollView style={styles(theme).scroll}>
-          <Text style={styles(theme).description}>{message}</Text>
+        <View style={styles(theme).centeredView}>
+          <View style={styles(theme).description}>
+            <Text style={styles(theme).text}>記入したメールアドレス宛にパスワード再設定用のメールを送信します。</Text>
+          </View>
 
           <TextInput
-            onChangeText={(text) => setPassword(text)}
-            placeholder="パスワード"
+            autoCapitalize="none"
+            keyboardType="email-address"
+            onChangeText={(text) => setEmail(text)}
+            placeholder="Email"
             style={styles(theme).input}
-            value={password}
+            textContentType="emailAddress"
+            value={email}
           />
 
           <Button
-            label="設定"
+            label="送信"
             onPress={() => {
               navigation.goBack();
             }}
@@ -43,7 +44,7 @@ export default function SettingModelChangeScreen(props) {
             linearGradient
             options={{ colors: appStyles(theme).buttonMedium.gradientColors }}
           />
-        </ScrollView>
+        </View>
       </ImageBackground>
     </View>
   );
@@ -54,13 +55,16 @@ const styles = (theme) => StyleSheet.create({
     backgroundColor: appStyles(theme).app.backgroundColor,
     flex: 1,
   },
-  scroll: {
+  centeredView: {
+    flex: 1,
+    justifyContent: 'center',
     paddingHorizontal: appStyles(theme).app.paddingHorizontal,
-    paddingVertical: appStyles(theme).app.paddingVertical,
   },
   description: {
-    fontSize: appStyles(theme).body.fontSize,
-    lineHeight: appStyles(theme).body.lineHeight,
+    alignItems: 'center',
+  },
+  text: {
+    fontSize: 16,
   },
   input: {
     borderColor: appStyles(theme).idPasswordInput.borderColor,

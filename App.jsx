@@ -24,6 +24,9 @@ import SettingMainColorScreen from './src/screens/SettingMainColorScreen';
 import SettingBackgroundImageScreen from './src/screens/SettingBackgroundImageScreen';
 import SettingModelChangeScreen from './src/screens/SettingModelChangeScreen';
 import SettingModelChangeDoneScreen from './src/screens/SettingModelChangeDoneScreen';
+import LogInScreen from './src/screens/LogInScreen';
+import SignUpScreen from './src/screens/SignUpScreen';
+import PasswordResetScreen from './src/screens/PasswordResetScreen';
 
 import AppBar from './src/components/AppBar';
 import Button from './src/components/Button';
@@ -158,6 +161,21 @@ export default function App() {
               name="SettingModelChangeDone"
               component={SettingModelChangeDoneScreen}
               options={{ title: '機種変更' }}
+            />
+            <Stack.Screen
+              name="LogIn"
+              component={LogInScreen}
+              options={{ title: 'ログイン' }}
+            />
+            <Stack.Screen
+              name="SignUp"
+              component={SignUpScreen}
+              options={{ title: '会員登録' }}
+            />
+            <Stack.Screen
+              name="PasswordReset"
+              component={PasswordResetScreen}
+              options={{ title: 'パスワード再設定' }}
             />
             <Stack.Group
               screenOptions={{ cardStyleInterpolator: CardStyleInterpolators.forVerticalIOS }}

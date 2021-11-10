@@ -89,8 +89,16 @@ export default function SettingScreen(props) {
       id: 3,
       label: '機種変更',
       onPress: () => {
-        // navigation.navigate('SettingModelChange');
-        navigation.navigate('SettingModelChangeDone');
+        navigation.navigate('SettingModelChange');
+        // navigation.navigate('SettingModelChangeDone');
+      },
+      with: null,
+    },
+    {
+      id: 4,
+      label: 'ログイン',
+      onPress: () => {
+        navigation.navigate('LogIn');
       },
       with: null,
     },

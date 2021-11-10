@@ -1,40 +1,48 @@
 import React, { useContext, useState } from 'react';
 import {
-  ImageBackground, ScrollView, StyleSheet, Text, TextInput, View,
+  ImageBackground, StyleSheet, Text, TextInput, View,
 } from 'react-native';
 
 import { BackgroundImageContext, ThemeContext } from '../contexts';
 import Button from '../components/Button';
 import { appStyles } from '../style';
 
-export default function SettingModelChangeScreen(props) {
+export default function SignUpScreen(props) {
   const { backgroundImage } = useContext(BackgroundImageContext);
   const { theme } = useContext(ThemeContext);
+
   const { navigation } = props;
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-
-  const message = `あなたのIDは「abc123」です。以下でパスワードを設定し、ID・パスワードを大事に保管してください。
-
-設定が完了して24時間以内に、機種変更後の端末にデータを移行してください。データの移行は、本アプリ初回起動時に「機種変更」ボタンを押してから行ってください。`;
 
   return (
     <View style={styles(theme).container}>
       <ImageBackground source={{ uri: backgroundImage }} resizeMode="cover" style={{ flex: 1 }}>
-
-        <ScrollView style={styles(theme).scroll}>
-          <Text style={styles(theme).description}>{message}</Text>
+        <View style={styles(theme).centeredView}>
+          <TextInput
+            autoCapitalize="none"
+            keyboardType="email-address"
+            onChangeText={(text) => setEmail(text)}
+            placeholder="Email"
+            style={styles(theme).input}
+            textContentType="emailAddress"
+            value={email}
+          />
 
           <TextInput
+            autoCapitalize="none"
             onChangeText={(text) => setPassword(text)}
-            placeholder="パスワード"
+            placeholder="Password"
+            secureTextEntry
             style={styles(theme).input}
+            textContentType="password"
             value={password}
           />
 
           <Button
-            label="設定"
+            label="登録"
             onPress={() => {
-              navigation.goBack();
+              navigation.navigate('Root', { screen: 'Setting' });
             }}
             color={appStyles(theme).buttonMedium.color}
             style={styles(theme).submit}
@@ -43,7 +51,19 @@ export default function SettingModelChangeScreen(props) {
             linearGradient
             options={{ colors: appStyles(theme).buttonMedium.gradientColors }}
           />
-        </ScrollView>
+
+          <View style={styles(theme).footer}>
+            <View style={styles(theme).row}>
+              <Text style={styles(theme).text}>ログインは</Text>
+              <Text
+                style={styles(theme).link}
+                onPress={() => { navigation.navigate('LogIn'); }}
+              >
+                こちら
+              </Text>
+            </View>
+          </View>
+        </View>
       </ImageBackground>
     </View>
   );
@@ -54,13 +74,10 @@ const styles = (theme) => StyleSheet.create({
     backgroundColor: appStyles(theme).app.backgroundColor,
     flex: 1,
   },
-  scroll: {
+  centeredView: {
+    flex: 1,
+    justifyContent: 'center',
     paddingHorizontal: appStyles(theme).app.paddingHorizontal,
-    paddingVertical: appStyles(theme).app.paddingVertical,
-  },
-  description: {
-    fontSize: appStyles(theme).body.fontSize,
-    lineHeight: appStyles(theme).body.lineHeight,
   },
   input: {
     borderColor: appStyles(theme).idPasswordInput.borderColor,
@@ -73,5 +90,20 @@ const styles = (theme) => StyleSheet.create({
   submit: {
     alignSelf: 'center',
     marginTop: appStyles(theme).buttonMedium.margin,
+  },
+  footer: {
+    marginTop: 40,
+  },
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginBottom: 24,
+  },
+  text: {
+    fontSize: 16,
+  },
+  link: {
+    color: '#39f',
+    fontSize: 16,
   },
 });

@@ -63,7 +63,7 @@ export const appStyles = (themeName) => ({
     gradientColors: theme[themeName].mainGradientColors,
     height: 40,
     margin: 24,
-    width: 80,
+    width: 128,
   },
   calendar: {
     borderColor: black,
