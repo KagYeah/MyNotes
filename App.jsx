@@ -23,7 +23,6 @@ import SettingScreen from './src/screens/SettingScreen';
 import SettingMainColorScreen from './src/screens/SettingMainColorScreen';
 import SettingBackgroundImageScreen from './src/screens/SettingBackgroundImageScreen';
 import SettingModelChangeScreen from './src/screens/SettingModelChangeScreen';
-import SettingModelChangeDoneScreen from './src/screens/SettingModelChangeDoneScreen';
 import LogInScreen from './src/screens/LogInScreen';
 import SignUpScreen from './src/screens/SignUpScreen';
 import PasswordResetScreen from './src/screens/PasswordResetScreen';
@@ -155,11 +154,6 @@ export default function App() {
             <Stack.Screen
               name="SettingModelChange"
               component={SettingModelChangeScreen}
-              options={{ title: '機種変更' }}
-            />
-            <Stack.Screen
-              name="SettingModelChangeDone"
-              component={SettingModelChangeDoneScreen}
               options={{ title: '機種変更' }}
             />
             <Stack.Screen

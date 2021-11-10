@@ -90,7 +90,6 @@ export default function SettingScreen(props) {
       label: '機種変更',
       onPress: () => {
         navigation.navigate('SettingModelChange');
-        // navigation.navigate('SettingModelChangeDone');
       },
       with: null,
     },
