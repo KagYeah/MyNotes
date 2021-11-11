@@ -1,10 +1,12 @@
 import React, { useContext, useState } from 'react';
 import {
-  ImageBackground, StyleSheet, Text, TextInput, View,
+  Alert, ImageBackground, StyleSheet, Text, TextInput, View,
 } from 'react-native';
+import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 
 import { BackgroundImageContext, ThemeContext } from '../contexts';
 import Button from '../components/Button';
+import Loading from '../components/Loading';
 import { appStyles } from '../style';
 
 export default function LogInScreen(props) {
@@ -14,10 +16,28 @@ export default function LogInScreen(props) {
   const { navigation } = props;
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const auth = getAuth();
+
+  function logIn() {
+    setIsLoading(true);
+    signInWithEmailAndPassword(auth, email, password)
+      .then(() => {
+        navigation.goBack();
+      })
+      .catch((error) => {
+        console.log(error.code);
+        Alert.alert('ログインに失敗しました。');
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  }
 
   return (
     <View style={styles(theme).container}>
       <ImageBackground source={{ uri: backgroundImage }} resizeMode="cover" style={{ flex: 1 }}>
+        <Loading isLoading={isLoading} />
         <View style={styles(theme).centeredView}>
           <TextInput
             autoCapitalize="none"
@@ -41,9 +61,7 @@ export default function LogInScreen(props) {
 
           <Button
             label="ログイン"
-            onPress={() => {
-              navigation.goBack();
-            }}
+            onPress={logIn}
             color={appStyles(theme).buttonMedium.color}
             style={styles(theme).submit}
             height={appStyles(theme).buttonMedium.height}

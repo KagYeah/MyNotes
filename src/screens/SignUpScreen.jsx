@@ -1,10 +1,12 @@
 import React, { useContext, useState } from 'react';
 import {
-  ImageBackground, StyleSheet, Text, TextInput, View,
+  Alert, ImageBackground, StyleSheet, Text, TextInput, View,
 } from 'react-native';
+import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
 
 import { BackgroundImageContext, ThemeContext } from '../contexts';
 import Button from '../components/Button';
+import Loading from '../components/Loading';
 import { appStyles } from '../style';
 
 export default function SignUpScreen(props) {
@@ -14,10 +16,30 @@ export default function SignUpScreen(props) {
   const { navigation } = props;
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+
+  function signUp() {
+    const auth = getAuth();
+
+    setIsLoading(true);
+    createUserWithEmailAndPassword(auth, email, password)
+      .then(() => {
+        navigation.navigate('Root', { screen: 'Setting' });
+      })
+      .catch((error) => {
+        console.log(error.code);
+        Alert.alert('登録に失敗しました。');
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  }
 
   return (
     <View style={styles(theme).container}>
       <ImageBackground source={{ uri: backgroundImage }} resizeMode="cover" style={{ flex: 1 }}>
+        <Loading isLoading={isLoading} />
+
         <View style={styles(theme).centeredView}>
           <TextInput
             autoCapitalize="none"
@@ -41,9 +63,7 @@ export default function SignUpScreen(props) {
 
           <Button
             label="登録"
-            onPress={() => {
-              navigation.navigate('Root', { screen: 'Setting' });
-            }}
+            onPress={signUp}
             color={appStyles(theme).buttonMedium.color}
             style={styles(theme).submit}
             height={appStyles(theme).buttonMedium.height}

@@ -5,6 +5,8 @@ import { createStackNavigator, CardStyleInterpolators } from '@react-navigation/
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import 'react-native-gesture-handler';
 
+import { getApps, initializeApp } from 'firebase/app';
+
 import InitialStartingScreen from './src/screens/InitialStartingScreen';
 import InitialSettingScreen from './src/screens/InitialSettingScreen';
 import HomeScreen from './src/screens/HomeScreen';
@@ -40,6 +42,12 @@ import {
   CreateSchedulesTable,
   CreateTasksTable,
 } from './src/classes/migration';
+
+import { firebaseConfig } from './env';
+
+if (getApps().length === 0) {
+  initializeApp(firebaseConfig);
+}
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();

@@ -10,9 +10,11 @@ import {
 } from 'react-native';
 import * as Notifications from 'expo-notifications';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
 
 import { BackgroundImageContext, ThemeContext } from '../contexts';
 import ListItem from '../components/ListItem';
+import Loading from '../components/Loading';
 import { appStyles } from '../style';
 
 export default function SettingScreen(props) {
@@ -21,9 +23,20 @@ export default function SettingScreen(props) {
 
   const { navigation } = props;
   const [notificationEnabled, setNotificationEnabled] = useState(false);
+  const [currentUser, setCurrentUser] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const auth = getAuth();
 
   useEffect(() => {
     initNotificationEnabled();
+  }, []);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      setCurrentUser(user);
+    });
+
+    return unsubscribe;
   }, []);
 
   async function initNotificationEnabled() {
@@ -55,6 +68,20 @@ export default function SettingScreen(props) {
         shouldSetBadge: false,
       }),
     });
+  }
+
+  function logOut() {
+    setIsLoading(true);
+    signOut(auth)
+      .then(() => {
+        Alert.alert('ログアウトしました。');
+      })
+      .catch(() => {
+        Alert.alert('ログアウトに失敗しました。');
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
   }
 
   const settings = [
@@ -95,9 +122,27 @@ export default function SettingScreen(props) {
     },
     {
       id: 4,
-      label: 'ログイン',
+      label: currentUser ? 'ログアウト' : 'ログイン',
       onPress: () => {
-        navigation.navigate('LogIn');
+        if (currentUser) {
+          Alert.alert(
+            'ログアウトします。',
+            '本当によろしいですか？',
+            [
+              {
+                text: 'キャンセル',
+                style: 'cancel',
+              },
+              {
+                text: 'ログアウト',
+                onPress: logOut,
+                style: 'destructive',
+              },
+            ],
+          );
+        } else {
+          navigation.navigate('LogIn');
+        }
       },
       with: null,
     },
@@ -106,6 +151,7 @@ export default function SettingScreen(props) {
   return (
     <View style={styles(theme).container}>
       <ImageBackground source={{ uri: backgroundImage }} resizeMode="cover" style={{ flex: 1 }}>
+        <Loading isLoading={isLoading} />
         <FlatList
           data={settings}
           keyExtractor={(item) => `${item.id}`}
