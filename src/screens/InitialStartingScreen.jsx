@@ -88,19 +88,6 @@ export default function InitialStartingScreen(props) {
             linearGradient
             options={{ colors: appStyles(theme).buttonLarge.gradientColors }}
           />
-
-          <Button
-            label="機種変更"
-            onPress={() => {
-              navigation.navigate('InitialSetting');
-            }}
-            color={appStyles(theme).buttonLarge.color}
-            style={{ marginTop: appStyles(theme).buttonLarge.margin }}
-            height={appStyles(theme).buttonLarge.height}
-            width={appStyles(theme).buttonLarge.width}
-            linearGradient
-            options={{ colors: appStyles(theme).buttonLarge.gradientColors }}
-          />
         </View>
       </ImageBackground>
     </View>

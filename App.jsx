@@ -8,7 +8,6 @@ import 'react-native-gesture-handler';
 import { getApps, initializeApp } from 'firebase/app';
 
 import InitialStartingScreen from './src/screens/InitialStartingScreen';
-import InitialSettingScreen from './src/screens/InitialSettingScreen';
 import HomeScreen from './src/screens/HomeScreen';
 import MemoListScreen from './src/screens/MemoListScreen';
 import MemoEditScreen from './src/screens/MemoEditScreen';
@@ -112,11 +111,6 @@ export default function App() {
             <Stack.Screen
               name="InitialStarting"
               component={InitialStartingScreen}
-              options={{ title: 'My Notes' }}
-            />
-            <Stack.Screen
-              name="InitialSetting"
-              component={InitialSettingScreen}
               options={{ title: 'My Notes' }}
             />
             <Stack.Screen
