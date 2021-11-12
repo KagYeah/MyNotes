@@ -116,7 +116,11 @@ export default function SettingScreen(props) {
       id: 3,
       label: '機種変更',
       onPress: () => {
-        navigation.navigate('SettingModelChange');
+        if (currentUser) {
+          navigation.navigate('SettingModelChange');
+        } else {
+          Alert.alert('ログインしてください。');
+        }
       },
       with: null,
     },
