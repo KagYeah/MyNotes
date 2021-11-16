@@ -6,11 +6,11 @@ import {
   bool, func, shape, string,
 } from 'prop-types';
 
-import { ThemeContext } from '../contexts';
+import { GlobalContext } from '../contexts';
 import { appStyles } from '../style';
 
 export default function NoteBodyInput(props) {
-  const { theme } = useContext(ThemeContext);
+  const { theme } = useContext(GlobalContext);
   const {
     autoFocus, onChangeText, placeholder, style, value,
   } = props;

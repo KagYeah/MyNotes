@@ -4,14 +4,13 @@ import {
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import { BackgroundImageContext, ThemeContext } from '../contexts';
+import { GlobalContext } from '../contexts';
 import ListItem from '../components/ListItem';
 import { appStyles } from '../style';
 import { getHexFromColor } from '../helpers';
 
 export default function SettingMainColorScreen() {
-  const { backgroundImage } = useContext(BackgroundImageContext);
-  const { theme, setTheme } = useContext(ThemeContext);
+  const { theme, setTheme, backgroundImage } = useContext(GlobalContext);
   const [color, setColor] = useState(theme);
 
   const colors = [

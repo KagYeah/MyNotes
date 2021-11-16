@@ -1,12 +1,12 @@
 import React, { useContext } from 'react';
 import { func } from 'prop-types';
 
-import { ThemeContext } from '../contexts';
+import { GlobalContext } from '../contexts';
 import CircleButton from './CircleButton';
 import { appStyles } from '../style';
 
 export default function CreateButton(props) {
-  const { theme } = useContext(ThemeContext);
+  const { theme } = useContext(GlobalContext);
   const { onPress } = props;
 
   return (

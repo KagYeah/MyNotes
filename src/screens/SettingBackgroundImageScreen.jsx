@@ -5,13 +5,12 @@ import {
 import * as ImagePicker from 'expo-image-picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import { BackgroundImageContext, ThemeContext } from '../contexts';
+import { GlobalContext } from '../contexts';
 import ListItem from '../components/ListItem';
 import { appStyles } from '../style';
 
 export default function SettingBackgroundImageScreen() {
-  const { backgroundImage, setBackgroundImage } = useContext(BackgroundImageContext);
-  const { theme } = useContext(ThemeContext);
+  const { theme, backgroundImage, setBackgroundImage } = useContext(GlobalContext);
 
   useEffect(() => {
     (async () => {

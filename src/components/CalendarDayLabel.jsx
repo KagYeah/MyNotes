@@ -1,11 +1,11 @@
 import React, { useContext } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
-import { ThemeContext } from '../contexts';
+import { GlobalContext } from '../contexts';
 import { appStyles } from '../style';
 
 export default function CalendarDayLabel() {
-  const { theme } = useContext(ThemeContext);
+  const { theme } = useContext(GlobalContext);
   const labels = ['日', '月', '火', '水', '木', '金', '土'];
   const keys = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
   const labelComponents = [];

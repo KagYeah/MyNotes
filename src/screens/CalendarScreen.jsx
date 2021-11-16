@@ -5,15 +5,14 @@ import {
 import { LinearGradient } from 'expo-linear-gradient';
 import SegmentedPicker from 'react-native-segmented-picker';
 
-import { BackgroundImageContext, ThemeContext } from '../contexts';
+import { GlobalContext } from '../contexts';
 import Button from '../components/Button';
 import Calendar from '../components/Calendar';
 import { appStyles } from '../style';
 import { DATE_SEPARATOR } from '../helpers';
 
 export default function CalendarScreen() {
-  const { backgroundImage } = useContext(BackgroundImageContext);
-  const { theme } = useContext(ThemeContext);
+  const { theme, backgroundImage } = useContext(GlobalContext);
 
   const now = new Date();
   const currentYear = now.getFullYear();

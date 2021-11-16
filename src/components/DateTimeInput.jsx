@@ -8,13 +8,13 @@ import {
   func, instanceOf, oneOf, string,
 } from 'prop-types';
 
-import { ThemeContext } from '../contexts';
+import { GlobalContext } from '../contexts';
 import Button from './Button';
 import { appStyles } from '../style';
 import { date2string } from '../helpers';
 
 export default function DateTimeInput(props) {
-  const { theme } = useContext(ThemeContext);
+  const { theme } = useContext(GlobalContext);
   const {
     label, mode, onChange, value,
   } = props;

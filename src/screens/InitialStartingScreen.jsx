@@ -8,13 +8,12 @@ import {
 import * as Notifications from 'expo-notifications';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import { BackgroundImageContext, ThemeContext } from '../contexts';
+import { GlobalContext } from '../contexts';
 import Button from '../components/Button';
 import { appStyles } from '../style';
 
 export default function InitialStartingScreen(props) {
-  const { backgroundImage } = useContext(BackgroundImageContext);
-  const { theme } = useContext(ThemeContext);
+  const { theme, backgroundImage } = useContext(GlobalContext);
 
   const { navigation } = props;
   const [isInitialized, setIsInitialized] = useState(false);

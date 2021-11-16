@@ -3,12 +3,12 @@ import {
   element, func, number, oneOfType, shape, string,
 } from 'prop-types';
 
-import { ThemeContext } from '../contexts';
+import { GlobalContext } from '../contexts';
 import Button from './Button';
 import { appStyles } from '../style';
 
 export default function CircleButton(props) {
-  const { theme } = useContext(ThemeContext);
+  const { theme } = useContext(GlobalContext);
   const {
     label, onPress, style, size, fontSize, fontWeight,
   } = props;

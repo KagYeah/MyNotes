@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import { number, shape } from 'prop-types';
 
-import { BackgroundImageContext, ThemeContext } from '../contexts';
+import { GlobalContext } from '../contexts';
 import Button from '../components/Button';
 import DeleteButton from '../components/DeleteButton';
 import Loading from '../components/Loading';
@@ -21,8 +21,7 @@ import { appStyles } from '../style';
 import { MemosTable } from '../classes/storage';
 
 export default function MemoEditScreen(props) {
-  const { backgroundImage } = useContext(BackgroundImageContext);
-  const { theme } = useContext(ThemeContext);
+  const { theme, backgroundImage } = useContext(GlobalContext);
 
   const { navigation, route } = props;
   const { id } = route.params;

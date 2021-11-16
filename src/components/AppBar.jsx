@@ -3,11 +3,11 @@ import { StyleSheet, View, Text } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { element, oneOfType, string } from 'prop-types';
 
-import { ThemeContext } from '../contexts';
+import { GlobalContext } from '../contexts';
 import { appStyles } from '../style';
 
 export default function AppBar(props) {
-  const { theme } = useContext(ThemeContext);
+  const { theme } = useContext(GlobalContext);
   const { title, left, right } = props;
   let titleComponent = title;
 

@@ -1,12 +1,12 @@
 import React, { useContext } from 'react';
 import { func, number, shape } from 'prop-types';
 
-import { ThemeContext } from '../contexts';
+import { GlobalContext } from '../contexts';
 import Button from './Button';
 import { appStyles } from '../style';
 
 export default function DeleteButton(props) {
-  const { theme } = useContext(ThemeContext);
+  const { theme } = useContext(GlobalContext);
   const {
     onPress, style, height, width,
   } = props;

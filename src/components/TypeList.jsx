@@ -3,13 +3,13 @@ import { ScrollView, StyleSheet, Text } from 'react-native';
 import { shape } from 'prop-types';
 import { StackActions, useNavigation } from '@react-navigation/native';
 
-import { ThemeContext } from '../contexts';
+import { GlobalContext } from '../contexts';
 import ListItem from './ListItem';
 import { appStyles } from '../style';
 
 // if you change the number of ListItem, edit appStyles(theme).typeListItem.count
 export default function TypeList(props) {
-  const { theme } = useContext(ThemeContext);
+  const { theme } = useContext(GlobalContext);
   const navigation = useNavigation();
   const { style } = props;
 

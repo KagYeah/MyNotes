@@ -2,12 +2,12 @@ import React, { useContext } from 'react';
 import { StyleSheet, View, Text } from 'react-native';
 import { bool, func, string } from 'prop-types';
 
-import { ThemeContext } from '../contexts';
+import { GlobalContext } from '../contexts';
 import ListItem from './ListItem';
 import { appStyles } from '../style';
 
 export default function ListItemWithCheckBox(props) {
-  const { theme } = useContext(ThemeContext);
+  const { theme } = useContext(GlobalContext);
   const {
     title,
     subtitle,

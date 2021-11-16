@@ -2,13 +2,13 @@ import React, { useContext } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { number } from 'prop-types';
 
-import { ThemeContext } from '../contexts';
+import { GlobalContext } from '../contexts';
 import CalendarDate from './CalendarDate';
 import CalendarDayLabel from './CalendarDayLabel';
 import { appStyles } from '../style';
 
 export default function Calendar(props) {
-  const { theme } = useContext(ThemeContext);
+  const { theme } = useContext(GlobalContext);
   const { year, month } = props;
 
   const firstDayOfCurrentMonth = new Date(year, month, 1).getDay();

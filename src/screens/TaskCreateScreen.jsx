@@ -14,7 +14,7 @@ import {
 } from 'react-native';
 import * as Notifications from 'expo-notifications';
 
-import { BackgroundImageContext, ThemeContext } from '../contexts';
+import { GlobalContext } from '../contexts';
 import Button from '../components/Button';
 import DateTimeInput from '../components/DateTimeInput';
 import Loading from '../components/Loading';
@@ -26,8 +26,7 @@ import { date2string, sleep } from '../helpers';
 import { TasksTable } from '../classes/storage';
 
 export default function TaskCreateScreen(props) {
-  const { backgroundImage } = useContext(BackgroundImageContext);
-  const { theme } = useContext(ThemeContext);
+  const { theme, backgroundImage } = useContext(GlobalContext);
 
   const { navigation } = props;
   const [date, setDate] = useState(new Date());

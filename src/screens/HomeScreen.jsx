@@ -1,12 +1,11 @@
 import React, { useContext, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import { BackgroundImageContext, ThemeContext } from '../contexts';
+import { GlobalContext } from '../contexts';
 import DailyNoteListScreen from './DailyNoteListScreen';
 
 export default function HomeScreen() {
-  const { setTheme } = useContext(ThemeContext);
-  const { setBackgroundImage } = useContext(BackgroundImageContext);
+  const { setTheme, setBackgroundImage } = useContext(GlobalContext);
 
   useEffect(() => {
     setThemeConfig();

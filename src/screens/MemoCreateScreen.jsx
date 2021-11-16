@@ -12,7 +12,7 @@ import {
   View,
 } from 'react-native';
 
-import { BackgroundImageContext, ThemeContext } from '../contexts';
+import { GlobalContext } from '../contexts';
 import Button from '../components/Button';
 import Loading from '../components/Loading';
 import NoteBodyInput from '../components/NoteBodyInput';
@@ -24,8 +24,7 @@ import { sleep } from '../helpers';
 import { MemosTable } from '../classes/storage';
 
 export default function MemoCreateScreen(props) {
-  const { backgroundImage } = useContext(BackgroundImageContext);
-  const { theme } = useContext(ThemeContext);
+  const { theme, backgroundImage } = useContext(GlobalContext);
 
   const { navigation } = props;
   const [title, setTitle] = useState('');

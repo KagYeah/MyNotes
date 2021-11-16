@@ -11,7 +11,7 @@ import {
 import { number, shape } from 'prop-types';
 import * as Notifications from 'expo-notifications';
 
-import { BackgroundImageContext, ThemeContext } from '../contexts';
+import { GlobalContext } from '../contexts';
 import Button from '../components/Button';
 import DateTimeInput from '../components/DateTimeInput';
 import DeleteButton from '../components/DeleteButton';
@@ -23,8 +23,7 @@ import { date2string } from '../helpers';
 import { TasksTable } from '../classes/storage';
 
 export default function TaskEditScreen(props) {
-  const { backgroundImage } = useContext(BackgroundImageContext);
-  const { theme } = useContext(ThemeContext);
+  const { theme, backgroundImage } = useContext(GlobalContext);
 
   const { navigation, route } = props;
   const { id } = route.params;

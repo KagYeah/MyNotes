@@ -7,12 +7,12 @@ import {
 } from 'prop-types';
 import { LinearGradient } from 'expo-linear-gradient';
 
-import { ThemeContext } from '../contexts';
+import { GlobalContext } from '../contexts';
 import { appStyles } from '../style';
 import { normalizeObj } from '../helpers';
 
 export default function ListItem(props) {
-  const { theme } = useContext(ThemeContext);
+  const { theme } = useContext(GlobalContext);
   const {
     title, onPress, style, linearGradient, options,
   } = props;

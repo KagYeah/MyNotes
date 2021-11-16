@@ -4,14 +4,13 @@ import {
 } from 'react-native';
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 
-import { BackgroundImageContext, ThemeContext } from '../contexts';
+import { GlobalContext } from '../contexts';
 import Button from '../components/Button';
 import Loading from '../components/Loading';
 import { appStyles } from '../style';
 
 export default function LogInScreen(props) {
-  const { backgroundImage } = useContext(BackgroundImageContext);
-  const { theme } = useContext(ThemeContext);
+  const { theme, backgroundImage } = useContext(GlobalContext);
 
   const { navigation } = props;
   const [email, setEmail] = useState('');

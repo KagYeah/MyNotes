@@ -7,12 +7,12 @@ import { useNavigation } from '@react-navigation/native';
 import HolidayJP from '@holiday-jp/holiday_jp';
 import { isToday } from 'date-fns';
 
-import { ThemeContext } from '../contexts';
+import { GlobalContext } from '../contexts';
 import { appStyles } from '../style';
 import { SchedulesTable, TasksTable } from '../classes/storage';
 
 export default function CalendarDate(props) {
-  const { theme } = useContext(ThemeContext);
+  const { theme } = useContext(GlobalContext);
   const navigation = useNavigation();
   const { date, isCurrentMonth } = props;
   const dateObj = {

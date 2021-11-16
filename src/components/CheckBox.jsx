@@ -2,11 +2,11 @@ import React, { useContext, useEffect, useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity } from 'react-native';
 import { bool, func, shape } from 'prop-types';
 
-import { ThemeContext } from '../contexts';
+import { GlobalContext } from '../contexts';
 import { appStyles } from '../style';
 
 export default function CheckBox(props) {
-  const { theme } = useContext(ThemeContext);
+  const { theme } = useContext(GlobalContext);
   const { checked, onPress, style } = props;
   const [_checked, setChecked] = useState(checked);
 

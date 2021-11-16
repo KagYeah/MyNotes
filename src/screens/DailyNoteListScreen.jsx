@@ -7,7 +7,7 @@ import { useNavigation } from '@react-navigation/native';
 import { isToday } from 'date-fns';
 import * as Notifications from 'expo-notifications';
 
-import { BackgroundImageContext, ThemeContext } from '../contexts';
+import { GlobalContext } from '../contexts';
 import Button from '../components/Button';
 import CreateButton from '../components/CreateButton';
 import DeleteButton from '../components/DeleteButton';
@@ -19,8 +19,7 @@ import { capitalize, date2string } from '../helpers';
 import { MyNotesTable, SchedulesTable, TasksTable } from '../classes/storage';
 
 export default function DailyNoteListScreen(props) {
-  const { backgroundImage } = useContext(BackgroundImageContext);
-  const { theme } = useContext(ThemeContext);
+  const { theme, backgroundImage } = useContext(GlobalContext);
 
   const navigation = useNavigation();
   const { date, appbarTitle } = props;

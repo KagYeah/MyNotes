@@ -10,7 +10,7 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import * as Notifications from 'expo-notifications';
 
-import { BackgroundImageContext, ThemeContext } from '../contexts';
+import { GlobalContext } from '../contexts';
 import Button from '../components/Button';
 import CreateButton from '../components/CreateButton';
 import DeleteButton from '../components/DeleteButton';
@@ -23,8 +23,7 @@ import {
 } from '../classes/storage';
 
 export default function ListScreen(props) {
-  const { backgroundImage } = useContext(BackgroundImageContext);
-  const { theme } = useContext(ThemeContext);
+  const { theme, backgroundImage } = useContext(GlobalContext);
 
   const navigation = useNavigation();
   const { data, type, reload } = props;

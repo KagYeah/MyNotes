@@ -8,15 +8,14 @@ import {
 } from 'firebase/storage';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import { BackgroundImageContext, ThemeContext } from '../contexts';
+import { GlobalContext } from '../contexts';
 import ListItem from '../components/ListItem';
 import { appStyles } from '../style';
 
 import { MemosTable, SchedulesTable, TasksTable } from '../classes/storage';
 
 export default function SettingModelChangeScreen(props) {
-  const { backgroundImage } = useContext(BackgroundImageContext);
-  const { theme, setTheme } = useContext(ThemeContext);
+  const { theme, setTheme, backgroundImage } = useContext(GlobalContext);
 
   const { navigation } = props;
   const auth = getAuth();

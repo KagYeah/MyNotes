@@ -2,11 +2,11 @@ import React, { useContext } from 'react';
 import { ActivityIndicator, StyleSheet, View } from 'react-native';
 import { bool } from 'prop-types';
 
-import { ThemeContext } from '../contexts';
+import { GlobalContext } from '../contexts';
 import { appStyles } from '../style';
 
 export default function Loading(props) {
-  const { theme } = useContext(ThemeContext);
+  const { theme } = useContext(GlobalContext);
   const { isLoading } = props;
 
   if (!isLoading) {
