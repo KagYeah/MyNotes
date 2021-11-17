@@ -61,8 +61,7 @@ export default function SettingModelChangeScreen(props) {
       await uploadBytes(backupRef, blob);
 
       Alert.alert('データのアップロードに成功しました。');
-    } catch (error) {
-      console.log(error);
+    } catch {
       Alert.alert('データのアップロードに失敗しました。');
     }
   }
@@ -103,8 +102,7 @@ export default function SettingModelChangeScreen(props) {
       setTheme(config.theme);
 
       Alert.alert('データのダウンロードに成功しました。');
-    } catch (error) {
-      console.log(error);
+    } catch {
       Alert.alert('データのダウンロードに失敗しました。');
     }
   }

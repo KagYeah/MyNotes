@@ -152,12 +152,8 @@ export default function ScheduleCreateScreen(props) {
           },
           trigger: startTimeDate,
         });
-        console.log('Notification ID is ' + notificationId);
-      } else {
-        console.log('Notification ID is null');
       }
-    } catch (error) {
-      console.log(error);
+    } catch {
       Alert.alert('データの保存に失敗しました。');
       return;
     }
@@ -172,11 +168,9 @@ export default function ScheduleCreateScreen(props) {
     setIsLoading(true);
     schedulesTable.insert(values)
       .then(() => {
-        console.log('Saved!');
         navigation.navigate('Root', { screen: 'ScheduleList' });
       })
-      .catch(async (error) => {
-        console.log(error);
+      .catch(async () => {
         await Notifications.cancelScheduledNotificationAsync(notificationId);
         Alert.alert('データの保存に失敗しました。');
       })

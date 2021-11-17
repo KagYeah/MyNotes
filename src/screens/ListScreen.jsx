@@ -112,8 +112,7 @@ export default function ListScreen(props) {
           Notifications.cancelScheduledNotificationAsync(row.notification_id)
         ));
         await Promise.all(promiseAll);
-      } catch (error) {
-        console.log(error);
+      } catch {
         Alert.alert('データの削除に失敗しました。');
         return;
       }
@@ -121,7 +120,6 @@ export default function ListScreen(props) {
 
     table.deleteByIds(checkedIds)
       .then(() => {
-        console.log('Deleted!');
         reload();
       })
       .catch(() => {

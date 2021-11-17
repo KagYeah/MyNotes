@@ -23,8 +23,7 @@ export default function PasswordResetScreen(props) {
       .then(() => {
         navigation.goBack();
       })
-      .catch((error) => {
-        console.log(error);
+      .catch(() => {
         Alert.alert('メールの送信に失敗しました。');
       })
       .finally(() => {

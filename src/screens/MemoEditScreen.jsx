@@ -95,7 +95,6 @@ export default function MemoEditScreen(props) {
     setIsLoading(true);
     memosTable.updateById(id, values)
       .then(() => {
-        console.log('Updated!');
         navigation.goBack();
       })
       .catch(() => {
@@ -110,7 +109,6 @@ export default function MemoEditScreen(props) {
     setIsLoading(true);
     memosTable.deleteById(id)
       .then(() => {
-        console.log('Deleted!');
         navigation.goBack();
       })
       .catch(() => {

@@ -154,10 +154,7 @@ export default function DailyNoteListScreen(props) {
           { column: 'end_time', order: 'ASC' },
         ],
       );
-
-      console.log('fetched!', schedulesResult._array, tasksResult._array);
-    } catch (error) {
-      console.log(error);
+    } catch {
       Alert.alert('データの取得に失敗しました。');
     }
 
@@ -220,19 +217,16 @@ export default function DailyNoteListScreen(props) {
         Notifications.cancelScheduledNotificationAsync(row.notification_id)
       ));
       await Promise.all(promiseAll);
-    } catch (error) {
-      console.log(error);
+    } catch {
       Alert.alert('データの削除に失敗しました。');
       return;
     }
 
     table.deleteByIds(ids)
       .then(() => {
-        console.log('Deleted!');
         fetch();
       })
-      .catch((error) => {
-        console.log(error);
+      .catch(() => {
         Alert.alert('データの削除に失敗しました。');
       });
   }

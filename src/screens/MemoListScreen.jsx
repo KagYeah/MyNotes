@@ -25,7 +25,6 @@ export default function MemoListScreen(props) {
       null,
       [{ column: 'updated_at', order: 'DESC' }],
     ).then((result) => {
-      console.log('fetched!', result._array);
       const memosArr = result._array.map((memo) => {
         const updatedAt = memosTable.datetime2date(memo.updated_at);
         return {
@@ -36,9 +35,8 @@ export default function MemoListScreen(props) {
         };
       });
       setMemos(memosArr);
-    }).catch((error) => {
-      console.log(error);
-      Alert.alert(error);
+    }).catch(() => {
+      Alert.alert('データの取得に失敗しました。');
     }).finally(() => {
       setIsLoading(false);
     });

@@ -98,10 +98,7 @@ export default function CalendarDate(props) {
             { column: 'end_time', order: 'ASC' },
           ],
         );
-
-        console.log('fetched!', schedulesResult._array, tasksResult._array);
-      } catch (error) {
-        console.log(error);
+      } catch {
         Alert.alert('データの取得に失敗しました。');
       }
 

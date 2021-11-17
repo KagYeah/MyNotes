@@ -16,8 +16,8 @@ export default function HomeScreen() {
     let themeName = 'navy';
     try {
       themeName = await AsyncStorage.getItem('@theme');
-    } catch (error) {
-      console.log(error);
+    } catch {
+      themeName = 'navy';
     }
 
     setTheme(themeName);
@@ -27,8 +27,8 @@ export default function HomeScreen() {
     let imageUri = null;
     try {
       imageUri = await AsyncStorage.getItem('@background_image');
-    } catch (error) {
-      console.log(error);
+    } catch {
+      imageUri = null;
     }
 
     if (imageUri === 'null') {

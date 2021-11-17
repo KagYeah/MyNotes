@@ -28,7 +28,6 @@ export default function ScheduleListScreen(props) {
         { column: 'end_time', order: 'ASC' },
       ],
     ).then((result) => {
-      console.log('fetched!');
       const data = result._array.map((schedule) => {
         const now = new Date();
         const subtitle = `${date2string(schedulesTable.datetime2date(schedule.start_time), 'datetime')} ~ ${date2string(schedulesTable.datetime2date(schedule.end_time), 'time')}`;
@@ -41,8 +40,7 @@ export default function ScheduleListScreen(props) {
         };
       });
       setSchedules(data);
-    }).catch((error) => {
-      console.log(error);
+    }).catch(() => {
       Alert.alert('データの取得に失敗しました。');
     }).finally(() => {
       setIsLoading(false);

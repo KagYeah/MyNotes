@@ -2,6 +2,7 @@ import React, {
   useContext, useEffect, useState, useRef,
 } from 'react';
 import {
+  Alert,
   Animated,
   ImageBackground,
   Keyboard,
@@ -129,11 +130,10 @@ export default function MemoCreateScreen(props) {
     setIsLoading(true);
     memosTable.insert(values)
       .then(() => {
-        console.log('Saved!');
         navigation.navigate('Root', { screen: 'MemoList' });
       })
-      .catch((error) => {
-        console.log(error);
+      .catch(() => {
+        Alert.alert('データの保存に失敗しました。');
       })
       .finally(() => {
         setIsLoading(false);

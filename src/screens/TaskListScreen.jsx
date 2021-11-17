@@ -25,7 +25,6 @@ export default function TaskListScreen(props) {
       null,
       [{ column: 'deadline', order: 'ASC' }],
     ).then((result) => {
-      console.log('fetched!', result._array);
       const now = new Date();
       const data = result._array.map((task) => ({
         id: task.id,
@@ -34,8 +33,7 @@ export default function TaskListScreen(props) {
         timeout: task.deadline < tasksTable.datetime(now),
       }));
       setTasks(data);
-    }).catch((error) => {
-      console.log(error);
+    }).catch(() => {
       Alert.alert('データの取得に失敗しました。');
     }).finally(() => {
       setIsLoading(false);

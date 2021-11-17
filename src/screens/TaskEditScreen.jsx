@@ -67,7 +67,6 @@ export default function TaskEditScreen(props) {
       setIsLoading(true);
       tasksTable.selectById(id, ['title', 'deadline', 'notification_id'])
         .then((result) => {
-          console.log('fetched!', result._array);
           const row = result._array[0];
           setDate(tasksTable.datetime2date(row.deadline));
           setTime(tasksTable.datetime2date(row.deadline));
@@ -117,13 +116,9 @@ export default function TaskEditScreen(props) {
           },
           trigger: deadlineDate,
         });
-        console.log('Notification ID is ' + newNotificationId);
-      } else {
-        console.log('Notification ID is null');
       }
       setNotificationId(newNotificationId);
-    } catch (error) {
-      console.log(error);
+    } catch {
       Alert.alert('データの保存に失敗しました。');
       return;
     }
@@ -136,11 +131,9 @@ export default function TaskEditScreen(props) {
 
     tasksTable.updateById(id, values)
       .then(() => {
-        console.log('Saved!');
         navigation.goBack();
       })
-      .catch(async (error) => {
-        console.log(error);
+      .catch(async () => {
         await Notifications.cancelScheduledNotificationAsync(newNotificationId);
         Alert.alert('データの保存に失敗しました。');
       })
@@ -154,19 +147,16 @@ export default function TaskEditScreen(props) {
 
     try {
       await Notifications.cancelScheduledNotificationAsync(notificationId);
-    } catch (error) {
-      console.log(error);
+    } catch {
       Alert.alert('データの削除に失敗しました。');
       return;
     }
 
     tasksTable.deleteById(id)
       .then(() => {
-        console.log('Deleted!');
         navigation.goBack();
       })
-      .catch((error) => {
-        console.log(error);
+      .catch(() => {
         Alert.alert('データの削除に失敗しました。');
       })
       .finally(() => {

@@ -43,8 +43,7 @@ export default function SettingScreen(props) {
     try {
       const enabled = (await AsyncStorage.getItem('@notification_enabled')) === 'true';
       setNotificationEnabled(enabled);
-    } catch (error) {
-      console.log(error);
+    } catch {
       Alert.alert('データの取得に失敗しました。');
       navigation.goBack();
     }
@@ -54,8 +53,7 @@ export default function SettingScreen(props) {
     const enabled = !notificationEnabled;
     try {
       await AsyncStorage.setItem('@notification_enabled', String(enabled));
-    } catch (error) {
-      console.log(error);
+    } catch {
       Alert.alert('設定に失敗しました。');
       return;
     }

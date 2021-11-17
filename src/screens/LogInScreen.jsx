@@ -25,8 +25,7 @@ export default function LogInScreen(props) {
       .then(() => {
         navigation.goBack();
       })
-      .catch((error) => {
-        console.log(error.code);
+      .catch(() => {
         Alert.alert('ログインに失敗しました。');
       })
       .finally(() => {

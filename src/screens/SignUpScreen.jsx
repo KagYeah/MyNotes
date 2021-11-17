@@ -25,8 +25,7 @@ export default function SignUpScreen(props) {
       .then(() => {
         navigation.navigate('Root', { screen: 'Setting' });
       })
-      .catch((error) => {
-        console.log(error.code);
+      .catch(() => {
         Alert.alert('登録に失敗しました。');
       })
       .finally(() => {

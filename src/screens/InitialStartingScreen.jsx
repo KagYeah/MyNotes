@@ -40,8 +40,7 @@ export default function InitialStartingScreen(props) {
         await AsyncStorage.setItem('@version', '0');
         setIsInitialized(true);
       }
-    } catch (error) {
-      console.log(error);
+    } catch {
       Alert.alert('初期化に失敗しました。', '再起動してください。');
     }
   }
@@ -82,20 +81,14 @@ export default function InitialStartingScreen(props) {
 
   async function migrate() {
     const migration = new MigrationController();
-    try {
-      await migration.init();
-      console.log('Initialized Migration!');
-      await migration.migrate([
-        CreateMemosTable,
-        CreateTasksTable,
-        CreateSchedulesTable,
-        AddNotificationIdToTasksTable,
-        AddNotificationIdToSchedulesTable,
-      ]);
-      console.log('Migrated!');
-    } catch (error) {
-      console.log(error);
-    }
+    await migration.init();
+    await migration.migrate([
+      CreateMemosTable,
+      CreateTasksTable,
+      CreateSchedulesTable,
+      AddNotificationIdToTasksTable,
+      AddNotificationIdToSchedulesTable,
+    ]);
   }
 
   if (!isInitialized) {

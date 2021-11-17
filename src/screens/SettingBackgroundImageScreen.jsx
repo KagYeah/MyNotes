@@ -31,14 +31,11 @@ export default function SettingBackgroundImageScreen() {
       quality: 1,
     });
 
-    console.log(result);
-
     if (!result.cancelled) {
       try {
         await AsyncStorage.setItem('@background_image', result.uri);
         setBackgroundImage(result.uri);
-      } catch (error) {
-        console.log(error);
+      } catch {
         Alert.alert('画像の設定に失敗しました。');
       }
     }
@@ -49,7 +46,6 @@ export default function SettingBackgroundImageScreen() {
       await AsyncStorage.setItem('@background_image', 'null');
       setBackgroundImage('null');
     } catch (error) {
-      console.log(error);
       Alert.alert('画像の削除に失敗しました。');
     }
   }
