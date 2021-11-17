@@ -144,13 +144,18 @@ export default function ScheduleCreateScreen(props) {
     let notificationId = null;
 
     try {
-      notificationId = await Notifications.scheduleNotificationAsync({
-        content: {
-          title,
-          body: `${date2string(startTimeDate, 'datetime')} ~ ${date2string(endTimeDate, 'time')}`,
-        },
-        trigger: startTimeDate,
-      });
+      if ((new Date()).getTime() < startTimeDate.getTime()) {
+        notificationId = await Notifications.scheduleNotificationAsync({
+          content: {
+            title,
+            body: `${date2string(startTimeDate, 'datetime')} ~ ${date2string(endTimeDate, 'time')}`,
+          },
+          trigger: startTimeDate,
+        });
+        console.log('Notification ID is ' + notificationId);
+      } else {
+        console.log('Notification ID is null');
+      }
     } catch (error) {
       console.log(error);
       Alert.alert('データの保存に失敗しました。');

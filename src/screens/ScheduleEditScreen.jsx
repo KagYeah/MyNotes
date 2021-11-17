@@ -137,13 +137,18 @@ export default function ScheduleEditScreen(props) {
 
     try {
       await Notifications.cancelScheduledNotificationAsync(notificationId);
-      newNotificationId = await Notifications.scheduleNotificationAsync({
-        content: {
-          title,
-          body: `${date2string(startTimeDate, 'datetime')} ~ ${date2string(endTimeDate, 'time')}`,
-        },
-        trigger: startTimeDate,
-      });
+      if ((new Date()).getTime() < startTimeDate.getTime()) {
+        newNotificationId = await Notifications.scheduleNotificationAsync({
+          content: {
+            title,
+            body: `${date2string(startTimeDate, 'datetime')} ~ ${date2string(endTimeDate, 'time')}`,
+          },
+          trigger: startTimeDate,
+        });
+        console.log('Notification ID is ' + newNotificationId);
+      } else {
+        console.log('Notification ID is null');
+      }
       setNotificationId(newNotificationId);
     } catch (error) {
       console.log(error);

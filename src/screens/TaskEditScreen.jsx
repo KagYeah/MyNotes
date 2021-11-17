@@ -109,13 +109,18 @@ export default function TaskEditScreen(props) {
 
     try {
       await Notifications.cancelScheduledNotificationAsync(notificationId);
-      newNotificationId = await Notifications.scheduleNotificationAsync({
-        content: {
-          title,
-          body: `期限 ${date2string(deadlineDate, 'datetime')}`,
-        },
-        trigger: deadlineDate,
-      });
+      if ((new Date()).getTime() < deadlineDate.getTime()) {
+        newNotificationId = await Notifications.scheduleNotificationAsync({
+          content: {
+            title,
+            body: `期限 ${date2string(deadlineDate, 'datetime')}`,
+          },
+          trigger: deadlineDate,
+        });
+        console.log('Notification ID is ' + newNotificationId);
+      } else {
+        console.log('Notification ID is null');
+      }
       setNotificationId(newNotificationId);
     } catch (error) {
       console.log(error);

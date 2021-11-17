@@ -135,13 +135,18 @@ export default function TaskCreateScreen(props) {
     let notificationId = null;
 
     try {
-      notificationId = await Notifications.scheduleNotificationAsync({
-        content: {
-          title,
-          body: `期限 ${date2string(deadlineDate, 'datetime')}`,
-        },
-        trigger: deadlineDate,
-      });
+      if ((new Date()).getTime() < deadlineDate.getTime()) {
+        notificationId = await Notifications.scheduleNotificationAsync({
+          content: {
+            title,
+            body: `期限 ${date2string(deadlineDate, 'datetime')}`,
+          },
+          trigger: deadlineDate,
+        });
+        console.log('Notification ID is ' + notificationId);
+      } else {
+        console.log('Notification ID is null');
+      }
     } catch (error) {
       console.log(error);
       Alert.alert('データの保存に失敗しました。');
