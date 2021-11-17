@@ -8,6 +8,14 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { GlobalContext } from '../contexts';
 import appTheme from '../style/theme';
 import Button from '../components/Button';
+import { MigrationController } from '../lib/storage/migration';
+import {
+  AddNotificationIdToSchedulesTable,
+  AddNotificationIdToTasksTable,
+  CreateMemosTable,
+  CreateSchedulesTable,
+  CreateTasksTable,
+} from '../classes/migration';
 
 export default function InitialStartingScreen(props) {
   const { theme, backgroundImage } = useContext(GlobalContext);
@@ -21,8 +29,17 @@ export default function InitialStartingScreen(props) {
 
   async function initialize() {
     try {
-      await initializeAsync();
-      setIsInitialized(true);
+      const version = await AsyncStorage.getItem('@version');
+      if (version) {
+        navigation.reset({
+          index: 0,
+          routes: [{ name: 'Root', params: { screen: 'Home' } }],
+        });
+      } else {
+        await initializeAsync();
+        await AsyncStorage.setItem('@version', '0');
+        setIsInitialized(true);
+      }
     } catch (error) {
       console.log(error);
       Alert.alert('初期化に失敗しました。', '再起動してください。');
@@ -34,6 +51,7 @@ export default function InitialStartingScreen(props) {
       setConfig(),
       requestPermissionsAsync(),
       setNotificationHandler(),
+      migrate(),
     ]);
   }
 
@@ -60,6 +78,24 @@ export default function InitialStartingScreen(props) {
         shouldSetBadge: false,
       }),
     });
+  }
+
+  async function migrate() {
+    const migration = new MigrationController();
+    try {
+      await migration.init();
+      console.log('Initialized Migration!');
+      await migration.migrate([
+        CreateMemosTable,
+        CreateTasksTable,
+        CreateSchedulesTable,
+        AddNotificationIdToTasksTable,
+        AddNotificationIdToSchedulesTable,
+      ]);
+      console.log('Migrated!');
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   if (!isInitialized) {

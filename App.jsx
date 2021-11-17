@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { StatusBar } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator, CardStyleInterpolators } from '@react-navigation/stack';
@@ -34,15 +34,6 @@ import AppBar from './src/components/AppBar';
 import Button from './src/components/Button';
 import Icon from './src/components/Icon';
 
-import { MigrationController } from './src/lib/storage/migration';
-import {
-  AddNotificationIdToSchedulesTable,
-  AddNotificationIdToTasksTable,
-  CreateMemosTable,
-  CreateSchedulesTable,
-  CreateTasksTable,
-} from './src/classes/migration';
-
 import { firebaseConfig } from './env';
 
 if (getApps().length === 0) {
@@ -56,27 +47,6 @@ export default function App() {
   const [theme, setTheme] = useState('navy');
   const [backgroundImage, setBackgroundImage] = useState(null);
 
-  useEffect(() => {
-    const migration = new MigrationController();
-    const migrate = async () => {
-      try {
-        await migration.init();
-        console.log('Initialized Migration!');
-        await migration.migrate([
-          CreateMemosTable,
-          CreateTasksTable,
-          CreateSchedulesTable,
-          AddNotificationIdToTasksTable,
-          AddNotificationIdToSchedulesTable,
-        ]);
-        console.log('Migrated!');
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    migrate();
-  }, []);
-
   return (
     <GlobalContext.Provider
       value={{
@@ -86,7 +56,6 @@ export default function App() {
       <StatusBar barStyle={appTheme[theme].statusbarStyle} />
       <NavigationContainer>
         <Stack.Navigator
-          // initialRouteName="Root"
           initialRouteName="InitialStarting"
           screenOptions={{
             cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
