@@ -28,7 +28,7 @@ export default function ListScreen(props) {
   const { data, type, reload } = props;
   const { theme, backgroundImage } = useContext(GlobalContext);
 
-  const [showCheckBox, setShowCheckBox] = useState(false);
+  const [editMode, setEditMode] = useState(false);
   const [checkedIds, setCheckedIds] = useState([]);
   const listTranslateY = useRef(new Animated.Value(0));
 
@@ -48,7 +48,7 @@ export default function ListScreen(props) {
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
-      setShowCheckBox(false);
+      setEditMode(false);
     });
 
     return unsubscribe;
@@ -57,27 +57,27 @@ export default function ListScreen(props) {
   useEffect(() => {
     setCheckedIds([]);
 
-    if (!showCheckBox) {
+    if (!editMode) {
       listTranslateY.current = new Animated.Value(0);
     }
 
     navigation.setOptions({
       headerRight: (
         <Button
-          label={showCheckBox ? '完了' : '編集'}
+          label={editMode ? '完了' : '編集'}
           onPress={async () => {
             await toggleListHeader();
-            setShowCheckBox(!showCheckBox);
+            setEditMode(!editMode);
           }}
           backgroundColor="#0000"
           color={appTheme[theme].colorOnGradientColors1}
         />
       ),
     });
-  }, [showCheckBox, theme]);
+  }, [editMode, theme]);
 
   async function toggleListHeader() {
-    if (!showCheckBox) {
+    if (!editMode) {
       Animated.timing(listTranslateY.current, {
         toValue: 48,
         duration: 500,
@@ -132,7 +132,7 @@ export default function ListScreen(props) {
   return (
     <View style={{ flex: 1, bakgroundColor: appTheme[theme].appBackgroundColor }}>
       <ImageBackground source={{ uri: backgroundImage }} resizeMode="cover" style={{ flex: 1 }}>
-        {showCheckBox ? (
+        {editMode ? (
           <Animated.View
             style={[
               styles.listHeader,
@@ -209,7 +209,7 @@ export default function ListScreen(props) {
                 title={item.title}
                 subtitle={item.subtitle}
                 timeout={item.timeout}
-                showCheckBox={showCheckBox}
+                showCheckBox={editMode}
                 checked={checkedIds.includes(item.id)}
                 onPressWithCheckBox={() => {
                   toggleCheckedId(item.id);

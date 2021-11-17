@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import {
-  Alert, ImageBackground, SectionList, View,
+  Alert, ImageBackground, SectionList, StyleSheet, View,
 } from 'react-native';
 import { instanceOf, string } from 'prop-types';
 import { useNavigation } from '@react-navigation/native';
@@ -13,9 +13,10 @@ import Button from '../components/Button';
 import CreateButton from '../components/CreateButton';
 import DeleteButton from '../components/DeleteButton';
 import ListHeader from '../components/ListHeader';
+import ListItem from '../components/ListItem';
 import ListItemWithCheckBox from '../components/ListItemWithCheckBox';
 import Loading from '../components/Loading';
-import { capitalize, date2string } from '../helpers';
+import { capitalize, empty, date2string } from '../helpers';
 
 import { MyNotesTable, SchedulesTable, TasksTable } from '../classes/storage';
 
@@ -24,7 +25,7 @@ export default function DailyNoteListScreen(props) {
   const { date, appbarTitle } = props;
   const { theme, backgroundImage } = useContext(GlobalContext);
 
-  const [showCheckBox, setShowCheckBox] = useState(false);
+  const [editMode, setEditMode] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState([]);
   const [checkedTaskIds, setCheckedTaskIds] = useState([]);
@@ -35,7 +36,7 @@ export default function DailyNoteListScreen(props) {
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
-      setShowCheckBox(false);
+      setEditMode(false);
     });
 
     return unsubscribe;
@@ -49,14 +50,14 @@ export default function DailyNoteListScreen(props) {
       title: appbarTitle,
       headerRight: (
         <Button
-          label={showCheckBox ? '完了' : '編集'}
-          onPress={() => setShowCheckBox(!showCheckBox)}
+          label={editMode ? '完了' : '編集'}
+          onPress={() => setEditMode(!editMode)}
           backgroundColor="#0000"
           color={appTheme[theme].colorOnGradientColors1}
         />
       ),
     });
-  }, [showCheckBox, theme]);
+  }, [editMode, theme]);
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', fetch);
@@ -171,11 +172,13 @@ export default function DailyNoteListScreen(props) {
       timeout: row.deadline < tasksTable.datetime(now),
     }));
 
-    notes.push({
-      type: 'task',
-      title: isToday(date) ? '今日のタスク' : `${date2string(date, 'date')}のタスク`,
-      data: tasks,
-    });
+    if (!empty(tasks)) {
+      notes.push({
+        type: 'task',
+        title: isToday(date) ? '今日のタスク' : `${date2string(date, 'date')}のタスク`,
+        data: tasks,
+      });
+    }
 
     const schedules = schedulesResult._array.map((row) => ({
       id: row.id,
@@ -184,11 +187,13 @@ export default function DailyNoteListScreen(props) {
       timeout: row.end_time < schedulesTable.datetime(now),
     }));
 
-    notes.push({
-      type: 'schedule',
-      title: isToday(date) ? '今日の予定' : `${date2string(date, 'date')}の予定`,
-      data: schedules,
-    });
+    if (!empty(schedules)) {
+      notes.push({
+        type: 'schedule',
+        title: isToday(date) ? '今日の予定' : `${date2string(date, 'date')}の予定`,
+        data: schedules,
+      });
+    }
 
     setData(notes);
   }
@@ -238,74 +243,81 @@ export default function DailyNoteListScreen(props) {
 
         <Loading isLoading={isLoading} />
 
-        <SectionList
-          sections={data}
-          keyExtractor={(item) => item.id}
-          stickySectionHeadersEnabled={false}
-          renderItem={({ item, section: { type } }) => {
-            let checkedIds = [];
+        {empty(data) ? (
+          <ListItem
+            title={`${isToday(date) ? '今日' : date2string(date, 'date')}のタスク・予定はありません`}
+            style={styles.emptyItem}
+          />
+        ) : (
+          <SectionList
+            sections={data}
+            keyExtractor={(item) => item.id}
+            stickySectionHeadersEnabled={false}
+            renderItem={({ item, section: { type } }) => {
+              let checkedIds = [];
 
-            switch (type) {
-              case 'task':
-                checkedIds = checkedTaskIds;
-                break;
-              case 'schedule':
-                checkedIds = checkedScheduleIds;
-                break;
-              default:
-            }
+              switch (type) {
+                case 'task':
+                  checkedIds = checkedTaskIds;
+                  break;
+                case 'schedule':
+                  checkedIds = checkedScheduleIds;
+                  break;
+                default:
+              }
 
-            return (
-              <ListItemWithCheckBox
-                title={item.title}
-                subtitle={item.subtitle}
-                timeout={item.timeout}
-                showCheckBox={showCheckBox}
-                checked={checkedIds.includes(item.id)}
-                onPressWithCheckBox={() => {
-                  toggleCheckedId(type, item.id);
-                }}
-                onPressWithoutCheckBox={() => {
-                  navigation.navigate(`${capitalize(type)}Edit`, { id: item.id });
-                }}
-              />
-            );
-          }}
-          renderSectionHeader={({ section: { title, type } }) => (
-            <ListHeader
-              left={title}
-              right={!showCheckBox ? null : (
-                <DeleteButton
-                  onPress={() => {
-                    Alert.alert(
-                      '選択した項目を削除します',
-                      '本当によろしいですか？',
-                      [
-                        {
-                          text: 'キャンセル',
-                          style: 'cancel',
-                        },
-                        {
-                          text: '削除',
-                          onPress: () => {
-                            deleteNotes(type);
-                          },
-                          style: 'destructive',
-                        },
-                      ],
-                    );
+              return (
+                <ListItemWithCheckBox
+                  title={item.title}
+                  subtitle={item.subtitle}
+                  timeout={item.timeout}
+                  showCheckBox={editMode}
+                  checked={checkedIds.includes(item.id)}
+                  onPressWithCheckBox={() => {
+                    toggleCheckedId(type, item.id);
                   }}
-                  height={32}
-                  width={64}
+                  onPressWithoutCheckBox={() => {
+                    navigation.navigate(`${capitalize(type)}Edit`, { id: item.id });
+                  }}
                 />
-              )}
-            />
-          )}
-        />
+              );
+            }}
+            renderSectionHeader={({ section: { title, type } }) => (
+              <ListHeader
+                left={title}
+                right={!editMode ? null : (
+                  <DeleteButton
+                    onPress={() => {
+                      Alert.alert(
+                        '選択した項目を削除します',
+                        '本当によろしいですか？',
+                        [
+                          {
+                            text: 'キャンセル',
+                            style: 'cancel',
+                          },
+                          {
+                            text: '削除',
+                            onPress: () => {
+                              deleteNotes(type);
+                            },
+                            style: 'destructive',
+                          },
+                        ],
+                      );
+                    }}
+                    height={32}
+                    width={64}
+                  />
+                )}
+              />
+            )}
+          />
+        )}
 
         <CreateButton
           onPress={() => {
-            navigation.navigate('MemoCreate');
+            navigation.navigate('TaskCreate');
           }}
         />
       </ImageBackground>
@@ -317,3 +329,13 @@ DailyNoteListScreen.propTypes = {
   date: instanceOf(Date).isRequired,
   appbarTitle: string.isRequired,
 };
+
+const styles = StyleSheet.create({
+  emptyItem: {
+    alignItems: 'center',
+    backgroundColor: '#0000',
+    color: '#000',
+    fontSize: 18,
+    fontWeight: 'normal',
+  },
+});

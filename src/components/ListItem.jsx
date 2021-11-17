@@ -25,6 +25,8 @@ export default function ListItem(props) {
     component = <Text style={properties}>{title}</Text>;
   }
 
+  let isWrapped = false;
+
   if (linearGradient) {
     const properties = normalizeObj({
       colors: options.colors,
@@ -38,19 +40,14 @@ export default function ListItem(props) {
     component = (
       <LinearGradient
         {...properties}
-        style={[
-          {
-            height: 72,
-            justifyContent: 'center',
-            paddingHorizontal: 24,
-            paddingVertical: 8,
-          },
-          style,
-        ]}
+        style={isWrapped
+          ? { padding: 0 }
+          : [styles.container, style]}
       >
         {component}
       </LinearGradient>
     );
+    isWrapped = true;
   }
 
   if (onPress) {
@@ -62,22 +59,32 @@ export default function ListItem(props) {
     component = (
       <TouchableOpacity
         {...properties}
-        style={!linearGradient ? [
-          {
-            height: 72,
-            justifyContent: 'center',
-            paddingHorizontal: 24,
-            paddingVertical: 8,
-          },
-          style,
-        ] : style}
+        style={isWrapped
+          ? { padding: 0 }
+          : [styles.container, style]}
       >
         {component}
       </TouchableOpacity>
     );
+    isWrapped = true;
   }
 
-  return <View style={[styles.container, style]}>{component}</View>;
+  return (
+    <View
+      style={[
+        isWrapped ? { padding: 0 } : styles.container,
+        {
+          backgroundColor: '#fff',
+          opacity: 0.8,
+          borderBottomColor: 'rgba(0, 0, 0, 0.25)',
+          borderBottomWidth: 1,
+        },
+        isWrapped ? null : style,
+      ]}
+    >
+      {component}
+    </View>
+  );
 }
 
 ListItem.propTypes = {
@@ -97,11 +104,10 @@ ListItem.defaultProps = {
 
 const styles = StyleSheet.create({
   container: {
+    height: 72,
     width: '100%',
-    backgroundColor: '#fff',
-    opacity: 0.8,
     justifyContent: 'center',
-    borderBottomColor: 'rgba(0, 0, 0, 0.25)',
-    borderBottomWidth: 1,
+    paddingHorizontal: 24,
+    paddingVertical: 8,
   },
 });
