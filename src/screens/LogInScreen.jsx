@@ -5,17 +5,18 @@ import {
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 
 import { GlobalContext } from '../contexts';
+import appTheme from '../style/theme';
 import Button from '../components/Button';
 import Loading from '../components/Loading';
-import { appStyles } from '../style';
 
 export default function LogInScreen(props) {
+  const { navigation } = props;
   const { theme, backgroundImage } = useContext(GlobalContext);
 
-  const { navigation } = props;
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+
   const auth = getAuth();
 
   function logIn() {
@@ -34,16 +35,16 @@ export default function LogInScreen(props) {
   }
 
   return (
-    <View style={styles(theme).container}>
+    <View style={{ flex: 1, backgroundColor: appTheme[theme].appBackgroundColor }}>
       <ImageBackground source={{ uri: backgroundImage }} resizeMode="cover" style={{ flex: 1 }}>
         <Loading isLoading={isLoading} />
-        <View style={styles(theme).centeredView}>
+        <View style={styles.centeredView}>
           <TextInput
             autoCapitalize="none"
             keyboardType="email-address"
             onChangeText={(text) => setEmail(text)}
             placeholder="Email"
-            style={styles(theme).input}
+            style={styles.input}
             textContentType="emailAddress"
             value={email}
           />
@@ -53,7 +54,7 @@ export default function LogInScreen(props) {
             onChangeText={(text) => setPassword(text)}
             placeholder="Password"
             secureTextEntry
-            style={styles(theme).input}
+            style={styles.input}
             textContentType="password"
             value={password}
           />
@@ -61,28 +62,28 @@ export default function LogInScreen(props) {
           <Button
             label="ログイン"
             onPress={logIn}
-            color={appStyles(theme).buttonMedium.color}
-            style={styles(theme).submit}
-            height={appStyles(theme).buttonMedium.height}
-            width={appStyles(theme).buttonMedium.width}
+            color={appTheme[theme].colorOnGradientColors1}
+            style={styles.submit}
+            height={40}
+            width={128}
             linearGradient
-            options={{ colors: appStyles(theme).buttonMedium.gradientColors }}
+            options={{ colors: appTheme[theme].gradientColors1 }}
           />
 
-          <View style={styles(theme).footer}>
-            <View style={styles(theme).row}>
-              <Text style={styles(theme).text}>会員登録は</Text>
+          <View style={styles.footer}>
+            <View style={styles.row}>
+              <Text style={styles.text}>会員登録は</Text>
               <Text
-                style={styles(theme).link}
+                style={styles.link}
                 onPress={() => { navigation.navigate('SignUp'); }}
               >
                 こちら
               </Text>
             </View>
-            <View style={styles(theme).row}>
-              <Text style={styles(theme).text}>パスワードを忘れた方は</Text>
+            <View style={styles.row}>
+              <Text style={styles.text}>パスワードを忘れた方は</Text>
               <Text
-                style={styles(theme).link}
+                style={styles.link}
                 onPress={() => { navigation.navigate('PasswordReset'); }}
               >
                 こちら
@@ -95,27 +96,23 @@ export default function LogInScreen(props) {
   );
 }
 
-const styles = (theme) => StyleSheet.create({
-  container: {
-    backgroundColor: appStyles(theme).app.backgroundColor,
-    flex: 1,
-  },
+const styles = StyleSheet.create({
   centeredView: {
     flex: 1,
     justifyContent: 'center',
-    paddingHorizontal: appStyles(theme).app.paddingHorizontal,
+    paddingHorizontal: 24,
   },
   input: {
-    borderColor: appStyles(theme).idPasswordInput.borderColor,
-    borderWidth: appStyles(theme).idPasswordInput.borderWidth,
-    fontSize: appStyles(theme).idPasswordInput.fontSize,
-    height: appStyles(theme).idPasswordInput.height,
-    padding: appStyles(theme).idPasswordInput.padding,
-    marginTop: appStyles(theme).idPasswordInput.margin,
+    borderColor: 'rgba(0, 0, 0, 0.25)',
+    borderWidth: 1,
+    fontSize: 18,
+    height: 34,
+    padding: 8,
+    marginTop: 24,
   },
   submit: {
     alignSelf: 'center',
-    marginTop: appStyles(theme).buttonMedium.margin,
+    marginTop: 24,
   },
   footer: {
     marginTop: 40,

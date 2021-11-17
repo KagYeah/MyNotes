@@ -4,29 +4,29 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { element, oneOfType, string } from 'prop-types';
 
 import { GlobalContext } from '../contexts';
-import { appStyles } from '../style';
+import appTheme from '../style/theme';
 
 export default function ListHeader(props) {
-  const { theme } = useContext(GlobalContext);
   const { left, right } = props;
+  const { theme } = useContext(GlobalContext);
+  const gradientColors = appTheme[theme].gradientColors2;
+  const textColor = appTheme[theme].colorOnGradientColors2;
+
   let leftComponent = left;
   let rightComponent = right;
 
   if (typeof left === 'string') {
-    leftComponent = <Text style={styles(theme).text}>{left}</Text>;
+    leftComponent = <Text style={[styles.text, { color: textColor }]}>{left}</Text>;
   }
 
   if (typeof right === 'string') {
-    rightComponent = <Text style={styles(theme).text}>{right}</Text>;
+    rightComponent = <Text style={[styles.text, { color: textColor }]}>{right}</Text>;
   }
 
   return (
-    <LinearGradient
-      colors={appStyles(theme).listHeader.gradientColors}
-      style={styles(theme).container}
-    >
-      {left && <View style={styles(theme).left}>{leftComponent}</View>}
-      {right && <View style={styles(theme).right}>{rightComponent}</View>}
+    <LinearGradient colors={gradientColors} style={styles.container}>
+      {left && <View style={styles.left}>{leftComponent}</View>}
+      {right && <View style={styles.right}>{rightComponent}</View>}
     </LinearGradient>
   );
 }
@@ -41,24 +41,24 @@ ListHeader.defaultProps = {
   right: null,
 };
 
-const styles = (theme) => StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
     flexDirection: 'row',
-    height: appStyles(theme).listHeader.height,
+    height: 48,
     justifyContent: 'space-between',
-    paddingHorizontal: appStyles(theme).listHeader.paddingHorizontal,
-    paddingVertical: appStyles(theme).listHeader.paddingVertical,
+    paddingHorizontal: 24,
+    paddingVertical: 8,
   },
   left: {
     alignItems: 'center',
   },
   right: {
     alignItems: 'center',
-    width: appStyles(theme).listHeaderRight.width,
+    width: '20%',
   },
   text: {
-    fontSize: appStyles(theme).listHeader.fontSize,
-    fontWeight: appStyles(theme).listHeader.fontWeight,
+    fontSize: 18,
+    fontWeight: 'bold',
   },
 });

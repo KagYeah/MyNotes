@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import {
   StyleSheet, View, Text, TouchableOpacity,
 } from 'react-native';
@@ -7,15 +7,13 @@ import {
 } from 'prop-types';
 import { LinearGradient } from 'expo-linear-gradient';
 
-import { GlobalContext } from '../contexts';
-import { appStyles } from '../style';
 import { normalizeObj } from '../helpers';
 
 export default function ListItem(props) {
-  const { theme } = useContext(GlobalContext);
   const {
     title, onPress, style, linearGradient, options,
   } = props;
+
   let component = title;
 
   if (typeof title === 'string') {
@@ -42,10 +40,10 @@ export default function ListItem(props) {
         {...properties}
         style={[
           {
-            height: appStyles(theme).listItem.height,
+            height: 72,
             justifyContent: 'center',
-            paddingHorizontal: appStyles(theme).listItem.paddingHorizontal,
-            paddingVertical: appStyles(theme).listItem.paddingVertical,
+            paddingHorizontal: 24,
+            paddingVertical: 8,
           },
           style,
         ]}
@@ -66,10 +64,10 @@ export default function ListItem(props) {
         {...properties}
         style={!linearGradient ? [
           {
-            height: appStyles(theme).listItem.height,
+            height: 72,
             justifyContent: 'center',
-            paddingHorizontal: appStyles(theme).listItem.paddingHorizontal,
-            paddingVertical: appStyles(theme).listItem.paddingVertical,
+            paddingHorizontal: 24,
+            paddingVertical: 8,
           },
           style,
         ] : style}
@@ -79,7 +77,7 @@ export default function ListItem(props) {
     );
   }
 
-  return <View style={[styles(theme).container, style]}>{component}</View>;
+  return <View style={[styles.container, style]}>{component}</View>;
 }
 
 ListItem.propTypes = {
@@ -97,13 +95,13 @@ ListItem.defaultProps = {
   options: {},
 };
 
-const styles = (theme) => StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
-    backgroundColor: appStyles(theme).listItem.backgroundColor,
-    borderBottomColor: appStyles(theme).listItem.borderBottomColor,
-    borderBottomWidth: 1,
-    justifyContent: 'center',
-    opacity: appStyles(theme).listItem.opacity,
     width: '100%',
+    backgroundColor: '#fff',
+    opacity: 0.8,
+    justifyContent: 'center',
+    borderBottomColor: 'rgba(0, 0, 0, 0.25)',
+    borderBottomWidth: 1,
   },
 });

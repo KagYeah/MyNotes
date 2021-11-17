@@ -1,25 +1,35 @@
 import React, { useContext } from 'react';
-import { StyleSheet, View, Text } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { element, oneOfType, string } from 'prop-types';
 
 import { GlobalContext } from '../contexts';
-import { appStyles } from '../style';
+import appTheme from '../style/theme';
 
 export default function AppBar(props) {
-  const { theme } = useContext(GlobalContext);
   const { title, left, right } = props;
+  const { theme } = useContext(GlobalContext);
+
   let titleComponent = title;
 
   if (typeof title === 'string') {
-    titleComponent = <Text style={styles(theme).title}>{title}</Text>;
+    titleComponent = (
+      <Text
+        style={[
+          styles.title,
+          { color: appTheme[theme].colorOnGradientColors1 },
+        ]}
+      >
+        {title}
+      </Text>
+    );
   }
 
   return (
-    <LinearGradient colors={appStyles(theme).appbar.gradientColors} style={styles(theme).container}>
-      <View style={styles(theme).inner}>{titleComponent}</View>
-      <View style={styles(theme).left}>{left}</View>
-      <View style={styles(theme).right}>{right}</View>
+    <LinearGradient colors={appTheme[theme].gradientColors1} style={styles.container}>
+      <View style={styles.inner}>{titleComponent}</View>
+      <View style={styles.left}>{left}</View>
+      <View style={styles.right}>{right}</View>
     </LinearGradient>
   );
 }
@@ -35,30 +45,29 @@ AppBar.defaultProps = {
   right: null,
 };
 
-const styles = (theme) => StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
-    height: appStyles(theme).appbar.height,
-    justifyContent: 'flex-end',
+    height: 104,
     width: '100%',
-    zIndex: appStyles(theme).appbar.zIndex,
+    justifyContent: 'flex-end',
+    zIndex: 10,
   },
   inner: {
     alignItems: 'center',
-    marginBottom: appStyles(theme).appbar.paddingBottom,
+    marginBottom: 16,
   },
   title: {
-    color: appStyles(theme).appbarTitle.color,
-    fontSize: appStyles(theme).appbarTitle.fontSize,
+    fontSize: 32,
     fontWeight: 'bold',
   },
   left: {
-    bottom: 0,
-    left: appStyles(theme).appbar.paddingHorizontal,
     position: 'absolute',
+    bottom: 0,
+    left: 16,
   },
   right: {
-    bottom: 0,
     position: 'absolute',
-    right: appStyles(theme).appbar.paddingHorizontal,
+    bottom: 0,
+    right: 16,
   },
 });

@@ -9,15 +9,14 @@ import {
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { GlobalContext } from '../contexts';
+import appTheme from '../style/theme';
 import ListItem from '../components/ListItem';
-import { appStyles } from '../style';
-
 import { MemosTable, SchedulesTable, TasksTable } from '../classes/storage';
 
 export default function SettingModelChangeScreen(props) {
+  const { navigation } = props;
   const { theme, setTheme, backgroundImage } = useContext(GlobalContext);
 
-  const { navigation } = props;
   const auth = getAuth();
 
   const memosTable = new MemosTable();
@@ -114,10 +113,10 @@ export default function SettingModelChangeScreen(props) {
 
 機種変更する際は、「データをアップロード」でバックアップを取り、新しい端末で、「データをダウンロード」してください。機種変更にはログインする必要があります。
 
-データをダウンロードすると、前のデータは消てしまいます。ご注意ください。`;
+データをダウンロードすると、前のデータは消えてしまいます。ご注意ください。`;
 
   return (
-    <View style={styles(theme).container}>
+    <View style={{ flex: 1, backgroundColor: appTheme[theme].appBackgroundColor }}>
       <ImageBackground source={{ uri: backgroundImage }} resizeMode="cover" style={{ flex: 1 }}>
 
         <ScrollView>
@@ -139,7 +138,7 @@ export default function SettingModelChangeScreen(props) {
                 ],
               );
             }}
-            style={styles(theme).listItem}
+            style={styles.listItem}
           />
 
           <ListItem
@@ -161,11 +160,11 @@ export default function SettingModelChangeScreen(props) {
                 ],
               );
             }}
-            style={styles(theme).listItem}
+            style={styles.listItem}
           />
 
-          <View style={styles(theme).description}>
-            <Text style={styles(theme).text}>{message}</Text>
+          <View style={styles.description}>
+            <Text style={styles.text}>{message}</Text>
           </View>
         </ScrollView>
       </ImageBackground>
@@ -173,11 +172,7 @@ export default function SettingModelChangeScreen(props) {
   );
 }
 
-const styles = (theme) => StyleSheet.create({
-  container: {
-    backgroundColor: appStyles(theme).app.backgroundColor,
-    flex: 1,
-  },
+const styles = StyleSheet.create({
   listItem: {
     fontSize: 18,
     height: 48,
@@ -186,7 +181,7 @@ const styles = (theme) => StyleSheet.create({
     padding: 24,
   },
   text: {
-    fontSize: appStyles(theme).body.fontSize,
-    lineHeight: appStyles(theme).body.lineHeight,
+    fontSize: 16,
+    lineHeight: 24,
   },
 });

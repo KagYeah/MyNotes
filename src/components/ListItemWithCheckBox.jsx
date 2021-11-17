@@ -3,11 +3,11 @@ import { StyleSheet, View, Text } from 'react-native';
 import { bool, func, string } from 'prop-types';
 
 import { GlobalContext } from '../contexts';
+import appTheme from '../style/theme';
+import Icon from './Icon';
 import ListItem from './ListItem';
-import { appStyles } from '../style';
 
 export default function ListItemWithCheckBox(props) {
-  const { theme } = useContext(GlobalContext);
   const {
     title,
     subtitle,
@@ -15,18 +15,22 @@ export default function ListItemWithCheckBox(props) {
     showCheckBox,
     onPressWithCheckBox,
     onPressWithoutCheckBox,
-    destructive,
+    timeout,
   } = props;
+  const { theme } = useContext(GlobalContext);
+  const gradientColors = appTheme[theme].gradientColors3;
+  const textColor = appTheme[theme].colorOnGradientColor3;
 
   return (
     <ListItem
       title={(
-        <View style={styles(theme).container}>
-          <View style={styles(theme).left}>
+        <View style={styles.container}>
+          <View style={styles.left}>
             <Text
               style={[
-                styles(theme).title,
-                destructive ? styles(theme).destructive : null,
+                styles.title,
+                { color: textColor },
+                timeout ? styles.timeout : null,
               ]}
             >
               {title}
@@ -34,8 +38,9 @@ export default function ListItemWithCheckBox(props) {
             {subtitle && (
               <Text
                 style={[
-                  styles(theme).subtitle,
-                  destructive ? styles(theme).destructive : null,
+                  styles.subtitle,
+                  { color: textColor },
+                  timeout ? styles.timeout : null,
                 ]}
               >
                 {subtitle}
@@ -43,19 +48,17 @@ export default function ListItemWithCheckBox(props) {
             )}
           </View>
           {showCheckBox ? (
-            <View style={styles(theme).right}>
+            <View style={styles.right}>
               {checked
-                ? <Text style={styles(theme).checked}>[*]</Text>
-                : <Text style={styles(theme).unchecked}>[  ]</Text>}
+                ? <Icon name="checkbox-checked" size={24} color="#f00" />
+                : <Icon name="checkbox-unchecked" size={24} color="#000" />}
             </View>
           ) : null}
         </View>
       )}
       onPress={showCheckBox ? onPressWithCheckBox : onPressWithoutCheckBox}
       linearGradient
-      options={{
-        colors: appStyles(theme).listItemWithCheckBox.gradientColors,
-      }}
+      options={{ colors: gradientColors }}
     />
   );
 }
@@ -67,7 +70,7 @@ ListItemWithCheckBox.propTypes = {
   showCheckBox: bool,
   onPressWithCheckBox: func,
   onPressWithoutCheckBox: func,
-  destructive: bool,
+  timeout: bool,
 };
 
 ListItemWithCheckBox.defaultProps = {
@@ -76,10 +79,10 @@ ListItemWithCheckBox.defaultProps = {
   showCheckBox: true,
   onPressWithCheckBox: () => {},
   onPressWithoutCheckBox: () => {},
-  destructive: false,
+  timeout: false,
 };
 
-const styles = (theme) => StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
   },
@@ -90,26 +93,18 @@ const styles = (theme) => StyleSheet.create({
   right: {
     alignItems: 'center',
     justifyContent: 'center',
-    width: appStyles(theme).listItemRight.width,
+    width: '20%',
   },
   title: {
-    fontSize: appStyles(theme).listItemTitle.fontSize,
-    lineHeight: appStyles(theme).listItemTitle.lineHeight,
+    fontSize: 18,
+    lineHeight: 32,
   },
   subtitle: {
-    fontSize: appStyles(theme).listItemSubTitle.fontSize,
-    lineHeight: appStyles(theme).listItemSubTitle.lineHeight,
-    paddingStart: appStyles(theme).listItemSubTitle.paddingStart,
+    fontSize: 12,
+    lineHeight: 24,
+    paddingStart: 8,
   },
-  checked: {
-    color: appStyles(theme).checkbox.checkedColor,
-    fontSize: appStyles(theme).checkbox.fontSize,
-  },
-  unchecked: {
-    color: appStyles(theme).checkbox.uncheckedColor,
-    fontSize: appStyles(theme).checkbox.fontSize,
-  },
-  destructive: {
-    color: appStyles(theme).destructive.color,
+  timeout: {
+    color: '#f00',
   },
 });

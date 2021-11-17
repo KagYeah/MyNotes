@@ -1,12 +1,13 @@
 import React, { useContext, useState } from 'react';
 import {
-  FlatList, ImageBackground, StyleSheet, Text, View,
+  FlatList, ImageBackground, StyleSheet, View,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { GlobalContext } from '../contexts';
+import appTheme from '../style/theme';
+import Icon from '../components/Icon';
 import ListItem from '../components/ListItem';
-import { appStyles } from '../style';
 import { getHexFromColor } from '../helpers';
 
 export default function SettingMainColorScreen() {
@@ -26,7 +27,7 @@ export default function SettingMainColorScreen() {
   ];
 
   return (
-    <View style={styles(theme).container}>
+    <View style={{ flex: 1, backgroundColor: appTheme[theme].appBackgroundColor }}>
       <ImageBackground source={{ uri: backgroundImage }} resizeMode="cover" style={{ flex: 1 }}>
 
         <FlatList
@@ -35,11 +36,11 @@ export default function SettingMainColorScreen() {
           renderItem={({ item }) => (
             <ListItem
               title={(
-                <View style={styles(theme).labelContainer}>
+                <View style={styles.labelContainer}>
                   <View
-                    style={[styles(theme).colorPod, { backgroundColor: getHexFromColor(item) }]}
+                    style={[styles.colorPod, { backgroundColor: getHexFromColor(item) }]}
                   />
-                  {item === color ? <Text>/</Text> : null}
+                  {item === color ? <Icon name="check" size={24} color="#0f0" /> : null}
                 </View>
               )}
               onPress={async () => {
@@ -47,7 +48,7 @@ export default function SettingMainColorScreen() {
                 setTheme(item);
                 await AsyncStorage.setItem('@theme', item);
               }}
-              style={{ height: appStyles(theme).settingListItem.height }}
+              style={{ height: 48 }}
             />
           )}
         />
@@ -56,19 +57,15 @@ export default function SettingMainColorScreen() {
   );
 }
 
-const styles = (theme) => StyleSheet.create({
-  container: {
-    backgroundColor: appStyles(theme).app.backgroundColor,
-    flex: 1,
-  },
+const styles = StyleSheet.create({
   labelContainer: {
     alignItems: 'center',
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
   colorPod: {
-    borderRadius: appStyles(theme).colorPod.height / 2,
-    height: appStyles(theme).colorPod.height,
-    width: appStyles(theme).colorPod.width,
+    borderRadius: 16,
+    height: 32,
+    width: 32,
   },
 });

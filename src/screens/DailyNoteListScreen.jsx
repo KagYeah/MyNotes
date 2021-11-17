@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import {
-  ImageBackground, StyleSheet, View, SectionList, Alert,
+  Alert, ImageBackground, SectionList, View,
 } from 'react-native';
 import { instanceOf, string } from 'prop-types';
 import { useNavigation } from '@react-navigation/native';
@@ -8,21 +8,22 @@ import { isToday } from 'date-fns';
 import * as Notifications from 'expo-notifications';
 
 import { GlobalContext } from '../contexts';
+import appTheme from '../style/theme';
 import Button from '../components/Button';
 import CreateButton from '../components/CreateButton';
 import DeleteButton from '../components/DeleteButton';
 import ListHeader from '../components/ListHeader';
 import ListItemWithCheckBox from '../components/ListItemWithCheckBox';
 import Loading from '../components/Loading';
-import { appStyles } from '../style';
 import { capitalize, date2string } from '../helpers';
+
 import { MyNotesTable, SchedulesTable, TasksTable } from '../classes/storage';
 
 export default function DailyNoteListScreen(props) {
-  const { theme, backgroundImage } = useContext(GlobalContext);
-
   const navigation = useNavigation();
   const { date, appbarTitle } = props;
+  const { theme, backgroundImage } = useContext(GlobalContext);
+
   const [showCheckBox, setShowCheckBox] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState([]);
@@ -50,8 +51,8 @@ export default function DailyNoteListScreen(props) {
         <Button
           label={showCheckBox ? '完了' : '編集'}
           onPress={() => setShowCheckBox(!showCheckBox)}
-          backgroundColor={appStyles(theme).appbarButton.backgroundColor}
-          color={appStyles(theme).appbarButton.color}
+          backgroundColor="#0000"
+          color={appTheme[theme].colorOnGradientColors1}
         />
       ),
     });
@@ -232,7 +233,7 @@ export default function DailyNoteListScreen(props) {
   }
 
   return (
-    <View style={styles(theme).container}>
+    <View style={{ flex: 1, backgroundColor: appTheme[theme].appBackgroundColor }}>
       <ImageBackground source={{ uri: backgroundImage }} resizeMode="cover" style={{ flex: 1 }}>
 
         <Loading isLoading={isLoading} />
@@ -258,7 +259,7 @@ export default function DailyNoteListScreen(props) {
               <ListItemWithCheckBox
                 title={item.title}
                 subtitle={item.subtitle}
-                destructive={item.timeout}
+                timeout={item.timeout}
                 showCheckBox={showCheckBox}
                 checked={checkedIds.includes(item.id)}
                 onPressWithCheckBox={() => {
@@ -294,8 +295,8 @@ export default function DailyNoteListScreen(props) {
                       ],
                     );
                   }}
-                  height={appStyles(theme).deleteButtonInListHeader.height}
-                  width={appStyles(theme).deleteButtonInListHeader.width}
+                  height={32}
+                  width={64}
                 />
               )}
             />
@@ -316,10 +317,3 @@ DailyNoteListScreen.propTypes = {
   date: instanceOf(Date).isRequired,
   appbarTitle: string.isRequired,
 };
-
-const styles = (theme) => StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: appStyles(theme).app.backgroundColor,
-  },
-});

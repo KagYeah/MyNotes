@@ -5,14 +5,14 @@ import {
 import { getAuth, sendPasswordResetEmail } from 'firebase/auth';
 
 import { GlobalContext } from '../contexts';
+import appTheme from '../style/theme';
 import Button from '../components/Button';
 import Loading from '../components/Loading';
-import { appStyles } from '../style';
 
 export default function PasswordResetScreen(props) {
+  const { navigation } = props;
   const { theme, backgroundImage } = useContext(GlobalContext);
 
-  const { navigation } = props;
   const [email, setEmail] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const auth = getAuth();
@@ -33,12 +33,12 @@ export default function PasswordResetScreen(props) {
   }
 
   return (
-    <View style={styles(theme).container}>
+    <View style={{ flex: 1, backgroundColor: appTheme[theme].appBackgroundColor }}>
       <ImageBackground source={{ uri: backgroundImage }} resizeMode="cover" style={{ flex: 1 }}>
         <Loading isLoading={isLoading} />
-        <View style={styles(theme).centeredView}>
-          <View style={styles(theme).description}>
-            <Text style={styles(theme).text}>記入したメールアドレス宛にパスワード再設定用のメールを送信します。</Text>
+        <View style={styles.centeredView}>
+          <View style={styles.description}>
+            <Text style={styles.text}>記入したメールアドレス宛にパスワード再設定用のメールを送信します。</Text>
           </View>
 
           <TextInput
@@ -46,7 +46,7 @@ export default function PasswordResetScreen(props) {
             keyboardType="email-address"
             onChangeText={(text) => setEmail(text)}
             placeholder="Email"
-            style={styles(theme).input}
+            style={styles.input}
             textContentType="emailAddress"
             value={email}
           />
@@ -54,12 +54,12 @@ export default function PasswordResetScreen(props) {
           <Button
             label="送信"
             onPress={sendEmail}
-            color={appStyles(theme).buttonMedium.color}
-            style={styles(theme).submit}
-            height={appStyles(theme).buttonMedium.height}
-            width={appStyles(theme).buttonMedium.width}
+            color={appTheme[theme].colorOnGradientColors1}
+            style={styles.submit}
+            height={40}
+            width={128}
             linearGradient
-            options={{ colors: appStyles(theme).buttonMedium.gradientColors }}
+            options={{ colors: appTheme[theme].gradientColors1 }}
           />
         </View>
       </ImageBackground>
@@ -67,15 +67,11 @@ export default function PasswordResetScreen(props) {
   );
 }
 
-const styles = (theme) => StyleSheet.create({
-  container: {
-    backgroundColor: appStyles(theme).app.backgroundColor,
-    flex: 1,
-  },
+const styles = StyleSheet.create({
   centeredView: {
     flex: 1,
     justifyContent: 'center',
-    paddingHorizontal: appStyles(theme).app.paddingHorizontal,
+    paddingHorizontal: 24,
   },
   description: {
     alignItems: 'center',
@@ -84,15 +80,15 @@ const styles = (theme) => StyleSheet.create({
     fontSize: 16,
   },
   input: {
-    borderColor: appStyles(theme).idPasswordInput.borderColor,
-    borderWidth: appStyles(theme).idPasswordInput.borderWidth,
-    fontSize: appStyles(theme).idPasswordInput.fontSize,
-    height: appStyles(theme).idPasswordInput.height,
-    padding: appStyles(theme).idPasswordInput.padding,
-    marginTop: appStyles(theme).idPasswordInput.margin,
+    height: 34,
+    marginTop: 24,
+    padding: 8,
+    fontSize: 18,
+    borderColor: 'rgba(0, 0, 0, 0.25)',
+    borderWidth: 1,
   },
   submit: {
     alignSelf: 'center',
-    marginTop: appStyles(theme).buttonMedium.margin,
+    marginTop: 24,
   },
 });

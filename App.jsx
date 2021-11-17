@@ -28,10 +28,11 @@ import LogInScreen from './src/screens/LogInScreen';
 import SignUpScreen from './src/screens/SignUpScreen';
 import PasswordResetScreen from './src/screens/PasswordResetScreen';
 
+import { GlobalContext } from './src/contexts';
+import appTheme from './src/style/theme';
 import AppBar from './src/components/AppBar';
 import Button from './src/components/Button';
-import { appStyles } from './src/style';
-import { GlobalContext } from './src/contexts';
+import Icon from './src/components/Icon';
 
 import { MigrationController } from './src/lib/storage/migration';
 import {
@@ -51,12 +52,10 @@ if (getApps().length === 0) {
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
 
-import * as FileSystem from 'expo-file-system';
 export default function App() {
   const [theme, setTheme] = useState('navy');
   const [backgroundImage, setBackgroundImage] = useState(null);
 
-  console.log(FileSystem.documentDirectory);
   useEffect(() => {
     const migration = new MigrationController();
     const migrate = async () => {
@@ -79,8 +78,12 @@ export default function App() {
   }, []);
 
   return (
-    <GlobalContext.Provider value={{ theme, setTheme, backgroundImage, setBackgroundImage }}>
-      <StatusBar barStyle={appStyles(theme).statusbar.barStyle} />
+    <GlobalContext.Provider
+      value={{
+        theme, setTheme, backgroundImage, setBackgroundImage,
+      }}
+    >
+      <StatusBar barStyle={appTheme[theme].statusbarStyle} />
       <NavigationContainer>
         <Stack.Navigator
           // initialRouteName="Root"
@@ -93,12 +96,11 @@ export default function App() {
                 left={
                   back ? (
                     <Button
-                      label="<"
+                      label={<Icon name="arrow-left" size={24} color={appTheme[theme].colorOnGradientColors1} />}
                       onPress={navigation.goBack}
-                      backgroundColor={appStyles(theme).appbarButton.backgroundColor}
-                      color={appStyles(theme).appbarButton.color}
-                      height={appStyles(theme).appbarButton.height}
-                      width={appStyles(theme).appbarButton.width}
+                      backgroundColor="#0000"
+                      height={50}
+                      width={68}
                     />
                   ) : null
                 }
@@ -207,26 +209,25 @@ function Root() {
             title={options.title}
             left={(
               <Button
-                label="三"
+                label={<Icon name="menu" size={24} color={appTheme[theme].colorOnGradientColors1} />}
                 onPress={() => navigation.openDrawer()}
-                backgroundColor={appStyles(theme).appbarButton.backgroundColor}
-                color={appStyles(theme).appbarButton.color}
-                height={appStyles(theme).appbarButton.height}
-                width={appStyles(theme).appbarButton.width}
+                backgroundColor="#0000"
+                height={50}
+                width={68}
               />
             )}
             right={options.headerRight}
           />
         ),
-        drawerActiveBackgroundColor: appStyles(theme).drawer.activeBackgroundColor,
+        drawerActiveBackgroundColor: '#fff',
         drawerStyle: {
-          backgroundColor: appStyles(theme).drawer.backgroundColor,
+          backgroundColor: appTheme[theme].backgroundColor1,
         },
-        drawerActiveTintColor: appStyles(theme).drawer.activeTintColor,
-        drawerInactiveTintColor: appStyles(theme).drawer.inactiveTintColor,
+        drawerActiveTintColor: appTheme[theme].backgroundColor1,
+        drawerInactiveTintColor: '#fff',
         drawerLabelStyle: {
-          fontSize: appStyles(theme).drawer.fontSize,
-          paddingLeft: appStyles(theme).drawer.paddingLeft,
+          fontSize: 18,
+          paddingLeft: 24,
         },
       }}
     >

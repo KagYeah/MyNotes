@@ -1,36 +1,33 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
-import { GlobalContext } from '../contexts';
-import { appStyles } from '../style';
-
 export default function CalendarDayLabel() {
-  const { theme } = useContext(GlobalContext);
-  const labels = ['日', '月', '火', '水', '木', '金', '土'];
   const keys = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  const labels = ['日', '月', '火', '水', '木', '金', '土'];
   const labelComponents = [];
 
   labels.forEach((label, index) => {
     labelComponents.push((
-      <View style={styles(theme).labelContainer} key={keys[index]}>
-        <Text style={styles(theme).label}>{label}</Text>
+      <View key={keys[index]} style={styles.labelContainer}>
+        <Text style={styles.label}>{label}</Text>
       </View>
     ));
   });
 
-  return <View style={styles(theme).container}>{labelComponents}</View>;
+  return <View style={styles.container}>{labelComponents}</View>;
 }
 
-const styles = (theme) => StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
   },
   labelContainer: {
     alignItems: 'center',
-    height: appStyles(theme).calendar.dateHeight / 2,
-    width: appStyles(theme).calendar.dateWidth,
+    height: 28,
+    width: 48,
   },
   label: {
-    lineHeight: appStyles(theme).calendar.dateHeight / 2,
+    fontSize: 18,
+    lineHeight: 28,
   },
 });

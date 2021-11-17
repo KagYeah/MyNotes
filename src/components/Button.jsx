@@ -1,7 +1,7 @@
 import React from 'react';
-import { Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity } from 'react-native';
 import {
-  func, string, number, shape, bool,
+  bool, element, func, number, oneOfType, shape, string,
 } from 'prop-types';
 import { LinearGradient } from 'expo-linear-gradient';
 
@@ -14,6 +14,7 @@ export default function Button(props) {
     color, fontSize, fontWeight,
     linearGradient, options,
   } = props;
+
   let labelComponent = label;
 
   if (typeof label === 'string') {
@@ -75,7 +76,7 @@ export default function Button(props) {
 }
 
 Button.propTypes = {
-  label: string.isRequired,
+  label: oneOfType([string, element]).isRequired,
   onPress: func.isRequired,
   style: shape(),
   backgroundColor: string,
@@ -90,7 +91,7 @@ Button.propTypes = {
 };
 
 Button.defaultProps = {
-  style: null,
+  style: {},
   backgroundColor: '#fff',
   borderRadius: 8,
   height: 50,

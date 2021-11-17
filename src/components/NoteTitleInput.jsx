@@ -1,30 +1,27 @@
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, TextInput, View } from 'react-native';
 import {
   bool, func, shape, string,
 } from 'prop-types';
 
-import { GlobalContext } from '../contexts';
-import { appStyles } from '../style';
-
 export default function NoteTitleInput(props) {
-  const { theme } = useContext(GlobalContext);
   const {
     autoFocus, onChangeText, placeholder, style, value,
   } = props;
+
   const [inputHeight, setInputHeight] = useState(0);
 
   return (
-    <View style={styles(theme).container}>
+    <View style={styles.container}>
       <TextInput
         autoFocus={autoFocus}
         multiline
         onChangeText={onChangeText}
         onContentSizeChange={(event) => setInputHeight(
-          Math.min(appStyles(theme).noteTitleInput.maxHeight, event.nativeEvent.contentSize.height),
+          Math.min(96, event.nativeEvent.contentSize.height),
         )}
         placeholder={placeholder}
-        style={[styles(theme).title, { height: inputHeight }, style]}
+        style={[styles.title, { height: inputHeight }, style]}
         value={value}
       />
     </View>
@@ -45,19 +42,19 @@ NoteTitleInput.defaultProps = {
   placeholder: 'タイトル',
 };
 
-const styles = (theme) => StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
-    backgroundColor: appStyles(theme).noteTitleInput.backgroundColor,
-    borderBottomColor: appStyles(theme).noteTitleInput.borderBottomColor,
-    borderBottomWidth: appStyles(theme).noteTitleInput.borderBottomWidth,
-    opacity: appStyles(theme).noteTitleInput.opacity,
-    paddingHorizontal: appStyles(theme).noteTitleInput.paddingHorizontal,
-    paddingVertical: appStyles(theme).noteTitleInput.paddingVertical,
     width: '100%',
+    backgroundColor: '#fff',
+    opacity: 0.8,
+    borderBottomColor: 'rgba(0, 0, 0, 0.25)',
+    borderBottomWidth: 1,
+    paddingHorizontal: 24,
+    paddingVertical: 16,
   },
   title: {
     paddingTop: 0,
-    color: appStyles(theme).noteTitleInput.color,
-    fontSize: appStyles(theme).noteTitleInput.fontSize,
+    color: '#000',
+    fontSize: 18,
   },
 });

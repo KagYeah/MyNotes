@@ -5,14 +5,14 @@ import {
 import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
 
 import { GlobalContext } from '../contexts';
+import appTheme from '../style/theme';
 import Button from '../components/Button';
 import Loading from '../components/Loading';
-import { appStyles } from '../style';
 
 export default function SignUpScreen(props) {
+  const { navigation } = props;
   const { theme, backgroundImage } = useContext(GlobalContext);
 
-  const { navigation } = props;
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -35,17 +35,17 @@ export default function SignUpScreen(props) {
   }
 
   return (
-    <View style={styles(theme).container}>
+    <View style={{ flex: 1, backgroundColor: appTheme[theme].appBackgroundColor }}>
       <ImageBackground source={{ uri: backgroundImage }} resizeMode="cover" style={{ flex: 1 }}>
         <Loading isLoading={isLoading} />
 
-        <View style={styles(theme).centeredView}>
+        <View style={styles.centeredView}>
           <TextInput
             autoCapitalize="none"
             keyboardType="email-address"
             onChangeText={(text) => setEmail(text)}
             placeholder="Email"
-            style={styles(theme).input}
+            style={styles.input}
             textContentType="emailAddress"
             value={email}
           />
@@ -55,7 +55,7 @@ export default function SignUpScreen(props) {
             onChangeText={(text) => setPassword(text)}
             placeholder="Password"
             secureTextEntry
-            style={styles(theme).input}
+            style={styles.input}
             textContentType="password"
             value={password}
           />
@@ -63,19 +63,19 @@ export default function SignUpScreen(props) {
           <Button
             label="登録"
             onPress={signUp}
-            color={appStyles(theme).buttonMedium.color}
-            style={styles(theme).submit}
-            height={appStyles(theme).buttonMedium.height}
-            width={appStyles(theme).buttonMedium.width}
+            color={appTheme[theme].colorOnGradientColors1}
+            style={styles.submit}
+            height={48}
+            width={128}
             linearGradient
-            options={{ colors: appStyles(theme).buttonMedium.gradientColors }}
+            options={{ colors: appTheme[theme].gradientColors1 }}
           />
 
-          <View style={styles(theme).footer}>
-            <View style={styles(theme).row}>
-              <Text style={styles(theme).text}>ログインは</Text>
+          <View style={styles.footer}>
+            <View style={styles.row}>
+              <Text style={styles.text}>ログインは</Text>
               <Text
-                style={styles(theme).link}
+                style={styles.link}
                 onPress={() => { navigation.navigate('LogIn'); }}
               >
                 こちら
@@ -88,35 +88,31 @@ export default function SignUpScreen(props) {
   );
 }
 
-const styles = (theme) => StyleSheet.create({
-  container: {
-    backgroundColor: appStyles(theme).app.backgroundColor,
-    flex: 1,
-  },
+const styles = StyleSheet.create({
   centeredView: {
     flex: 1,
     justifyContent: 'center',
-    paddingHorizontal: appStyles(theme).app.paddingHorizontal,
+    paddingHorizontal: 24,
   },
   input: {
-    borderColor: appStyles(theme).idPasswordInput.borderColor,
-    borderWidth: appStyles(theme).idPasswordInput.borderWidth,
-    fontSize: appStyles(theme).idPasswordInput.fontSize,
-    height: appStyles(theme).idPasswordInput.height,
-    padding: appStyles(theme).idPasswordInput.padding,
-    marginTop: appStyles(theme).idPasswordInput.margin,
+    height: 34,
+    marginTop: 24,
+    padding: 8,
+    fontSize: 18,
+    borderColor: 'rgba(0, 0, 0, 0.25)',
+    borderWidth: 1,
   },
   submit: {
+    marginTop: 24,
     alignSelf: 'center',
-    marginTop: appStyles(theme).buttonMedium.margin,
   },
   footer: {
     marginTop: 40,
   },
   row: {
+    marginBottom: 24,
     flexDirection: 'row',
     justifyContent: 'center',
-    marginBottom: 24,
   },
   text: {
     fontSize: 16,

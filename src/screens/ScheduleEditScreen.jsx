@@ -4,29 +4,28 @@ import {
   ImageBackground,
   Keyboard,
   KeyboardAvoidingView,
+  Platform,
   ScrollView,
-  StyleSheet,
-  View,
 } from 'react-native';
 import { number, shape } from 'prop-types';
 import * as Notifications from 'expo-notifications';
 
 import { GlobalContext } from '../contexts';
+import appTheme from '../style/theme';
 import Button from '../components/Button';
 import DateTimeInput from '../components/DateTimeInput';
 import DeleteButton from '../components/DeleteButton';
 import Loading from '../components/Loading';
 import NoteTitleInput from '../components/NoteTitleInput';
 import SaveButton from '../components/SaveButton';
-import { appStyles } from '../style';
 import { date2string } from '../helpers';
 import { SchedulesTable } from '../classes/storage';
 
 export default function ScheduleEditScreen(props) {
-  const { theme, backgroundImage } = useContext(GlobalContext);
-
   const { navigation, route } = props;
   const { id } = route.params;
+  const { theme, backgroundImage } = useContext(GlobalContext);
+
   const [date, setDate] = useState(new Date());
   const [startTime, setStartTime] = useState(new Date());
   const [endTime, setEndTime] = useState(new Date());
@@ -43,8 +42,8 @@ export default function ScheduleEditScreen(props) {
         <Button
           label="完了"
           onPress={() => Keyboard.dismiss()}
-          backgroundColor={appStyles(theme).appbarButton.backgroundColor}
-          color={appStyles(theme).appbarButton.color}
+          backgroundColor="#0000"
+          color={appTheme[theme].colorOnGradientColor1}
         />
       ) : null,
     });
@@ -201,71 +200,69 @@ export default function ScheduleEditScreen(props) {
 
   return (
     <KeyboardAvoidingView
-      style={{ flex: 1 }}
-      behavior={appStyles(theme).keyboardAvoidingView.behavior}
-      keyboardVerticalOffset={appStyles(theme).keyboardAvoidingView.verticalOffset}
+      style={{ flex: 1, backgroundColor: appTheme[theme].appBackgroundColor }}
+      behavior={Platform.OS === 'ios' ? 'padding' : null}
+      keyboardVerticalOffset={Platform.OS === 'ios' ? 104 : 0}
     >
       <ImageBackground source={{ uri: backgroundImage }} resizeMode="cover" style={{ flex: 1 }}>
 
         <Loading isLoading={isLoading} />
 
-        <View style={styles(theme).container}>
-          <ScrollView>
-            <DateTimeInput
-              label="日付"
-              mode="date"
-              onChange={(value) => setDate(value)}
-              value={date}
-            />
-
-            <DateTimeInput
-              label="開始時間"
-              mode="time"
-              onChange={(value) => setStartTime(value)}
-              value={startTime}
-            />
-
-            <DateTimeInput
-              label="終了時間"
-              mode="time"
-              onChange={(value) => setEndTime(value)}
-              value={endTime}
-            />
-
-            <NoteTitleInput
-              onChangeText={(text) => setTitle(text)}
-              placeholder="予定"
-              value={title}
-            />
-
-            <DeleteButton
-              onPress={() => {
-                Alert.alert(
-                  '予定を削除します',
-                  '本当によろしいですか？',
-                  [
-                    {
-                      text: 'キャンセル',
-                      style: 'cancel',
-                    },
-                    {
-                      text: '削除',
-                      onPress: deleteSchedule,
-                      style: 'destructive',
-                    },
-                  ],
-                );
-              }}
-              style={{ alignSelf: 'center' }}
-              height={appStyles(theme).deleteButton.height}
-              width={appStyles(theme).deleteButton.width}
-            />
-          </ScrollView>
-
-          <SaveButton
-            onPress={saveSchedule}
+        <ScrollView>
+          <DateTimeInput
+            label="日付"
+            mode="date"
+            onChange={(value) => setDate(value)}
+            value={date}
           />
-        </View>
+
+          <DateTimeInput
+            label="開始時間"
+            mode="time"
+            onChange={(value) => setStartTime(value)}
+            value={startTime}
+          />
+
+          <DateTimeInput
+            label="終了時間"
+            mode="time"
+            onChange={(value) => setEndTime(value)}
+            value={endTime}
+          />
+
+          <NoteTitleInput
+            onChangeText={(text) => setTitle(text)}
+            placeholder="予定"
+            value={title}
+          />
+
+          <DeleteButton
+            onPress={() => {
+              Alert.alert(
+                '予定を削除します',
+                '本当によろしいですか？',
+                [
+                  {
+                    text: 'キャンセル',
+                    style: 'cancel',
+                  },
+                  {
+                    text: '削除',
+                    onPress: deleteSchedule,
+                    style: 'destructive',
+                  },
+                ],
+              );
+            }}
+            style={{ alignSelf: 'center' }}
+            height={54}
+            width={68}
+          />
+        </ScrollView>
+
+        <SaveButton
+          onPress={saveSchedule}
+        />
       </ImageBackground>
     </KeyboardAvoidingView>
   );
@@ -276,10 +273,3 @@ ScheduleEditScreen.propTypes = {
     params: shape({ id: number }),
   }).isRequired,
 };
-
-const styles = (theme) => StyleSheet.create({
-  container: {
-    backgroundColor: appStyles(theme).app.backgroundColor,
-    flex: 1,
-  },
-});

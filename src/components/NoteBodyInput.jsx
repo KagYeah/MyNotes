@@ -1,4 +1,4 @@
-import React, { useContext, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import {
   StyleSheet, TextInput, TouchableOpacity,
 } from 'react-native';
@@ -6,14 +6,11 @@ import {
   bool, func, shape, string,
 } from 'prop-types';
 
-import { GlobalContext } from '../contexts';
-import { appStyles } from '../style';
-
 export default function NoteBodyInput(props) {
-  const { theme } = useContext(GlobalContext);
   const {
     autoFocus, onChangeText, placeholder, style, value,
   } = props;
+
   const [inputHeight, setInputHeight] = useState(0);
   const inputRef = useRef();
 
@@ -21,18 +18,18 @@ export default function NoteBodyInput(props) {
     <TouchableOpacity
       activeOpacity={1}
       onPress={() => inputRef.current.focus()}
-      style={[styles(theme).container, { height: inputHeight }]}
+      style={[styles.container, { height: inputHeight }]}
     >
       <TextInput
         autoFocus={autoFocus}
         multiline
         onChangeText={onChangeText}
         onContentSizeChange={(event) => setInputHeight(
-          Math.max(appStyles(theme).noteBodyInput.minHeight, event.nativeEvent.contentSize.height),
+          Math.max(400, event.nativeEvent.contentSize.height),
         )}
         placeholder={placeholder}
         scrollEnabled={false}
-        style={[styles(theme).body, style]}
+        style={[styles.body, style]}
         ref={inputRef}
         value={value}
       />
@@ -54,19 +51,18 @@ NoteBodyInput.defaultProps = {
   style: null,
 };
 
-const styles = (theme) => StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
-    backgroundColor: appStyles(theme).noteBodyInput.backgroundColor,
-    borderBottomColor: appStyles(theme).noteBodyInput.borderBottomColor,
-    borderBottomWidth: appStyles(theme).noteBodyInput.borderBottomWidth,
-    // if you set opacity, edit appStyles(theme).noteBodyInput.opacity in src/style/index.jsx
-    // opacity: appStyles(theme).noteBodyInput.opacity,
-    paddingHorizontal: appStyles(theme).noteBodyInput.paddingHorizontal,
-    paddingVertical: appStyles(theme).noteBodyInput.paddingVertical,
+    backgroundColor: '#fff',
+    opacity: 0.8,
     width: '100%',
+    paddingHorizontal: 24,
+    paddingVertical: 16,
+    borderBottomColor: 'rgba(0, 0, 0, 0.25)',
+    borderBottomWidth: 1,
   },
   body: {
-    color: appStyles(theme).noteBodyInput.color,
-    fontSize: appStyles(theme).noteBodyInput.fontSize,
+    color: '#000',
+    fontSize: 16,
   },
 });

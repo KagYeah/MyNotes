@@ -1,7 +1,6 @@
 import { format } from 'date-fns';
+import { DATE_SEPARATOR, TIME_SEPARATOR } from '../constants';
 
-export const DATE_SEPARATOR = '/';
-export const TIME_SEPARATOR = ':';
 const DAY_OF_WEEK = ['日', '月', '火', '水', '木', '金', '土'];
 
 export function capitalize(string) {

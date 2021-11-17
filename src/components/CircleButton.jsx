@@ -5,7 +5,7 @@ import {
 
 import { GlobalContext } from '../contexts';
 import Button from './Button';
-import { appStyles } from '../style';
+import appTheme from '../style/theme';
 
 export default function CircleButton(props) {
   const { theme } = useContext(GlobalContext);
@@ -21,11 +21,11 @@ export default function CircleButton(props) {
       borderRadius={size / 2}
       height={size}
       width={size}
-      color={appStyles(theme).circleButton.color}
+      color={appTheme[theme].colorOnGradientColors1}
       fontSize={fontSize}
       fontWeight={fontWeight}
       linearGradient
-      options={{ colors: appStyles(theme).circleButton.gradientColors }}
+      options={{ colors: appTheme[theme].gradientColors1 }}
     />
   );
 }

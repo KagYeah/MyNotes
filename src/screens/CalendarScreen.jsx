@@ -1,15 +1,16 @@
 import React, { useContext, useRef, useState } from 'react';
 import {
-  ImageBackground, ScrollView, StyleSheet, View,
+  ImageBackground, ScrollView, StyleSheet, Text, View,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import SegmentedPicker from 'react-native-segmented-picker';
 
 import { GlobalContext } from '../contexts';
+import appTheme from '../style/theme';
 import Button from '../components/Button';
 import Calendar from '../components/Calendar';
-import { appStyles } from '../style';
-import { DATE_SEPARATOR } from '../helpers';
+import Icon from '../components/Icon';
+import { DATE_SEPARATOR } from '../constants';
 
 export default function CalendarScreen() {
   const { theme, backgroundImage } = useContext(GlobalContext);
@@ -64,26 +65,35 @@ export default function CalendarScreen() {
   }
 
   return (
-    <View style={styles(theme).container}>
+    <View style={{ flex: 1, backgroundColor: appTheme[theme].appBackgroundColor }}>
       <ImageBackground source={{ uri: backgroundImage }} resizeMode="cover" style={{ flex: 1 }}>
 
         <LinearGradient
-          colors={appStyles(theme).calendarHeader.gradientColors}
-          style={styles(theme).header}
+          colors={appTheme[theme].gradientColors2}
+          style={styles.header}
         >
-          <View style={styles(theme).monthInput}>
+          <View style={styles.monthInput}>
             <Button
-              label={`${year} ${DATE_SEPARATOR} ${month} _`}
+              label={(
+                <View style={styles.row}>
+                  <Text
+                    style={[
+                      styles.headerTitle,
+                      { color: appTheme[theme].colorOnGradientColors2 },
+                    ]}
+                  >
+                    {`${year} ${DATE_SEPARATOR} ${month} `}
+                  </Text>
+                  <Icon name="arrow-down" size={12} color={appTheme[theme].colorOnGradientColors2} />
+                </View>
+              )}
               onPress={() => {
                 refPicker.current.show();
               }}
-              backgroundColor={appStyles(theme).calendarHeaderButton.backgroundColor}
-              fontSize={appStyles(theme).calendarHeader.fontSize}
-              fontWeight={appStyles(theme).calendarHeader.fontWeight}
-              height={
-                appStyles(theme).calendarHeader.height
-                - appStyles(theme).calendarHeader.paddingVertical * 2
-              }
+              backgroundColor="#0000"
+              fontSize={18}
+              fontWeight="bold"
+              height={32}
               width={200}
             />
 
@@ -100,33 +110,31 @@ export default function CalendarScreen() {
           </View>
 
           {year === currentYear && month === 1 ? null : (
-            <View style={styles(theme).headerLeft}>
+            <View style={styles.headerLeft}>
               <Button
-                label="<"
-                onPress={() => setPreviousMonth()}
-                backgroundColor={appStyles(theme).calendarHeaderButton.backgroundColor}
-                color={appStyles(theme).calendarHeader.color}
-                height={appStyles(theme).calendarHeader.height
-                  - appStyles(theme).calendarHeader.paddingVertical * 2}
+                label={<Icon name="arrow-left" size={24} color={appTheme[theme].colorOnGradientColor2} />}
+                onPress={setPreviousMonth}
+                backgroundColor="#0000"
+                color={appTheme[theme].colorOnGradientColor2}
+                height={32}
               />
             </View>
           )}
 
           {year === currentYear + yearPickerDataCount && month === 12 ? null : (
-            <View style={styles(theme).headerRight}>
+            <View style={styles.headerRight}>
               <Button
-                label=">"
-                onPress={() => setNextMonth()}
-                backgroundColor={appStyles(theme).calendarHeaderButton.backgroundColor}
-                color={appStyles(theme).calendarHeader.color}
-                height={appStyles(theme).calendarHeader.height
-                  - appStyles(theme).calendarHeader.paddingVertical * 2}
+                label={<Icon name="arrow-right" size={24} color={appTheme[theme].colorOnGradientColor2} />}
+                onPress={setNextMonth}
+                backgroundColor="#0000"
+                color={appTheme[theme].colorOnGradientColor2}
+                height={32}
               />
             </View>
           )}
         </LinearGradient>
 
-        <ScrollView style={styles(theme).calendar}>
+        <ScrollView style={styles.calendar}>
           <Calendar year={year} month={month - 1} />
         </ScrollView>
       </ImageBackground>
@@ -134,32 +142,35 @@ export default function CalendarScreen() {
   );
 }
 
-const styles = (theme) => StyleSheet.create({
-  container: {
-    backgroundColor: appStyles(theme).app.backgroundColor,
-    flex: 1,
-  },
+const styles = StyleSheet.create({
   header: {
+    height: 48,
     alignItems: 'center',
-    height: appStyles(theme).calendarHeader.height,
     justifyContent: 'center',
+  },
+  row: {
+    flexDirection: 'row',
+    alignItems: 'baseline',
+  },
+  headerTitle: {
+    fontSize: 18,
   },
   headerLeft: {
-    bottom: appStyles(theme).calendarHeader.paddingVertical,
-    justifyContent: 'center',
-    left: appStyles(theme).calendarHeader.paddingHorizontal,
     position: 'absolute',
+    bottom: 8,
+    left: 24,
+    justifyContent: 'center',
   },
   headerRight: {
-    bottom: appStyles(theme).calendarHeader.paddingVertical,
-    justifyContent: 'center',
     position: 'absolute',
-    right: appStyles(theme).calendarHeader.paddingHorizontal,
+    bottom: 8,
+    right: 24,
+    justifyContent: 'center',
   },
   monthInput: {
     alignSelf: 'center',
   },
   calendar: {
-    paddingTop: appStyles(theme).calendarHeader.marginBottom,
+    paddingTop: 48,
   },
 });

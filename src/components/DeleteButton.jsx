@@ -1,12 +1,9 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { func, number, shape } from 'prop-types';
 
-import { GlobalContext } from '../contexts';
 import Button from './Button';
-import { appStyles } from '../style';
 
 export default function DeleteButton(props) {
-  const { theme } = useContext(GlobalContext);
   const {
     onPress, style, height, width,
   } = props;
@@ -16,12 +13,12 @@ export default function DeleteButton(props) {
       label="削除"
       onPress={onPress}
       style={style}
-      backgroundColor={appStyles(theme).deleteButton.backgroundColor}
+      backgroundColor="#0000"
       height={height}
       width={width}
-      color={appStyles(theme).deleteButton.color}
-      fontSize={appStyles(theme).deleteButton.fontSize}
-      fontWeight={appStyles(theme).deleteButton.fontWeight}
+      color="#f00"
+      fontSize={18}
+      fontWeight="bold"
     />
   );
 }

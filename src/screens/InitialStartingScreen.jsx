@@ -1,16 +1,13 @@
 import React, { useContext, useEffect, useState } from 'react';
 import {
-  Alert,
-  ImageBackground,
-  StyleSheet,
-  View,
+  Alert, ImageBackground, StyleSheet, View,
 } from 'react-native';
 import * as Notifications from 'expo-notifications';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { GlobalContext } from '../contexts';
+import appTheme from '../style/theme';
 import Button from '../components/Button';
-import { appStyles } from '../style';
 
 export default function InitialStartingScreen(props) {
   const { theme, backgroundImage } = useContext(GlobalContext);
@@ -70,9 +67,9 @@ export default function InitialStartingScreen(props) {
   }
 
   return (
-    <View style={styles(theme).container}>
+    <View style={{ flex: 1, backgroundColor: appTheme[theme].appBackgroundColor }}>
       <ImageBackground source={{ uri: backgroundImage }} resizeMode="cover" style={{ flex: 1 }}>
-        <View style={styles(theme).centeredView}>
+        <View style={styles.centeredView}>
           <Button
             label="はじめる"
             onPress={() => {
@@ -81,11 +78,11 @@ export default function InitialStartingScreen(props) {
                 routes: [{ name: 'Root', params: { screen: 'Home' } }],
               });
             }}
-            color={appStyles(theme).buttonLarge.color}
-            height={appStyles(theme).buttonLarge.height}
-            width={appStyles(theme).buttonLarge.width}
+            color={appTheme[theme].colorOnGradientColors1}
+            height={40}
+            width={200}
             linearGradient
-            options={{ colors: appStyles(theme).buttonLarge.gradientColors }}
+            options={{ colors: appTheme[theme].gradientColors1 }}
           />
         </View>
       </ImageBackground>
@@ -93,15 +90,10 @@ export default function InitialStartingScreen(props) {
   );
 }
 
-const styles = (theme) => StyleSheet.create({
-  container: {
-    backgroundColor: appStyles(theme).app.backgroundColor,
-    flex: 1,
-  },
+const styles = StyleSheet.create({
   centeredView: {
-    alignItems: 'center',
     flex: 1,
+    alignItems: 'center',
     justifyContent: 'center',
-    paddingHorizontal: appStyles(theme).app.paddingHorizontal,
   },
 });

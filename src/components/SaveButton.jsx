@@ -1,25 +1,22 @@
 import React, { useContext } from 'react';
+import { StyleSheet } from 'react-native';
 import { func } from 'prop-types';
 
 import { GlobalContext } from '../contexts';
+import appTheme from '../style/theme';
 import CircleButton from './CircleButton';
-import { appStyles } from '../style';
+import Icon from './Icon';
 
 export default function CreateButton(props) {
-  const { theme } = useContext(GlobalContext);
   const { onPress } = props;
+  const { theme } = useContext(GlobalContext);
 
   return (
     <CircleButton
-      label="/"
+      label={<Icon name="check" size={32} color={appTheme[theme].colorOnGradientColors1} />}
       onPress={onPress}
-      style={{
-        bottom: appStyles(theme).saveButton.bottom,
-        position: 'absolute',
-        right: appStyles(theme).saveButton.right,
-      }}
-      size={appStyles(theme).circleButton.size}
-      fontSize={appStyles(theme).saveButton.fontSize}
+      style={styles.button}
+      size={48}
     />
   );
 }
@@ -27,3 +24,11 @@ export default function CreateButton(props) {
 CreateButton.propTypes = {
   onPress: func.isRequired,
 };
+
+const styles = StyleSheet.create({
+  button: {
+    position: 'absolute',
+    bottom: 24,
+    right: 24,
+  },
+});

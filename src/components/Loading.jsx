@@ -1,12 +1,8 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { ActivityIndicator, StyleSheet, View } from 'react-native';
 import { bool } from 'prop-types';
 
-import { GlobalContext } from '../contexts';
-import { appStyles } from '../style';
-
 export default function Loading(props) {
-  const { theme } = useContext(GlobalContext);
   const { isLoading } = props;
 
   if (!isLoading) {
@@ -14,9 +10,9 @@ export default function Loading(props) {
   }
 
   return (
-    <View style={styles(theme).container}>
-      <View style={styles(theme).inner}>
-        <ActivityIndicator size="large" color={appStyles(theme).loading.color} />
+    <View style={styles.container}>
+      <View style={styles.inner}>
+        <ActivityIndicator size="large" color="#000" />
       </View>
     </View>
   );
@@ -30,10 +26,10 @@ Loading.defaultProps = {
   isLoading: false,
 };
 
-const styles = (theme) => StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
-    backgroundColor: appStyles(theme).loading.backgroundColor,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
     bottom: 0,
     height: '100%',
     justifyContent: 'center',
@@ -42,9 +38,9 @@ const styles = (theme) => StyleSheet.create({
     right: 0,
     top: 0,
     width: '100%',
-    zIndex: appStyles(theme).loading.zIndex,
+    zIndex: 10,
   },
   inner: {
-    marginBottom: appStyles(theme).appbar.height / 2,
+    marginBottom: 54,
   },
 });

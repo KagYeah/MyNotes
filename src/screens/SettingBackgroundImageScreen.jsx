@@ -1,13 +1,13 @@
 import React, { useContext, useEffect } from 'react';
 import {
-  Alert, ImageBackground, Platform, ScrollView, StyleSheet, View,
+  Alert, ImageBackground, Platform, ScrollView, View,
 } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { GlobalContext } from '../contexts';
+import appTheme from '../style/theme';
 import ListItem from '../components/ListItem';
-import { appStyles } from '../style';
 
 export default function SettingBackgroundImageScreen() {
   const { theme, backgroundImage, setBackgroundImage } = useContext(GlobalContext);
@@ -55,7 +55,7 @@ export default function SettingBackgroundImageScreen() {
   }
 
   return (
-    <View style={styles(theme).container}>
+    <View style={{ flex: 1, backgroundColor: appTheme[theme].appBackgroundColor }}>
       <ImageBackground source={{ uri: backgroundImage }} resizeMode="cover" style={{ flex: 1 }}>
 
         <ScrollView>
@@ -63,9 +63,9 @@ export default function SettingBackgroundImageScreen() {
             title="画像をアップロード"
             onPress={pickImage}
             style={{
-              color: appStyles(theme).uploadButton.color,
-              fontSize: appStyles(theme).uploadButton.fontSize,
-              height: appStyles(theme).uploadButton.height,
+              color: '#39f',
+              fontSize: 18,
+              height: 48,
             }}
           />
 
@@ -89,9 +89,9 @@ export default function SettingBackgroundImageScreen() {
               );
             }}
             style={{
-              color: appStyles(theme).deleteButton.color,
-              fontSize: appStyles(theme).uploadButton.fontSize,
-              height: appStyles(theme).uploadButton.height,
+              color: '#f00',
+              fontSize: 18,
+              height: 48,
             }}
           />
         </ScrollView>
@@ -99,10 +99,3 @@ export default function SettingBackgroundImageScreen() {
     </View>
   );
 }
-
-const styles = (theme) => StyleSheet.create({
-  container: {
-    backgroundColor: appStyles(theme).app.backgroundColor,
-    flex: 1,
-  },
-});
