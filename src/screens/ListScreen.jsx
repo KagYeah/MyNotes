@@ -128,7 +128,7 @@ export default function ListScreen(props) {
   }
 
   return (
-    <View style={{ flex: 1, bakgroundColor: appTheme[theme].appBackgroundColor }}>
+    <View style={{ flex: 1, backgroundColor: appTheme[theme].appBackgroundColor }}>
       <ImageBackground source={{ uri: backgroundImage }} resizeMode="cover" style={{ flex: 1 }}>
         {editMode ? (
           <Animated.View
