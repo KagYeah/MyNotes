@@ -37,7 +37,7 @@ export default function InitialStartingScreen(props) {
         });
       } else {
         await initializeAsync();
-        await AsyncStorage.setItem('@version', '0');
+        await AsyncStorage.setItem('@version', '1');
         setIsInitialized(true);
       }
     } catch {
