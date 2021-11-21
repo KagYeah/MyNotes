@@ -153,7 +153,7 @@ export default function MemoCreateScreen(props) {
         {showTypeList ? (
           <>
             <TouchableOpacity
-              activeOpacity={1}
+              activeOpacity={0.5}
               onPress={toggleTypeList}
               style={styles.typeListBackground}
             />

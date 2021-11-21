@@ -16,7 +16,7 @@ export default function NoteBodyInput(props) {
 
   return (
     <TouchableOpacity
-      activeOpacity={1}
+      activeOpacity={0.8}
       onPress={() => inputRef.current.focus()}
       style={[styles.container, { height: inputHeight }]}
     >
