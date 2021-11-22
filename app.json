@@ -24,6 +24,7 @@
     "android": {
       "package": "com.kagyeah.mynotes",
       "versionCode": 1,
+      "permissions": [],
       "adaptiveIcon": {
         "foregroundImage": "./assets/icon-adaptive-foreground.png",
         "backgroundColor": "#000033"
