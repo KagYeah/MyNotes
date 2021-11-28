@@ -16,6 +16,7 @@ import {
   CreateSchedulesTable,
   CreateTasksTable,
 } from '../classes/migration';
+import { VERSION } from '../constants';
 
 export default function InitialStartingScreen(props) {
   const { theme, backgroundImage } = useContext(GlobalContext);
@@ -31,64 +32,19 @@ export default function InitialStartingScreen(props) {
     try {
       const version = await AsyncStorage.getItem('@version');
       if (version) {
+        await updateVersion(version);
         navigation.reset({
           index: 0,
           routes: [{ name: 'Root', params: { screen: 'Home' } }],
         });
       } else {
         await initializeAsync();
-        await AsyncStorage.setItem('@version', '1');
+        await AsyncStorage.setItem('@version', `${VERSION}`);
         setIsInitialized(true);
       }
     } catch {
       Alert.alert('初期化に失敗しました。', '再起動してください。');
     }
-  }
-
-  function initializeAsync() {
-    return Promise.all([
-      setConfig(),
-      requestPermissionsAsync(),
-      setNotificationHandler(),
-      migrate(),
-    ]);
-  }
-
-  async function setConfig() {
-    await AsyncStorage.multiSet([
-      ['@notification_enabled', 'true'],
-      ['@theme', 'navy'],
-      ['@background_image', 'null'],
-    ]);
-  }
-
-  async function requestPermissionsAsync() {
-    const { granted } = await Notifications.getPermissionsAsync();
-    if (granted) { return; }
-
-    await Notifications.requestPermissionsAsync();
-  }
-
-  function setNotificationHandler() {
-    Notifications.setNotificationHandler({
-      handleNotification: async () => ({
-        shouldShowAlert: true,
-        shouldPlaySound: true,
-        shouldSetBadge: false,
-      }),
-    });
-  }
-
-  async function migrate() {
-    const migration = new MigrationController();
-    await migration.init();
-    await migration.migrate([
-      CreateMemosTable,
-      CreateTasksTable,
-      CreateSchedulesTable,
-      AddNotificationIdToTasksTable,
-      AddNotificationIdToSchedulesTable,
-    ]);
   }
 
   if (!isInitialized) {
@@ -126,3 +82,63 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 });
+
+async function updateVersion(v) {
+  const version = Number(v);
+  if (version === VERSION) {
+    return;
+  }
+
+  if (version < 2) {
+    const notificationEnabled = await AsyncStorage.getItem('@notification_enabled');
+    if (notificationEnabled) {
+      setNotificationHandler();
+    }
+  }
+}
+
+function initializeAsync() {
+  return Promise.all([
+    setConfig(),
+    requestPermissionsAsync(),
+    setNotificationHandler(),
+    migrate(),
+  ]);
+}
+
+async function setConfig() {
+  await AsyncStorage.multiSet([
+    ['@notification_enabled', 'true'],
+    ['@theme', 'navy'],
+    ['@background_image', 'null'],
+  ]);
+}
+
+async function requestPermissionsAsync() {
+  const { granted } = await Notifications.getPermissionsAsync();
+  if (granted) { return; }
+
+  await Notifications.requestPermissionsAsync();
+}
+
+function setNotificationHandler() {
+  Notifications.setNotificationHandler({
+    handleNotification: async () => ({
+      shouldShowAlert: true,
+      shouldPlaySound: true,
+      shouldSetBadge: false,
+    }),
+  });
+}
+
+async function migrate() {
+  const migration = new MigrationController();
+  await migration.init();
+  await migration.migrate([
+    CreateMemosTable,
+    CreateTasksTable,
+    CreateSchedulesTable,
+    AddNotificationIdToTasksTable,
+    AddNotificationIdToSchedulesTable,
+  ]);
+}
