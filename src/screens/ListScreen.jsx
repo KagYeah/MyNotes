@@ -16,8 +16,9 @@ import Button from '../components/Button';
 import CreateButton from '../components/CreateButton';
 import DeleteButton from '../components/DeleteButton';
 import ListHeader from '../components/ListHeader';
+import ListItem from '../components/ListItem';
 import ListItemWithCheckBox from '../components/ListItemWithCheckBox';
-import { capitalize, sleep } from '../helpers';
+import { capitalize, empty, sleep } from '../helpers';
 
 import {
   MemosTable, MyNotesTable, TasksTable, SchedulesTable,
@@ -33,15 +34,19 @@ export default function ListScreen(props) {
   const listTranslateY = useRef(new Animated.Value(0));
 
   let table = new MyNotesTable();
+  let noteName = 'ノート';
   switch (type) {
     case 'memo':
       table = new MemosTable();
+      noteName = 'メモ';
       break;
     case 'task':
       table = new TasksTable();
+      noteName = 'タスク';
       break;
     case 'schedule':
       table = new SchedulesTable();
+      noteName = '予定';
       break;
     default:
   }
@@ -160,7 +165,7 @@ export default function ListScreen(props) {
                       setCheckedIds([]);
                     }}
                     backgroundColor="#0000"
-                    color={appTheme[theme].colorOnGradientColors1}
+                    color="#39f"
                     height={32}
                     width={80}
                   />
@@ -199,25 +204,32 @@ export default function ListScreen(props) {
             { transform: [{ translateY: listTranslateY.current }] },
           ]}
         >
-          <FlatList
-            data={data}
-            keyExtractor={(item) => `${item.id}`}
-            renderItem={({ item }) => (
-              <ListItemWithCheckBox
-                title={item.title}
-                subtitle={item.subtitle}
-                timeout={item.timeout}
-                showCheckBox={editMode}
-                checked={checkedIds.includes(item.id)}
-                onPressWithCheckBox={() => {
-                  toggleCheckedId(item.id);
-                }}
-                onPressWithoutCheckBox={() => {
-                  navigation.navigate(`${capitalize(type)}Edit`, { id: item.id });
-                }}
-              />
-            )}
-          />
+          {empty(data) ? (
+            <ListItem
+              title={`${noteName}がありません。右下の作成ボタンから作成してください。`}
+              style={styles.emptyItem}
+            />
+          ) : (
+            <FlatList
+              data={data}
+              keyExtractor={(item) => `${item.id}`}
+              renderItem={({ item }) => (
+                <ListItemWithCheckBox
+                  title={item.title}
+                  subtitle={item.subtitle}
+                  timeout={item.timeout}
+                  showCheckBox={editMode}
+                  checked={checkedIds.includes(item.id)}
+                  onPressWithCheckBox={() => {
+                    toggleCheckedId(item.id);
+                  }}
+                  onPressWithoutCheckBox={() => {
+                    navigation.navigate(`${capitalize(type)}Edit`, { id: item.id });
+                  }}
+                />
+              )}
+            />
+          )}
         </Animated.View>
 
         <CreateButton
@@ -252,5 +264,12 @@ const styles = StyleSheet.create({
   listHeaderLeft: {
     flexDirection: 'row',
     justifyContent: 'flex-start',
+  },
+  emptyItem: {
+    alignItems: 'center',
+    backgroundColor: '#0000',
+    color: '#000',
+    fontSize: 18,
+    fontWeight: 'normal',
   },
 });
