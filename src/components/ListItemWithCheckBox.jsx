@@ -19,7 +19,7 @@ export default function ListItemWithCheckBox(props) {
   } = props;
   const { theme } = useContext(GlobalContext);
   const gradientColors = appTheme[theme].gradientColors3;
-  const textColor = appTheme[theme].colorOnGradientColor3;
+  const textColor = appTheme[theme].colorOnGradientColors3;
 
   return (
     <ListItem
