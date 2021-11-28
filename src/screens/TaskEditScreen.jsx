@@ -107,12 +107,15 @@ export default function TaskEditScreen(props) {
     setIsLoading(true);
 
     try {
-      await Notifications.cancelScheduledNotificationAsync(notificationId);
+      if (notificationId) {
+        await Notifications.cancelScheduledNotificationAsync(notificationId);
+      }
       if ((new Date()).getTime() < deadlineDate.getTime()) {
         newNotificationId = await Notifications.scheduleNotificationAsync({
           content: {
             title,
             body: `期限 ${date2string(deadlineDate, 'datetime')}`,
+            sound: 'default',
           },
           trigger: deadlineDate,
         });
@@ -120,6 +123,7 @@ export default function TaskEditScreen(props) {
       setNotificationId(newNotificationId);
     } catch {
       Alert.alert('データの保存に失敗しました。');
+      setIsLoading(false);
       return;
     }
 

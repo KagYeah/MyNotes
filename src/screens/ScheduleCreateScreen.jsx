@@ -143,18 +143,22 @@ export default function ScheduleCreateScreen(props) {
 
     let notificationId = null;
 
+    setIsLoading(true);
+
     try {
       if ((new Date()).getTime() < startTimeDate.getTime()) {
         notificationId = await Notifications.scheduleNotificationAsync({
           content: {
             title,
             body: `${date2string(startTimeDate, 'datetime')} ~ ${date2string(endTimeDate, 'time')}`,
+            sound: 'default',
           },
           trigger: startTimeDate,
         });
       }
     } catch {
       Alert.alert('データの保存に失敗しました。');
+      setIsLoading(false);
       return;
     }
 
@@ -165,7 +169,6 @@ export default function ScheduleCreateScreen(props) {
       notification_id: notificationId,
     };
 
-    setIsLoading(true);
     schedulesTable.insert(values)
       .then(() => {
         navigation.navigate('Root', { screen: 'ScheduleList' });

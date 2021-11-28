@@ -134,12 +134,15 @@ export default function ScheduleEditScreen(props) {
     setIsLoading(true);
 
     try {
-      await Notifications.cancelScheduledNotificationAsync(notificationId);
+      if (notificationId) {
+        await Notifications.cancelScheduledNotificationAsync(notificationId);
+      }
       if ((new Date()).getTime() < startTimeDate.getTime()) {
         newNotificationId = await Notifications.scheduleNotificationAsync({
           content: {
             title,
             body: `${date2string(startTimeDate, 'datetime')} ~ ${date2string(endTimeDate, 'time')}`,
+            sound: 'default',
           },
           trigger: startTimeDate,
         });
@@ -147,6 +150,7 @@ export default function ScheduleEditScreen(props) {
       setNotificationId(newNotificationId);
     } catch {
       Alert.alert('データの保存に失敗しました。');
+      setIsLoading(false);
       return;
     }
 

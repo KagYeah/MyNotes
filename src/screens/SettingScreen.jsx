@@ -62,7 +62,7 @@ export default function SettingScreen(props) {
     Notifications.setNotificationHandler({
       handleNotification: async () => ({
         shouldShowAlert: enabled,
-        shouldPlaySound: false,
+        shouldPlaySound: enabled,
         shouldSetBadge: false,
       }),
     });

@@ -134,18 +134,22 @@ export default function TaskCreateScreen(props) {
 
     let notificationId = null;
 
+    setIsLoading(true);
+
     try {
       if ((new Date()).getTime() < deadlineDate.getTime()) {
         notificationId = await Notifications.scheduleNotificationAsync({
           content: {
             title,
             body: `期限 ${date2string(deadlineDate, 'datetime')}`,
+            sound: 'default',
           },
           trigger: deadlineDate,
         });
       }
     } catch {
       Alert.alert('データの保存に失敗しました。');
+      setIsLoading(false);
       return;
     }
 
@@ -155,7 +159,6 @@ export default function TaskCreateScreen(props) {
       notification_id: notificationId,
     };
 
-    setIsLoading(true);
     tasksTable.insert(values)
       .then(() => {
         navigation.navigate('Root', { screen: 'TaskList' });
