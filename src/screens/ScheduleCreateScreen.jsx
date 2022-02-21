@@ -79,7 +79,7 @@ export default function ScheduleCreateScreen(props) {
           label="完了"
           onPress={() => Keyboard.dismiss()}
           backgroundColor="#0000"
-          color={appTheme[theme].colorOnBackgroundColors1}
+          color={appTheme[theme].colorOnGradientColors1}
         />
       ) : null,
     });
