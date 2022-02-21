@@ -2,7 +2,7 @@
   "expo": {
     "name": "MyNotes",
     "slug": "MyNotes",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
@@ -19,11 +19,11 @@
     "ios": {
       "supportsTablet": false,
       "bundleIdentifier": "com.kagyeah.mynotes",
-      "buildNumber": "1.0.1"
+      "buildNumber": "1.0.2"
     },
     "android": {
       "package": "com.kagyeah.mynotes",
-      "versionCode": 2,
+      "versionCode": 3,
       "permissions": [],
       "adaptiveIcon": {
         "foregroundImage": "./assets/icon-adaptive-foreground.png",
