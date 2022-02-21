@@ -96,12 +96,12 @@ export default function App() {
           <Stack.Screen
             name="TaskEdit"
             component={TaskEditScreen}
-            options={{ title: 'タスク' }}
+            options={{ title: 'リマインダー' }}
           />
           <Stack.Screen
             name="ScheduleEdit"
             component={ScheduleEditScreen}
-            options={{ title: '予定' }}
+            options={{ title: 'スケジュール' }}
           />
           <Stack.Screen
             name="CalendarDetail"
@@ -154,12 +154,12 @@ export default function App() {
             <Stack.Screen
               name="TaskCreate"
               component={TaskCreateScreen}
-              options={{ title: 'タスク' }}
+              options={{ title: 'リマインダー' }}
             />
             <Stack.Screen
               name="ScheduleCreate"
               component={ScheduleCreateScreen}
-              options={{ title: '予定' }}
+              options={{ title: 'スケジュール' }}
             />
           </Stack.Group>
         </Stack.Navigator>
@@ -213,12 +213,12 @@ function Root() {
       <Drawer.Screen
         name="TaskList"
         component={TaskListScreen}
-        options={{ title: 'タスク' }}
+        options={{ title: 'リマインダー' }}
       />
       <Drawer.Screen
         name="ScheduleList"
         component={ScheduleListScreen}
-        options={{ title: '予定' }}
+        options={{ title: 'スケジュール' }}
       />
       <Stack.Screen
         name="Calendar"

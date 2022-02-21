@@ -42,11 +42,11 @@ export default function ListScreen(props) {
       break;
     case 'task':
       table = new TasksTable();
-      noteName = 'タスク';
+      noteName = 'リマインダー';
       break;
     case 'schedule':
       table = new SchedulesTable();
-      noteName = '予定';
+      noteName = 'スケジュール';
       break;
     default:
   }

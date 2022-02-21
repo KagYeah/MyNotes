@@ -200,14 +200,14 @@ export default function TaskEditScreen(props) {
 
           <NoteTitleInput
             onChangeText={(text) => setTitle(text)}
-            placeholder="タスク"
+            placeholder="リマインダー"
             value={title}
           />
 
           <DeleteButton
             onPress={() => {
               Alert.alert(
-                'タスクを削除します',
+                'リマインダーを削除します',
                 '本当によろしいですか？',
                 [
                   {

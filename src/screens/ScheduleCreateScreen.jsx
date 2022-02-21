@@ -55,7 +55,7 @@ export default function ScheduleCreateScreen(props) {
                   { color: appTheme[theme].colorOnGradientColors1 },
                 ]}
               >
-                予定
+                スケジュール
               </Text>
               <Icon name="arrow-down" size={12} color={appTheme[theme].colorOnGradientColors1} />
             </View>
@@ -239,7 +239,7 @@ export default function ScheduleCreateScreen(props) {
 
           <NoteTitleInput
             onChangeText={(text) => setTitle(text)}
-            placeholder="予定"
+            placeholder="スケジュール"
             value={title}
           />
         </ScrollView>

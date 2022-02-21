@@ -26,7 +26,7 @@ export default function TypeList(props) {
         options={{ colors: gradientColors }}
       />
       <ListItem
-        title={<Text style={[styles.text, { color: textColor }]}>タスク</Text>}
+        title={<Text style={[styles.text, { color: textColor }]}>リマインダー</Text>}
         onPress={() => {
           navigation.dispatch(StackActions.replace('TaskCreate'));
         }}
@@ -35,7 +35,7 @@ export default function TypeList(props) {
         options={{ colors: gradientColors }}
       />
       <ListItem
-        title={<Text style={[styles.text, { color: textColor }]}>予定</Text>}
+        title={<Text style={[styles.text, { color: textColor }]}>スケジュール</Text>}
         onPress={() => {
           navigation.dispatch(StackActions.replace('ScheduleCreate'));
         }}

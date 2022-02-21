@@ -172,7 +172,7 @@ export default function DailyNoteListScreen(props) {
     if (!empty(tasks)) {
       notes.push({
         type: 'task',
-        title: isToday(date) ? '今日のタスク' : `${date2string(date, 'date')}のタスク`,
+        title: isToday(date) ? '今日のリマインダー' : `${date2string(date, 'date')}のリマインダー`,
         data: tasks,
       });
     }
@@ -187,7 +187,7 @@ export default function DailyNoteListScreen(props) {
     if (!empty(schedules)) {
       notes.push({
         type: 'schedule',
-        title: isToday(date) ? '今日の予定' : `${date2string(date, 'date')}の予定`,
+        title: isToday(date) ? '今日のスケジュール' : `${date2string(date, 'date')}のスケジュール`,
         data: schedules,
       });
     }
@@ -243,7 +243,7 @@ export default function DailyNoteListScreen(props) {
 
         {empty(data) ? (
           <ListItem
-            title={`${isToday(date) ? '今日' : date2string(date, 'date')}のタスク・予定はありません`}
+            title={`${isToday(date) ? '今日' : date2string(date, 'date')}のリマインダー・スケジュールはありません`}
             style={styles.emptyItem}
           />
         ) : (

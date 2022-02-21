@@ -235,14 +235,14 @@ export default function ScheduleEditScreen(props) {
 
           <NoteTitleInput
             onChangeText={(text) => setTitle(text)}
-            placeholder="予定"
+            placeholder="スケジュール"
             value={title}
           />
 
           <DeleteButton
             onPress={() => {
               Alert.alert(
-                '予定を削除します',
+                'スケジュールを削除します',
                 '本当によろしいですか？',
                 [
                   {

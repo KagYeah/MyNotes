@@ -54,7 +54,7 @@ export default function TaskCreateScreen(props) {
                   { color: appTheme[theme].colorOnGradientColors1 },
                 ]}
               >
-                タスク
+                リマインダー
               </Text>
               <Icon name="arrow-down" size={12} color={appTheme[theme].colorOnGradientColors1} />
             </View>
@@ -222,7 +222,7 @@ export default function TaskCreateScreen(props) {
 
           <NoteTitleInput
             onChangeText={(text) => setTitle(text)}
-            placeholder="タスク"
+            placeholder="リマインダー"
             value={title}
           />
         </ScrollView>
