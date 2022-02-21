@@ -138,7 +138,9 @@ export default function TaskEditScreen(props) {
         navigation.goBack();
       })
       .catch(async () => {
-        await Notifications.cancelScheduledNotificationAsync(newNotificationId);
+        if (newNotificationId) {
+          await Notifications.cancelScheduledNotificationAsync(newNotificationId);
+        }
         Alert.alert('データの保存に失敗しました。');
       })
       .finally(() => {
@@ -150,9 +152,12 @@ export default function TaskEditScreen(props) {
     setIsLoading(true);
 
     try {
-      await Notifications.cancelScheduledNotificationAsync(notificationId);
+      if (notificationId) {
+        await Notifications.cancelScheduledNotificationAsync(notificationId);
+      }
     } catch {
       Alert.alert('データの削除に失敗しました。');
+      setIsLoading(false);
       return;
     }
 

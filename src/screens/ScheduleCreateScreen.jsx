@@ -174,7 +174,9 @@ export default function ScheduleCreateScreen(props) {
         navigation.navigate('Root', { screen: 'ScheduleList' });
       })
       .catch(async () => {
-        await Notifications.cancelScheduledNotificationAsync(notificationId);
+        if (notificationId) {
+          await Notifications.cancelScheduledNotificationAsync(notificationId);
+        }
         Alert.alert('データの保存に失敗しました。');
       })
       .finally(() => {

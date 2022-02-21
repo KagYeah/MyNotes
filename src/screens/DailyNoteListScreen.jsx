@@ -213,9 +213,13 @@ export default function DailyNoteListScreen(props) {
 
     try {
       const result = await table.selectByIds(ids, ['notification_id']);
-      const promiseAll = result._array.map((row) => (
-        Notifications.cancelScheduledNotificationAsync(row.notification_id)
-      ));
+      const promiseAll = result._array.map((row) => {
+        if (row.notification_id) {
+          return Notifications.cancelScheduledNotificationAsync(row.notification_id);
+        }
+
+        return null;
+      });
       await Promise.all(promiseAll);
     } catch {
       Alert.alert('データの削除に失敗しました。');

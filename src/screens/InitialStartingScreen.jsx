@@ -89,6 +89,7 @@ async function updateVersion(v) {
     return;
   }
 
+  // update version to 2
   if (version < 2) {
     const notificationEnabled = await AsyncStorage.getItem('@notification_enabled');
     if (notificationEnabled) {

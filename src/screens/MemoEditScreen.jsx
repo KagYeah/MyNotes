@@ -100,7 +100,7 @@ export default function MemoEditScreen(props) {
       .catch(() => {
         Alert.alert('データの保存に失敗しました。');
       })
-      .catch(() => {
+      .finally(() => {
         setIsLoading(false);
       });
   }
